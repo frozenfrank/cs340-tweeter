@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -14,10 +13,10 @@ import MainLayout from "./components/mainLayout/MainLayout";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import Toaster from "./components/toaster/Toaster";
-import { UserInfoContext } from "./components/userInfo/UserInfoProvider";
+import useUserInfo from "./components/userInfo/UserInfoHook";
 
 const App = () => {
-  const { currentUser, authToken } = useContext(UserInfoContext);
+  const { currentUser, authToken } = useUserInfo();
 
   const isAuthenticated = (): boolean => {
     return !!currentUser && !!authToken;
