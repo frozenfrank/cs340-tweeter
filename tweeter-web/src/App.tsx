@@ -6,13 +6,12 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { AuthToken, FakeData, User } from "tweeter-shared";
+import { AuthToken, FakeData, Status, User } from "tweeter-shared";
 import "./App.css";
 import Login from "./components/authentication/login/Login";
 import Register from "./components/authentication/register/Register";
-import FeedScroller from "./components/mainLayout/FeedScroller";
 import MainLayout from "./components/mainLayout/MainLayout";
-import StoryScroller from "./components/mainLayout/StoryScroller";
+import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import Toaster from "./components/toaster/Toaster";
 import { UserInfoContext } from "./components/userInfo/UserInfoProvider";
@@ -39,6 +38,27 @@ const App = () => {
 };
 
 const AuthenticatedRoutes = () => {
+
+  const loadMoreFeedItems = async (
+    authToken: AuthToken,
+    userAlias: string,
+    pageSize: number,
+    lastItem: Status | null
+  ): Promise<[Status[], boolean]> => {
+    // TODO: Replace with the result of calling server
+    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+  };
+
+  const loadMoreStoryItems = async (
+    authToken: AuthToken,
+    userAlias: string,
+    pageSize: number,
+    lastItem: Status | null
+  ): Promise<[Status[], boolean]> => {
+    // TODO: Replace with the result of calling server
+    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+  };
+
   const loadMoreFollowers = async (
     authToken: AuthToken,
     userAlias: string,
@@ -63,8 +83,26 @@ const AuthenticatedRoutes = () => {
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<Navigate to="/feed" />} />
-        <Route path="feed" element={<FeedScroller />} />
-        <Route path="story" element={<StoryScroller />} />
+        <Route
+          path="feed"
+          element={
+            <StatusItemScroller
+              key={1}
+              loadMore={loadMoreFeedItems}
+              itemDescription="feed"
+            />
+          }
+        />
+        <Route
+          path="story"
+          element={
+            <StatusItemScroller
+              key={2}
+              loadMore={loadMoreStoryItems}
+              itemDescription="story"
+            />
+          }
+        />
         <Route
           path="followees"
           element={
