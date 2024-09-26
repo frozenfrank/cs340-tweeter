@@ -1,6 +1,4 @@
-import "./App.css";
 import { useContext } from "react";
-import { UserInfoContext } from "./components/userInfo/UserInfoProvider";
 import {
   BrowserRouter,
   Navigate,
@@ -8,14 +6,16 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { AuthToken, FakeData, User } from "tweeter-shared";
+import "./App.css";
 import Login from "./components/authentication/login/Login";
 import Register from "./components/authentication/register/Register";
-import MainLayout from "./components/mainLayout/MainLayout";
-import Toaster from "./components/toaster/Toaster";
 import FeedScroller from "./components/mainLayout/FeedScroller";
+import MainLayout from "./components/mainLayout/MainLayout";
 import StoryScroller from "./components/mainLayout/StoryScroller";
-import { AuthToken, User, FakeData } from "tweeter-shared";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
+import Toaster from "./components/toaster/Toaster";
+import { UserInfoContext } from "./components/userInfo/UserInfoProvider";
 
 const App = () => {
   const { currentUser, authToken } = useContext(UserInfoContext);
@@ -71,7 +71,7 @@ const AuthenticatedRoutes = () => {
             <UserItemScroller
               key={1}
               loadItems={loadMoreFollowees}
-                itemDescription="followees"
+              itemDescription="followees"
             />
           }
         />
@@ -79,9 +79,9 @@ const AuthenticatedRoutes = () => {
           path="followers"
           element={
             <UserItemScroller
-              key={2} 
+              key={2}
               loadItems={loadMoreFollowers}
-                itemDescription="followers"
+              itemDescription="followers"
             />
           }
         />
