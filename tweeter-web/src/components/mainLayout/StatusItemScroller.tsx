@@ -1,31 +1,21 @@
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { AuthToken, Status } from "tweeter-shared";
+import { Status } from "tweeter-shared";
+import { ItemPresenter, ItemView } from "../../presenters/ItemPresenter";
 import StatusItem from "../statusItem/StatusItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 
-export const PAGE_SIZE = 10;
 
 interface Props {
-  itemDescription: string;
-  loadMore: (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null
-  ) => Promise<[Status[], boolean]>;
+  presenterGenerator: (view: ItemView<Status>) => ItemPresenter<Status>;
 }
 
 const StatusItemScroller = (props: Props) => {
   const { displayErrorMessage } = useToastListener();
   const [items, setItems] = useState<Status[]>([]);
   const [newItems, setNewItems] = useState<Status[]>([]);
-  const [hasMoreItems, setHasMoreItems] = useState(true);
-  const [lastItem, setLastItem] = useState<Status | null>(null);
   const [changedDisplayedUser, setChangedDisplayedUser] = useState(true);
-
-  const addItems = (newItems: Status[]) => setNewItems(newItems);
 
   const { displayedUser, authToken } = useUserInfo();
 
@@ -51,30 +41,20 @@ const StatusItemScroller = (props: Props) => {
   const reset = async () => {
     setItems([]);
     setNewItems([]);
-    setLastItem(null);
-    setHasMoreItems(true);
+    presenter.reset();
     setChangedDisplayedUser(true);
   }
 
-  const loadMoreItems = async () => {
-    try {
-      const [newItems, hasMore] = await props.loadMore(
-        authToken!,
-        displayedUser!.alias,
-        PAGE_SIZE,
-        lastItem
-      );
-
-      setHasMoreItems(hasMore);
-      setLastItem(newItems[newItems.length - 1]);
-      addItems(newItems);
-      setChangedDisplayedUser(false)
-    } catch (error) {
-      displayErrorMessage(
-        `Failed to ${props.itemDescription} items because of exception: ${error}`
-      );
-    }
+  const listener: ItemView<Status> = {
+    addItems: newItems => setNewItems(newItems),
+    displayErrorMessage: message => displayErrorMessage(message),
   };
+  const [presenter] = useState(props.presenterGenerator(listener));
+
+  const loadMoreItems = async () => {
+    await presenter.loadMoreItems(authToken!, displayedUser!.alias);
+    setChangedDisplayedUser(false);
+  }
 
   return (
     <div className="container px-0 overflow-visible vh-100">
@@ -82,7 +62,7 @@ const StatusItemScroller = (props: Props) => {
         className="pr-0 mr-0"
         dataLength={items.length}
         next={loadMoreItems}
-        hasMore={hasMoreItems}
+        hasMore={presenter.hasMoreItems}
         loader={<h4>Loading...</h4>}
       >
         {items.map((item, index) => (

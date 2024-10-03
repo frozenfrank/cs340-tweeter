@@ -5,7 +5,6 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { AuthToken, FakeData, Status } from "tweeter-shared";
 import "./App.css";
 import Login from "./components/authentication/login/Login";
 import Register from "./components/authentication/register/Register";
@@ -16,6 +15,8 @@ import Toaster from "./components/toaster/Toaster";
 import useUserInfo from "./components/userInfo/UserInfoHook";
 import { FolloweePresenter } from "./presenters/FolloweePresenter";
 import { FollowerPresenter } from "./presenters/FollowerPresenter";
+import { FeedPresenter } from "./presenters/FeedPresenter";
+import { StoryPresenter } from "./presenters/StoryPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -40,27 +41,6 @@ const App = () => {
 
 const AuthenticatedRoutes = () => {
 
-  const loadMoreFeedItems = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null
-  ): Promise<[Status[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  };
-
-  const loadMoreStoryItems = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null
-  ): Promise<[Status[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  };
-
-
   return (
     <Routes>
       <Route element={<MainLayout />}>
@@ -70,8 +50,7 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={1}
-              loadMore={loadMoreFeedItems}
-              itemDescription="feed"
+              presenterGenerator={view => new FeedPresenter(view)}
             />
           }
         />
@@ -80,8 +59,7 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={2}
-              loadMore={loadMoreStoryItems}
-              itemDescription="story"
+              presenterGenerator={view => new StoryPresenter(view)}
             />
           }
         />

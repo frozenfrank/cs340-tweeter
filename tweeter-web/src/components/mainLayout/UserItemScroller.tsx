@@ -39,8 +39,8 @@ const UserItemScroller = (props: Props) => {
   }
 
   const listener: ItemView<User> = {
-    addItems: (newItems: User[]) => setNewItems(newItems),
-    displayErrorMessage: (message: string) => displayErrorMessage(message),
+    addItems: newItems => setNewItems(newItems),
+    displayErrorMessage: message => displayErrorMessage(message),
   };
 
   const [presenter] = useState(props.presenterGenerator(listener));
