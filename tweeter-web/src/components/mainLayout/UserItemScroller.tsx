@@ -32,7 +32,7 @@ const UserItemScroller = (props: Props) => {
 
   // Add new items whenever there are new items to add
   useEffect(() => {
-    if(newItems) {
+    if(newItems.length) {
       setItems([...items, ...newItems]);
     }
   }, [newItems])
