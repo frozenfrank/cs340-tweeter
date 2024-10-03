@@ -16,7 +16,6 @@ import Toaster from "./components/toaster/Toaster";
 import useUserInfo from "./components/userInfo/UserInfoHook";
 import { FolloweePresenter } from "./presenters/FolloweePresenter";
 import { FollowerPresenter } from "./presenters/FollowerPresenter";
-import { UserItemView } from "./presenters/UserItemPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -91,7 +90,7 @@ const AuthenticatedRoutes = () => {
           element={
             <UserItemScroller
               key={1}
-              presenterGenerator={(view: UserItemView) => new FolloweePresenter(view)}
+              presenterGenerator={view => new FolloweePresenter(view)}
             />
           }
         />
@@ -100,7 +99,7 @@ const AuthenticatedRoutes = () => {
           element={
             <UserItemScroller
               key={2}
-              presenterGenerator={(view: UserItemView) => new FollowerPresenter(view)}
+              presenterGenerator={view => new FollowerPresenter(view)}
             />
           }
         />

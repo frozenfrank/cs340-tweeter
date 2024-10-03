@@ -1,20 +1,20 @@
-import { AuthToken, User } from "tweeter-shared";
+import { AuthToken } from "tweeter-shared";
 
-export interface UserItemView {
-  addItems(newItems: User[]): void;
+export interface ItemView<T> {
+  addItems(newItems: T[]): void;
   displayErrorMessage(message: string): void;
 }
 
-export abstract class UserItemPresenter {
+export abstract class ItemPresenter<T> {
 
   private PAGE_SIZE = 10;
   private _hasMoreItems = true;
-  private lastItem: User | null = null;
+  private lastItem: T | null = null;
 
   protected abstract itemDescription: string;
 
   public constructor(
-    private _view: UserItemView,
+    private _view: ItemView<T>,
   ) { }
 
   get view() { return this._view; }
@@ -24,8 +24,8 @@ export abstract class UserItemPresenter {
     authToken: AuthToken,
     userAlias: string,
     pageSize: number,
-    lastItem: User | null
-  ): Promise<[User[], boolean]>;
+    lastItem: T | null
+  ): Promise<[T[], boolean]>;
 
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
     try {

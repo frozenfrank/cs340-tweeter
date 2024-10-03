@@ -1,9 +1,10 @@
+import { User } from "tweeter-shared";
 import { FollowService } from "../model/service/FollowService";
-import { UserItemPresenter } from "./UserItemPresenter";
+import { ItemPresenter } from "./ItemPresenter";
 
 
-export class FollowerPresenter extends UserItemPresenter {
-  private followService: FollowService = new FollowService();
+export class FollowerPresenter extends ItemPresenter<User> {
+  private followService = new FollowService();
 
   public itemDescription = "followers";
   public doLoadMoreItems = this.followService.loadMoreFollowers.bind(this);

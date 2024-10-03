@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { User } from "tweeter-shared";
-import { UserItemPresenter, UserItemView } from "../../presenters/UserItemPresenter";
+import { ItemPresenter, ItemView } from "../../presenters/ItemPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 import UserItem from "../userItem/UserItem";
 
 interface Props {
-  presenterGenerator: (view: UserItemView) => UserItemPresenter;
+  presenterGenerator: (view: ItemView<User>) => ItemPresenter<User>;
 }
 
 const UserItemScroller = (props: Props) => {
@@ -38,7 +38,7 @@ const UserItemScroller = (props: Props) => {
     presenter.reset();
   }
 
-  const listener: UserItemView = {
+  const listener: ItemView<User> = {
     addItems: (newItems: User[]) => setNewItems(newItems),
     displayErrorMessage: (message: string) => displayErrorMessage(message),
   };
