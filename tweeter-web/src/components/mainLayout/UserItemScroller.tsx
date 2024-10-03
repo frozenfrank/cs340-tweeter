@@ -1,51 +1,15 @@
-import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { User } from "tweeter-shared";
 import { ItemPresenter, ItemView } from "../../presenters/ItemPresenter";
-import useToastListener from "../toaster/ToastListenerHook";
-import useUserInfo from "../userInfo/UserInfoHook";
 import UserItem from "../userItem/UserItem";
+import useItemScroller from "./ItemScrollerHook";
 
 interface Props {
   presenterGenerator: (view: ItemView<User>) => ItemPresenter<User>;
 }
 
 const UserItemScroller = (props: Props) => {
-  const { displayErrorMessage } = useToastListener();
-  const [items, setItems] = useState<User[]>([]);
-  const [newItems, setNewItems] = useState<User[]>([]);
-
-  const { displayedUser, authToken } = useUserInfo();
-
-  // Initialize the component whenever the displayed user changes
-  useEffect(() => {
-    reset();
-    loadMoreItems();
-  }, [displayedUser]);
-
-  // Add new items whenever there are new items to add
-  useEffect(() => {
-    if(newItems.length) {
-      setItems([...items, ...newItems]);
-    }
-  }, [newItems])
-
-  const reset = async () => {
-    setItems([]);
-    setNewItems([]);
-    items.length = 0;
-    newItems.length = 0;
-    presenter.reset();
-  }
-
-  const listener: ItemView<User> = {
-    addItems: newItems => setNewItems(newItems),
-    displayErrorMessage: message => displayErrorMessage(message),
-  };
-
-  const [presenter] = useState(props.presenterGenerator(listener));
-
-  const loadMoreItems = presenter.loadMoreItems.bind(presenter, authToken!, displayedUser!.alias);
+  const {items, loadMoreItems, hasMoreItems} = useItemScroller(props.presenterGenerator);
 
   return (
     <div className="container px-0 overflow-visible vh-100">
@@ -53,7 +17,7 @@ const UserItemScroller = (props: Props) => {
         className="pr-0 mr-0"
         dataLength={items.length}
         next={loadMoreItems}
-        hasMore={presenter.hasMoreItems}
+        hasMore={hasMoreItems}
         loader={<h4>Loading...</h4>}
       >
         {items.map((item, index) => (
