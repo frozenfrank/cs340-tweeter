@@ -3,6 +3,10 @@ import { ItemPresenter, ItemView } from "../../presenters/ItemPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 
+export interface ItemScrollerProps<T> {
+  presenterGenerator: (view: ItemView<T>) => ItemPresenter<T>;
+}
+
 interface ItemScroller<T> {
   items: T[];
   hasMoreItems: boolean;

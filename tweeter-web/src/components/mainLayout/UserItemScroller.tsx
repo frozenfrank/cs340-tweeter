@@ -1,14 +1,10 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import { User } from "tweeter-shared";
-import { ItemPresenter, ItemView } from "../../presenters/ItemPresenter";
 import UserItem from "../userItem/UserItem";
-import useItemScroller from "./ItemScrollerHook";
+import useItemScroller, { ItemScrollerProps } from "./ItemScrollerHook";
 
-interface Props {
-  presenterGenerator: (view: ItemView<User>) => ItemPresenter<User>;
-}
 
-const UserItemScroller = (props: Props) => {
+const UserItemScroller = (props: ItemScrollerProps<User>) => {
   const {items, loadMoreItems, hasMoreItems} = useItemScroller(props.presenterGenerator);
 
   return (
