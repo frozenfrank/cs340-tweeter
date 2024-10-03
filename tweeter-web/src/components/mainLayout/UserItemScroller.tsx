@@ -49,7 +49,7 @@ const UserItemScroller = (props: Props) => {
     displayErrorMessage: (message: string) => displayErrorMessage(message),
   };
 
-  const presenter = props.presenterGenerator(listener);
+  const [presenter] = useState(props.presenterGenerator(listener));
 
   const loadMoreItems = async () => {
     presenter.loadMoreItems(authToken!, displayedUser!.alias);
