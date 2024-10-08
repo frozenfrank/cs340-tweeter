@@ -10,27 +10,23 @@ export interface LoginView {
 }
 
 export class LoginPresenter {
-  private alias = "";
-  private password = "";
-  private rememberMe = false;
-
   private userService = new UserService();
 
   constructor(
     private view: LoginView,
   ) { }
 
-  public checkSubmitButtonStatus (): boolean {
-    return !this.alias || !this.password;
+  public checkSubmitButtonStatus(alias: string, password: string): boolean {
+    return !alias || !password;
   };
 
-  public async doLogin () {
+  public async doLogin(alias: string, password: string, rememberMe: boolean) {
     try {
       this.view.setIsLoading(true);
 
-      const [user, authToken] = await this.userService.login(this.alias, this.password);
+      const [user, authToken] = await this.userService.login(alias, password);
 
-      this.view.updateUserInfo(user, user, authToken, this.rememberMe);
+      this.view.updateUserInfo(user, user, authToken, rememberMe);
 
       if (!!this.view.originalUrl) {
         this.view.navigate(this.view.originalUrl);
@@ -44,13 +40,4 @@ export class LoginPresenter {
     }
   };
 
-  public setAlias(newVal: string): void {
-    this.alias = newVal;
-  }
-  public setPassword(newVal: string): void {
-    this.password = newVal;
-  }
-  public setRememberMe(newVal: boolean): void {
-    this.rememberMe = newVal;
-  }
 }

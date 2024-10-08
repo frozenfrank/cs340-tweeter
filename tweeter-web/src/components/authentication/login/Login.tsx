@@ -14,6 +14,9 @@ interface Props {
 }
 
 const Login = (props: Props) => {
+  const [alias, setAlias] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -29,16 +32,18 @@ const Login = (props: Props) => {
   };
   const [presenter] = useState(props.presenterGenerator(view));
 
+  const checkSubmitButtonStatus = () => presenter.checkSubmitButtonStatus(alias, password);
+  const doLogin = () => presenter.doLogin(alias, password, rememberMe);
+
   const loginOnEnter = async (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key == "Enter" && !presenter.checkSubmitButtonStatus()) {
-      presenter.doLogin();
+    if (event.key == "Enter" && !checkSubmitButtonStatus()) {
+      doLogin();
     }
   };
 
-  // TODO: The `presenter.setAlias()` is not preserving the `this` value correctly and doesn't work.
   const inputFieldGenerator = () => {
     return (
-      <AuthenticationFields onEnter={loginOnEnter} setAlias={presenter.setAlias} setPassword={presenter.setPassword} />
+      <AuthenticationFields onEnter={loginOnEnter} setAlias={setAlias} setPassword={setPassword} />
     );
   };
 
@@ -50,7 +55,6 @@ const Login = (props: Props) => {
     );
   };
 
-  // TODO: The `presenter.setAlias()` is not preserving the `this` value correctly and doesn't work.
   return (
     <AuthenticationFormLayout
       headingText="Please Sign In"
@@ -58,10 +62,10 @@ const Login = (props: Props) => {
       oAuthHeading="Sign in with:"
       inputFieldGenerator={inputFieldGenerator}
       switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
-      setRememberMe={presenter.setRememberMe}
-      submitButtonDisabled={presenter.checkSubmitButtonStatus}
+      setRememberMe={setRememberMe}
+      submitButtonDisabled={checkSubmitButtonStatus}
       isLoading={isLoading}
-      submit={presenter.doLogin}
+      submit={doLogin}
     />
   );
 };
