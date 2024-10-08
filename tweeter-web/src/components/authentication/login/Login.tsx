@@ -35,6 +35,7 @@ const Login = (props: Props) => {
     }
   };
 
+  // TODO: The `presenter.setAlias()` is not preserving the `this` value correctly and doesn't work.
   const inputFieldGenerator = () => {
     return (
       <AuthenticationFields onEnter={loginOnEnter} setAlias={presenter.setAlias} setPassword={presenter.setPassword} />
@@ -49,6 +50,7 @@ const Login = (props: Props) => {
     );
   };
 
+  // TODO: The `presenter.setAlias()` is not preserving the `this` value correctly and doesn't work.
   return (
     <AuthenticationFormLayout
       headingText="Please Sign In"
