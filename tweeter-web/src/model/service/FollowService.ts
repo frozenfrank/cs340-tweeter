@@ -2,7 +2,6 @@ import { AuthToken, User, FakeData } from "tweeter-shared";
 
 export class FollowService {
 
-
   public async follow(
     authToken: AuthToken,
     userToFollow: User
@@ -17,7 +16,6 @@ export class FollowService {
 
     return [followerCount, followeeCount];
   };
-
 
   public async unfollow(
     authToken: AuthToken,

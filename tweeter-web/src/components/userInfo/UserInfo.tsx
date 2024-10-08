@@ -32,13 +32,9 @@ const UserInfo = (props: Props) => {
   }, [displayedUser]);
 
   const view: UserInfoView = {
-    setIsLoading,
-    setIsFollower,
-    setFolloweeCount,
-    setFollowerCount,
-    displayErrorMessage,
-    displayInfoMessage,
-    clearLastInfoMessage,
+    setIsLoading, setIsFollower,
+    setFolloweeCount, setFollowerCount,
+    displayErrorMessage, displayInfoMessage, clearLastInfoMessage,
   };
   const [presenter] = useState(props.presenterGenerator(view))
 
