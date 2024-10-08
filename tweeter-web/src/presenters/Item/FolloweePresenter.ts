@@ -1,5 +1,5 @@
 import { User } from "tweeter-shared";
-import { FollowService } from "../model/service/FollowService";
+import { FollowService } from "../../model/service/FollowService";
 import { ItemPresenter } from "./ItemPresenter";
 
 

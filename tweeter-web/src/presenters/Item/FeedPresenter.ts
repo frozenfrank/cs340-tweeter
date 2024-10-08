@@ -1,5 +1,5 @@
 import { Status } from "tweeter-shared";
-import { StatusService } from "../model/service/StatusService";
+import { StatusService } from "../../model/service/StatusService";
 import { ItemPresenter } from "./ItemPresenter";
 
 export class FeedPresenter extends ItemPresenter<Status> {

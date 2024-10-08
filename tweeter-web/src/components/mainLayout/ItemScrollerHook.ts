@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ItemPresenter, ItemView } from "../../presenters/ItemPresenter";
+import { ItemPresenter, ItemView } from "../../presenters/Item/ItemPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 
