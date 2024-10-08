@@ -13,9 +13,10 @@ import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import Toaster from "./components/toaster/Toaster";
 import useUserInfo from "./components/userInfo/UserInfoHook";
+import { FeedPresenter } from "./presenters/FeedPresenter";
 import { FolloweePresenter } from "./presenters/FolloweePresenter";
 import { FollowerPresenter } from "./presenters/FollowerPresenter";
-import { FeedPresenter } from "./presenters/FeedPresenter";
+import { LoginPresenter, LoginView } from "./presenters/LoginPresenter";
 import { StoryPresenter } from "./presenters/StoryPresenter";
 
 const App = () => {
@@ -91,11 +92,15 @@ const AuthenticatedRoutes = () => {
 const UnauthenticatedRoutes = () => {
   const location = useLocation();
 
+  const loginPresenterGenerator = (view: LoginView) => new LoginPresenter(view);
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<Login presenterGenerator={loginPresenterGenerator}/>} />
       <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Login originalUrl={location.pathname} />} />
+      <Route path="*" element={
+        <Login originalUrl={location.pathname} presenterGenerator={loginPresenterGenerator} />
+      } />
     </Routes>
   );
 };

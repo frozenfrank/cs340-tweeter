@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthToken, FakeData, User } from "tweeter-shared";
+import { LoginPresenter, LoginView } from "../../../presenters/LoginPresenter";
 import useToastListener from "../../toaster/ToastListenerHook";
 import useUserInfo from "../../userInfo/UserInfoHook";
 import AuthenticationFields from "../AuthenticationFields";
@@ -9,68 +9,35 @@ import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import "./Login.css";
 
 interface Props {
+  presenterGenerator: (view: LoginView) => LoginPresenter;
   originalUrl?: string;
 }
 
 const Login = (props: Props) => {
-  const [alias, setAlias] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const { updateUserInfo } = useUserInfo();
   const { displayErrorMessage } = useToastListener();
 
-  const checkSubmitButtonStatus = (): boolean => {
-    return !alias || !password;
+  const view: LoginView = {
+    setIsLoading,
+    updateUserInfo,
+    displayErrorMessage,
+    navigate,
+    originalUrl: props.originalUrl,
   };
+  const [presenter] = useState(props.presenterGenerator(view));
 
-  const loginOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key == "Enter" && !checkSubmitButtonStatus()) {
-      doLogin();
+  const loginOnEnter = async (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key == "Enter" && !presenter.checkSubmitButtonStatus()) {
+      presenter.doLogin();
     }
-  };
-
-  const doLogin = async () => {
-    try {
-      setIsLoading(true);
-
-      const [user, authToken] = await login(alias, password);
-
-      updateUserInfo(user, user, authToken, rememberMe);
-
-      if (!!props.originalUrl) {
-        navigate(props.originalUrl);
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      displayErrorMessage(
-        `Failed to log user in because of exception: ${error}`
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const login = async (
-    alias: string,
-    password: string
-  ): Promise<[User, AuthToken]> => {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid alias or password");
-    }
-
-    return [user, FakeData.instance.authToken];
   };
 
   const inputFieldGenerator = () => {
     return (
-      <AuthenticationFields onEnter={loginOnEnter} setAlias={setAlias} setPassword={setPassword} />
+      <AuthenticationFields onEnter={loginOnEnter} setAlias={presenter.setAlias} setPassword={presenter.setPassword} />
     );
   };
 
@@ -89,10 +56,10 @@ const Login = (props: Props) => {
       oAuthHeading="Sign in with:"
       inputFieldGenerator={inputFieldGenerator}
       switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
-      setRememberMe={setRememberMe}
-      submitButtonDisabled={checkSubmitButtonStatus}
+      setRememberMe={presenter.setRememberMe}
+      submitButtonDisabled={presenter.checkSubmitButtonStatus}
       isLoading={isLoading}
-      submit={doLogin}
+      submit={presenter.doLogin}
     />
   );
 };
