@@ -1,6 +1,3 @@
-import "./App.css";
-import { useContext } from "react";
-import { UserInfoContext } from "./components/userInfo/UserInfoProvider";
 import {
   BrowserRouter,
   Navigate,
@@ -8,17 +5,18 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { AuthToken, FakeData, Status, User } from "tweeter-shared";
+import "./App.css";
 import Login from "./components/authentication/login/Login";
 import Register from "./components/authentication/register/Register";
 import MainLayout from "./components/mainLayout/MainLayout";
-import Toaster from "./components/toaster/Toaster";
-import FeedScroller from "./components/mainLayout/FeedScroller";
-import StoryScroller from "./components/mainLayout/StoryScroller";
-import { AuthToken, User, FakeData } from "tweeter-shared";
+import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
+import Toaster from "./components/toaster/Toaster";
+import useUserInfo from "./components/userInfo/UserInfoHook";
 
 const App = () => {
-  const { currentUser, authToken } = useContext(UserInfoContext);
+  const { currentUser, authToken } = useUserInfo();
 
   const isAuthenticated = (): boolean => {
     return !!currentUser && !!authToken;
@@ -39,6 +37,27 @@ const App = () => {
 };
 
 const AuthenticatedRoutes = () => {
+
+  const loadMoreFeedItems = async (
+    authToken: AuthToken,
+    userAlias: string,
+    pageSize: number,
+    lastItem: Status | null
+  ): Promise<[Status[], boolean]> => {
+    // TODO: Replace with the result of calling server
+    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+  };
+
+  const loadMoreStoryItems = async (
+    authToken: AuthToken,
+    userAlias: string,
+    pageSize: number,
+    lastItem: Status | null
+  ): Promise<[Status[], boolean]> => {
+    // TODO: Replace with the result of calling server
+    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+  };
+
   const loadMoreFollowers = async (
     authToken: AuthToken,
     userAlias: string,
@@ -63,15 +82,33 @@ const AuthenticatedRoutes = () => {
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<Navigate to="/feed" />} />
-        <Route path="feed" element={<FeedScroller />} />
-        <Route path="story" element={<StoryScroller />} />
+        <Route
+          path="feed"
+          element={
+            <StatusItemScroller
+              key={1}
+              loadMore={loadMoreFeedItems}
+              itemDescription="feed"
+            />
+          }
+        />
+        <Route
+          path="story"
+          element={
+            <StatusItemScroller
+              key={2}
+              loadMore={loadMoreStoryItems}
+              itemDescription="story"
+            />
+          }
+        />
         <Route
           path="followees"
           element={
             <UserItemScroller
               key={1}
               loadItems={loadMoreFollowees}
-                itemDescription="followees"
+              itemDescription="followees"
             />
           }
         />
@@ -79,9 +116,9 @@ const AuthenticatedRoutes = () => {
           path="followers"
           element={
             <UserItemScroller
-              key={2} 
+              key={2}
               loadItems={loadMoreFollowers}
-                itemDescription="followers"
+              itemDescription="followers"
             />
           }
         />

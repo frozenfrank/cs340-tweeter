@@ -1,32 +1,31 @@
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { AuthToken, User } from "tweeter-shared";
+import { AuthToken, Status } from "tweeter-shared";
+import StatusItem from "../statusItem/StatusItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
-import UserItem from "../userItem/UserItem";
 
 export const PAGE_SIZE = 10;
 
 interface Props {
-  loadItems: (
+  itemDescription: string;
+  loadMore: (
     authToken: AuthToken,
     userAlias: string,
     pageSize: number,
-    lastItem: User | null
-  ) => Promise<[User[], boolean]>;
-  itemDescription: string;
+    lastItem: Status | null
+  ) => Promise<[Status[], boolean]>;
 }
 
-const UserItemScroller = (props: Props) => {
+const StatusItemScroller = (props: Props) => {
   const { displayErrorMessage } = useToastListener();
-  const [items, setItems] = useState<User[]>([]);
-  const [newItems, setNewItems] = useState<User[]>([]);
+  const [items, setItems] = useState<Status[]>([]);
+  const [newItems, setNewItems] = useState<Status[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(true);
-  const [lastItem, setLastItem] = useState<User | null>(null);
+  const [lastItem, setLastItem] = useState<Status | null>(null);
   const [changedDisplayedUser, setChangedDisplayedUser] = useState(true);
 
-  const addItems = (newItems: User[]) =>
-    setNewItems(newItems);
+  const addItems = (newItems: Status[]) => setNewItems(newItems);
 
   const { displayedUser, authToken } = useUserInfo();
 
@@ -59,7 +58,7 @@ const UserItemScroller = (props: Props) => {
 
   const loadMoreItems = async () => {
     try {
-      const [newItems, hasMore] = await props.loadItems(
+      const [newItems, hasMore] = await props.loadMore(
         authToken!,
         displayedUser!.alias,
         PAGE_SIZE,
@@ -72,7 +71,7 @@ const UserItemScroller = (props: Props) => {
       setChangedDisplayedUser(false)
     } catch (error) {
       displayErrorMessage(
-        `Failed to load ${props.itemDescription} because of exception: ${error}`
+        `Failed to ${props.itemDescription} items because of exception: ${error}`
       );
     }
   };
@@ -91,7 +90,7 @@ const UserItemScroller = (props: Props) => {
             key={index}
             className="row mb-3 mx-0 px-0 border rounded bg-white"
           >
-            <UserItem value={item} />
+            <StatusItem status={item} />
           </div>
         ))}
       </InfiniteScroll>
@@ -99,4 +98,4 @@ const UserItemScroller = (props: Props) => {
   );
 };
 
-export default UserItemScroller;
+export default StatusItemScroller;
