@@ -32,7 +32,7 @@ const useItemScroller = <T,>(presenterGenerator: (view: ItemView<T>) => ItemPres
     if(newItems.length) {
       setItems([...items, ...newItems]);
     }
-  }, [newItems])
+  }, [newItems]);
 
   const reset = async () => {
     setItems([]);
