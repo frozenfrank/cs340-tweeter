@@ -5,7 +5,6 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { AuthToken, FakeData, Status, User } from "tweeter-shared";
 import "./App.css";
 import Login from "./components/authentication/login/Login";
 import Register from "./components/authentication/register/Register";
@@ -14,6 +13,12 @@ import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import Toaster from "./components/toaster/Toaster";
 import useUserInfo from "./components/userInfo/UserInfoHook";
+import { FeedPresenter } from "./presenters/Item/FeedPresenter";
+import { FolloweePresenter } from "./presenters/Item/FolloweePresenter";
+import { FollowerPresenter } from "./presenters/Item/FollowerPresenter";
+import { StoryPresenter } from "./presenters/Item/StoryPresenter";
+import { LoginPresenter, LoginView } from "./presenters/LoginPresenter";
+import { RegisterPresenter } from "./presenters/RegisterPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -38,46 +43,6 @@ const App = () => {
 
 const AuthenticatedRoutes = () => {
 
-  const loadMoreFeedItems = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null
-  ): Promise<[Status[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  };
-
-  const loadMoreStoryItems = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null
-  ): Promise<[Status[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  };
-
-  const loadMoreFollowers = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: User | null
-  ): Promise<[User[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastItem, pageSize, userAlias);
-  };
-
-  const loadMoreFollowees = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: User | null
-  ): Promise<[User[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastItem, pageSize, userAlias);
-  };
-
   return (
     <Routes>
       <Route element={<MainLayout />}>
@@ -87,8 +52,7 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={1}
-              loadMore={loadMoreFeedItems}
-              itemDescription="feed"
+              presenterGenerator={view => new FeedPresenter(view)}
             />
           }
         />
@@ -97,8 +61,7 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={2}
-              loadMore={loadMoreStoryItems}
-              itemDescription="story"
+              presenterGenerator={view => new StoryPresenter(view)}
             />
           }
         />
@@ -107,8 +70,7 @@ const AuthenticatedRoutes = () => {
           element={
             <UserItemScroller
               key={1}
-              loadItems={loadMoreFollowees}
-              itemDescription="followees"
+              presenterGenerator={view => new FolloweePresenter(view)}
             />
           }
         />
@@ -117,8 +79,7 @@ const AuthenticatedRoutes = () => {
           element={
             <UserItemScroller
               key={2}
-              loadItems={loadMoreFollowers}
-              itemDescription="followers"
+              presenterGenerator={view => new FollowerPresenter(view)}
             />
           }
         />
@@ -132,11 +93,15 @@ const AuthenticatedRoutes = () => {
 const UnauthenticatedRoutes = () => {
   const location = useLocation();
 
+  const loginPresenterGenerator = (view: LoginView) => new LoginPresenter(view);
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Login originalUrl={location.pathname} />} />
+      <Route path="/login" element={<Login presenterGenerator={loginPresenterGenerator}/>} />
+      <Route path="/register" element={<Register presenterGenerator={view => new RegisterPresenter(view)}/>} />
+      <Route path="*" element={
+        <Login originalUrl={location.pathname} presenterGenerator={loginPresenterGenerator} />
+      } />
     </Routes>
   );
 };
