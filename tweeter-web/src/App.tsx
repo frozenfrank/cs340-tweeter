@@ -13,10 +13,10 @@ import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import Toaster from "./components/toaster/Toaster";
 import useUserInfo from "./components/userInfo/UserInfoHook";
-import { FeedPresenter } from "./presenters/Item/FeedPresenter";
-import { FolloweePresenter } from "./presenters/Item/FolloweePresenter";
-import { FollowerPresenter } from "./presenters/Item/FollowerPresenter";
-import { StoryPresenter } from "./presenters/Item/StoryPresenter";
+import { FeedPresenter } from "./presenters/Item/Status/FeedPresenter";
+import { FolloweePresenter } from "./presenters/Item/Followx/FolloweePresenter";
+import { FollowerPresenter } from "./presenters/Item/Followx/FollowerPresenter";
+import { StoryPresenter } from "./presenters/Item/Status/StoryPresenter";
 import { LoginPresenter, LoginView } from "./presenters/LoginPresenter";
 import { RegisterPresenter } from "./presenters/RegisterPresenter";
 
