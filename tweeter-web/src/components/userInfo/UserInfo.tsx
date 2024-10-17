@@ -5,11 +5,7 @@ import useToastListener from "../toaster/ToastListenerHook";
 import "./UserInfo.css";
 import useUserInfo from "./UserInfoHook";
 
-interface Props {
-  presenterGenerator: (view: UserInfoView) => UserInfoPresenter;
-}
-
-const UserInfo = (props: Props) => {
+const UserInfo = () => {
   const [isFollower, setIsFollower] = useState(false);
   const [followeeCount, setFolloweeCount] = useState(-1);
   const [followerCount, setFollowerCount] = useState(-1);
@@ -36,7 +32,7 @@ const UserInfo = (props: Props) => {
     setFolloweeCount, setFollowerCount,
     displayErrorMessage, displayInfoMessage, clearLastInfoMessage,
   };
-  const [presenter] = useState(props.presenterGenerator(view))
+  const [presenter] = useState(() => new UserInfoPresenter(view))
 
   const switchToLoggedInUser = (event: React.MouseEvent): void => {
     event.preventDefault();

@@ -46,7 +46,7 @@ const useItemScroller = <T,U>(presenterGenerator: (view: PagedItemView<T>) => Pa
     addItems: newItems => setNewItems(newItems),
     displayErrorMessage: message => displayErrorMessage(message),
   };
-  const [presenter] = useState(presenterGenerator(listener));
+  const [presenter] = useState(() => presenterGenerator(listener));
 
   const loadMoreItems = presenter.loadMoreItems.bind(presenter, authToken!, displayedUser!.alias);
 

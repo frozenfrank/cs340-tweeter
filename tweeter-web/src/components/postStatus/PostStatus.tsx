@@ -16,7 +16,7 @@ const PostStatus = () => {
     setIsLoading, setPost,
     clearLastInfoMessage, displayInfoMessage, displayErrorMessage,
   };
-  const [presenter] = useState(new PostStatusPresenter(view));
+  const [presenter] = useState(() => new PostStatusPresenter(view));
 
   const submitPost = async (event: React.MouseEvent) => {
     event.preventDefault();

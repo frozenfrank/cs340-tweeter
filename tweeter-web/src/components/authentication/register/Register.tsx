@@ -8,11 +8,7 @@ import AuthenticationFields from "../AuthenticationFields";
 import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import "./Register.css";
 
-interface Props {
-  presenterGenerator: (view: RegisterView) => RegisterPresenter;
-}
-
-const Register = (props: Props) => {
+const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [alias, setAlias] = useState("");
@@ -45,7 +41,7 @@ const Register = (props: Props) => {
     setImageFileExtension,
     setImageUrl,
   };
-  const [presenter] = useState(props.presenterGenerator(view));
+  const [presenter] = useState(() => new RegisterPresenter(view));
 
   const doRegister = () => presenter.doRegister(firstName, lastName, alias, password, imageFileExtension, rememberMe);
 

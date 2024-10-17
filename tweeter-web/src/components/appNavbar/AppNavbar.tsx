@@ -7,11 +7,7 @@ import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 import "./AppNavbar.css";
 
-interface Props {
-  presenterGenerator: (view: AppNavbarView) => AppNavbarPresenter;
-}
-
-const AppNavbar = (props: Props) => {
+const AppNavbar = () => {
   const location = useLocation();
   const { authToken, clearUserInfo } = useUserInfo();
   const { displayInfoMessage, displayErrorMessage, clearLastInfoMessage } =
@@ -21,7 +17,7 @@ const AppNavbar = (props: Props) => {
     displayInfoMessage, displayErrorMessage, clearLastInfoMessage,
     clearUserInfo,
   };
-  const [presenter] = useState(props.presenterGenerator(view));
+  const [presenter] = useState(() => new AppNavbarPresenter(view));
 
   const logOut = () => presenter.logOut(authToken!);
 

@@ -9,7 +9,6 @@ import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import "./Login.css";
 
 interface Props {
-  presenterGenerator: (view: LoginView) => LoginPresenter;
   originalUrl?: string;
 }
 
@@ -30,7 +29,7 @@ const Login = (props: Props) => {
     navigate,
     originalUrl: props.originalUrl,
   };
-  const [presenter] = useState(props.presenterGenerator(view));
+  const [presenter] = useState(() => new LoginPresenter(view));
 
   const checkSubmitButtonStatus = () => presenter.checkSubmitButtonStatus(alias, password);
   const doLogin = () => presenter.doLogin(alias, password, rememberMe);
