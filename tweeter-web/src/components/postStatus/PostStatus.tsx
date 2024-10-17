@@ -15,6 +15,7 @@ const PostStatus = () => {
   const submitPost = async (event: React.MouseEvent) => {
     event.preventDefault();
 
+    // TODO: Extract to Presenter
     try {
       setIsLoading(true);
       displayInfoMessage("Posting status...", 0);
@@ -42,7 +43,7 @@ const PostStatus = () => {
     // Pause so we can see the logging out message. Remove when connected to the server
     await new Promise((f) => setTimeout(f, 2000));
 
-    // TODO: Call the server to post the status
+    // TODO: Call the server to post the status (FakeData!)
   };
 
   const clearPost = (event: React.MouseEvent) => {
