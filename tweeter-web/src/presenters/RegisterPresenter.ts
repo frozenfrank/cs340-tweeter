@@ -24,7 +24,7 @@ export class RegisterPresenter extends Presenter<RegisterView> {
     imageFileExtension: string,
     rememberMe: boolean,
   ) {
-    try {
+    await this.doTryOperation(async () => {
       this.view.setIsLoading(true);
 
       const [user, authToken] = await this.userService.register(
@@ -38,15 +38,9 @@ export class RegisterPresenter extends Presenter<RegisterView> {
 
       this.view.updateUserInfo(user, user, authToken, rememberMe);
       this.view.navigate("/");
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to register user because of exception: ${error}`
-      );
-    } finally {
-      this.view.setIsLoading(false);
-    }
+    }, "register user");
+    this.view.setIsLoading(false);
   };
-
 
   public getFileExtension(file: File): string | undefined {
     return file.name.split(".").pop();

@@ -23,7 +23,7 @@ export abstract class ItemPresenter<T> extends Presenter<ItemView<T>> {
   ): Promise<[T[], boolean]>;
 
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
-    try {
+    return this.doTryOperation(async () => {
       const [newItems, hasMore] = await this.doLoadMoreItems(
         authToken!,
         userAlias,
@@ -34,11 +34,7 @@ export abstract class ItemPresenter<T> extends Presenter<ItemView<T>> {
       this._hasMoreItems = hasMore;
       this.lastItem = newItems[newItems.length - 1];
       this.view.addItems(newItems);
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to load ${this.itemDescription} because of exception: ${error}`
-      );
-    }
+    }, `load ${this.itemDescription}`);
   };
 
   reset() {
