@@ -7,7 +7,7 @@ export interface MessageView extends View {
   displayInfoMessage(message: string, duration: number): void;
 }
 
-export class Presenter<V extends View=View> {
+export class Presenter<V extends View> {
   private _view: V;
 
   constructor(view: V) {
@@ -37,8 +37,8 @@ export interface LoadingView extends View {
   setIsLoading(isLoading: boolean): void;
 }
 
-export class LoadingPresenter<V extends LoadingView=LoadingView> extends Presenter<V> {
-  protected override async doTryOperation<T>(...args: Parameters<Presenter["doTryOperation"]>): Promise<T | void> {
+export class LoadingPresenter<V extends LoadingView> extends Presenter<V> {
+  protected override async doTryOperation<T>(...args: Parameters<Presenter<V>["doTryOperation"]>): Promise<T | void> {
     this.view.setIsLoading(true);
     await super.doTryOperation.apply(this, args);
     this.view.setIsLoading(false);
