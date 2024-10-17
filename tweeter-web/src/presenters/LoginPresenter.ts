@@ -1,20 +1,16 @@
 import { UserInfo } from "../components/userInfo/UserInfoProvider";
 import { UserService } from "../model/service/UserService";
+import { Presenter, View } from "./Presenter";
 
-export interface LoginView {
+export interface LoginView extends View {
   originalUrl: string | undefined;
   setIsLoading(isLoading: boolean): void;
   updateUserInfo: UserInfo["updateUserInfo"];
-  displayErrorMessage(message: string): void;
   navigate(url: string): void;
 }
 
-export class LoginPresenter {
+export class LoginPresenter extends Presenter<LoginView> {
   private userService = new UserService();
-
-  constructor(
-    private view: LoginView,
-  ) { }
 
   public checkSubmitButtonStatus(alias: string, password: string): boolean {
     return !alias || !password;

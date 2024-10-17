@@ -1,11 +1,11 @@
 import { AuthToken } from "tweeter-shared";
+import { Presenter, View } from "../Presenter";
 
-export interface ItemView<T> {
+export interface ItemView<T> extends View {
   addItems(newItems: T[]): void;
-  displayErrorMessage(message: string): void;
 }
 
-export abstract class ItemPresenter<T> {
+export abstract class ItemPresenter<T> extends Presenter<ItemView<T>> {
 
   private PAGE_SIZE = 10;
   private _hasMoreItems = true;
@@ -13,11 +13,6 @@ export abstract class ItemPresenter<T> {
 
   protected abstract itemDescription: string;
 
-  public constructor(
-    private _view: ItemView<T>,
-  ) { }
-
-  get view() { return this._view; }
   get hasMoreItems() { return this._hasMoreItems; }
 
   protected abstract doLoadMoreItems(

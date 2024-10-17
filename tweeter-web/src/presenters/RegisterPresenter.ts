@@ -1,24 +1,20 @@
 import { Buffer } from "buffer";
 import { UserInfo } from "../components/userInfo/UserInfoProvider";
 import { UserService } from "../model/service/UserService";
+import { Presenter, View } from "./Presenter";
 
-export interface RegisterView {
+export interface RegisterView extends View {
   updateUserInfo: UserInfo["updateUserInfo"];
   setIsLoading(isLoading: boolean): void;
   setImageUrl(imageUrl: string): void;
-  displayErrorMessage(message: string): void;
   setImageFileExtension(ext: string): void;
   navigate(url: string): void;
 }
 
-export class RegisterPresenter {
+export class RegisterPresenter extends Presenter<RegisterView> {
   private userService = new UserService();
 
   private imageBytes: Uint8Array = new Uint8Array();
-
-  constructor(
-    private view: RegisterView,
-  ) { }
 
   public async doRegister(
     firstName: string,
