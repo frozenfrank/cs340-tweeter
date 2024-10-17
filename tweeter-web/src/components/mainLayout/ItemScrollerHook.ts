@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { ItemPresenter, ItemView } from "../../presenters/Item/ItemPresenter";
+import { PagedItemPresenter, PagedItemView } from "../../presenters/PagedItem/PagedItemPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 
 export interface ItemScrollerProps<T> {
-  presenterGenerator: (view: ItemView<T>) => ItemPresenter<T>;
+  presenterGenerator: (view: PagedItemView<T>) => PagedItemPresenter<T>;
 }
 
 interface ItemScroller<T> {
@@ -13,7 +13,7 @@ interface ItemScroller<T> {
   loadMoreItems(): Promise<void>;
 }
 
-const useItemScroller = <T,>(presenterGenerator: (view: ItemView<T>) => ItemPresenter<T>): ItemScroller<T> => {
+const useItemScroller = <T,>(presenterGenerator: (view: PagedItemView<T>) => PagedItemPresenter<T>): ItemScroller<T> => {
 
   const { displayErrorMessage } = useToastListener();
   const [items, setItems] = useState<T[]>([]);
@@ -42,7 +42,7 @@ const useItemScroller = <T,>(presenterGenerator: (view: ItemView<T>) => ItemPres
     presenter.reset();
   }
 
-  const listener: ItemView<T> = {
+  const listener: PagedItemView<T> = {
     addItems: newItems => setNewItems(newItems),
     displayErrorMessage: message => displayErrorMessage(message),
   };
