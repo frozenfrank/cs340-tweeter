@@ -11,7 +11,7 @@ export interface UserInfoView extends LoadingView, MessageView {
 export class UserInfoPresenter extends LoadingPresenter<UserInfoView, FollowService> {
   override buildService() { return new FollowService(); }
 
-  public async setIsFollowerStatus(
+  public setIsFollowerStatus(
     authToken: AuthToken,
     currentUser: User,
     displayedUser: User
@@ -27,23 +27,25 @@ export class UserInfoPresenter extends LoadingPresenter<UserInfoView, FollowServ
     }, "determine follower status");
   };
 
-  public async setNumbFollowees(
-    authToken: AuthToken,
-    displayedUser: User
-  ) {
-    return this.doTryOperation(async () => {
-      this.view.setFolloweeCount(await this.service.getFolloweeCount(authToken, displayedUser));
-    }, "get followees count");
-  };
+  public setNumbFollowees = this.setNumFollowx.bind(
+    this, this.view.setFolloweeCount, this.service.getFolloweeCount, "get followees count");
 
-  public async setNumbFollowers(
+  public setNumbFollowers = this.setNumFollowx.bind(
+    this, this.view.setFollowerCount, this.service.getFollowerCount, "get followers count");
+
+  private setNumFollowx(
+    setX: (count: number) => void,
+    getRemoteX: (auth: AuthToken, user: User) => Promise<number>,
+    actionName: string,
+
+    // These intentionally placed last to be left unbound after config
     authToken: AuthToken,
-    displayedUser: User
+    displayedUser: User,
   ) {
-    return this.doTryOperation(async () => {
-      this.view.setFollowerCount(await this.service.getFollowerCount(authToken, displayedUser));
-    }, "get followers count");
-  };
+    return this.doTryOperation<void>(
+      async () => setX(await getRemoteX(authToken, displayedUser)),
+      actionName);
+  }
 
 
   public async followUser(authToken: AuthToken, displayedUser: User) {
