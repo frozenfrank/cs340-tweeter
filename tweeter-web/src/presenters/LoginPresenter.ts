@@ -1,15 +1,14 @@
 import { UserInfo } from "../components/userInfo/UserInfoProvider";
 import { UserService } from "../model/service/UserService";
-import { Presenter, View } from "./Presenter";
+import { LoadingPresenter, LoadingView, View } from "./Presenter";
 
-export interface LoginView extends View {
+export interface LoginView extends LoadingView {
   originalUrl: string | undefined;
-  setIsLoading(isLoading: boolean): void;
   updateUserInfo: UserInfo["updateUserInfo"];
   navigate(url: string): void;
 }
 
-export class LoginPresenter extends Presenter<LoginView> {
+export class LoginPresenter extends LoadingPresenter<LoginView> {
   private userService = new UserService();
 
   public checkSubmitButtonStatus(alias: string, password: string): boolean {
@@ -18,8 +17,6 @@ export class LoginPresenter extends Presenter<LoginView> {
 
   public async doLogin(alias: string, password: string, rememberMe: boolean) {
     await this.doTryOperation(async () => {
-      this.view.setIsLoading(true);
-
       const [user, authToken] = await this.userService.login(alias, password);
 
       this.view.updateUserInfo(user, user, authToken, rememberMe);
@@ -30,7 +27,6 @@ export class LoginPresenter extends Presenter<LoginView> {
         this.view.navigate("/");
       }
     }, "log user in");
-    this.view.setIsLoading(false);
   };
 
 }

@@ -1,15 +1,14 @@
 import { AuthToken, User } from "tweeter-shared";
 import { FollowService } from "../model/service/FollowService";
-import { MessageView, Presenter } from "./Presenter";
+import { LoadingPresenter, LoadingView, MessageView } from "./Presenter";
 
-export interface UserInfoView extends MessageView {
-  setIsLoading(isLoading: boolean): void;
+export interface UserInfoView extends LoadingView, MessageView {
   setIsFollower(isFollower: boolean): void;
   setFollowerCount(count: number): void;
   setFolloweeCount(count: number): void;
 }
 
-export class UserInfoPresenter extends Presenter<UserInfoView> {
+export class UserInfoPresenter extends LoadingPresenter<UserInfoView> {
   private followService = new FollowService();
 
   public async setIsFollowerStatus(
@@ -49,7 +48,6 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
 
   public async followUser(authToken: AuthToken, displayedUser: User) {
     await this.doTryOperation(async () => {
-      this.view.setIsLoading(true);
       this.view.displayInfoMessage(`Following ${displayedUser!.name}...`, 0);
 
       const [followerCount, followeeCount] = await this.followService.follow(
@@ -63,12 +61,10 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
     }, "follow user");
 
     this.view.clearLastInfoMessage();
-    this.view.setIsLoading(false);
   }
 
   public async unfollowUser(authToken: AuthToken, displayedUser: User) {
     await this.doTryOperation(async () => {
-      this.view.setIsLoading(true);
       this.view.displayInfoMessage(`Unfollowing ${displayedUser!.name}...`, 0);
 
       const [followerCount, followeeCount] = await this.followService.unfollow(
@@ -82,6 +78,5 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
     }, "unfollow user");
 
     this.view.clearLastInfoMessage();
-    this.view.setIsLoading(false);
   }
 }

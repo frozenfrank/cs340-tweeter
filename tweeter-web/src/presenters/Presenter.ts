@@ -31,3 +31,16 @@ export class Presenter<V extends View=View> {
     }
   }
 }
+
+
+export interface LoadingView extends View {
+  setIsLoading(isLoading: boolean): void;
+}
+
+export class LoadingPresenter<V extends LoadingView=LoadingView> extends Presenter<V> {
+  protected override async doTryOperation<T>(...args: Parameters<Presenter["doTryOperation"]>): Promise<T | void> {
+    this.view.setIsLoading(true);
+    await super.doTryOperation.apply(this, args);
+    this.view.setIsLoading(false);
+  }
+}
