@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PostStatusPresenter, PostStatusView } from "../../presenters/PostStatusPresenter";
+import { PostStatusPresenter, PostStatusView } from "../../presenters/others/PostStatusPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 import "./PostStatus.css";

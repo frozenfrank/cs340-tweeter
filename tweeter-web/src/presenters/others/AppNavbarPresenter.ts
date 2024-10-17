@@ -1,6 +1,6 @@
 import { AuthToken } from "tweeter-shared";
-import { UserService } from "../model/service/UserService";
-import { MessageView, ServicePresenter } from "./Presenter";
+import { UserService } from "../../model/service/UserService";
+import { MessageView, ServicePresenter } from "../Presenter";
 
 export interface AppNavbarView extends MessageView {
   clearUserInfo(): void;

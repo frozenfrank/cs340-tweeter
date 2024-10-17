@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserInfoPresenter, UserInfoView } from "../../presenters/UserInfoPresenter";
+import { UserInfoPresenter, UserInfoView } from "../../presenters/others/UserInfoPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import "./UserInfo.css";
 import useUserInfo from "./UserInfoHook";

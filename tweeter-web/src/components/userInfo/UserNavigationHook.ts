@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserNavigationPresenter, UserNavigationView } from "../../presenters/UserNavigationPresenter";
+import { UserNavigationPresenter, UserNavigationView } from "../../presenters/others/UserNavigationPresenter";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "./UserInfoHook";
 
