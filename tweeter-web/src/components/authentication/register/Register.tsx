@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { RegisterPresenter, RegisterView } from "../../../presenters/RegisterPresenter";
+import { RegisterPresenter, RegisterView } from "../../../presenters/Authentication/RegisterPresenter";
 import useToastListener from "../../toaster/ToastListenerHook";
 import useUserInfo from "../../userInfo/UserInfoHook";
 import AuthenticationFields from "../AuthenticationFields";

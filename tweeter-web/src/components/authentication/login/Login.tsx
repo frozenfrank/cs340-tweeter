@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginPresenter, LoginView } from "../../../presenters/LoginPresenter";
+import { LoginPresenter, LoginView } from "../../../presenters/Authentication/LoginPresenter";
 import useToastListener from "../../toaster/ToastListenerHook";
 import useUserInfo from "../../userInfo/UserInfoHook";
 import AuthenticationFields from "../AuthenticationFields";

@@ -1,21 +1,15 @@
 import { Buffer } from "buffer";
-import { UserInfo } from "../components/userInfo/UserInfoProvider";
-import { UserService } from "../model/service/UserService";
-import { LoadingPresenter, LoadingView } from "./Presenter";
+import { AuthenticationPresenter, AuthenticationView } from "./AuthenticationPresenter";
 
-export interface RegisterView extends LoadingView {
-  updateUserInfo: UserInfo["updateUserInfo"];
+export interface RegisterView extends AuthenticationView {
   setImageUrl(imageUrl: string): void;
   setImageFileExtension(ext: string): void;
-  navigate(url: string): void;
 }
 
-export class RegisterPresenter extends LoadingPresenter<RegisterView> {
-  private userService = new UserService();
-
+export class RegisterPresenter extends AuthenticationPresenter<RegisterView> {
   private imageBytes: Uint8Array = new Uint8Array();
 
-  public async doRegister(
+  public doRegister(
     firstName: string,
     lastName: string,
     alias: string,
@@ -23,20 +17,18 @@ export class RegisterPresenter extends LoadingPresenter<RegisterView> {
     imageFileExtension: string,
     rememberMe: boolean,
   ) {
-    await this.doTryOperation(async () => {
-      const [user, authToken] = await this.userService.register(
+    return this.doAuthentication(
+      () => this.userService.register(
         firstName,
         lastName,
         alias,
         password,
         this.imageBytes,
         imageFileExtension
-      );
-
-      this.view.updateUserInfo(user, user, authToken, rememberMe);
-      this.view.navigate("/");
-    }, "register user");
-  };
+      ),
+      rememberMe, "/", "register user",
+    );
+  }
 
   public getFileExtension(file: File): string | undefined {
     return file.name.split(".").pop();

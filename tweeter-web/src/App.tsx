@@ -17,8 +17,8 @@ import { FeedPresenter } from "./presenters/PagedItem/Status/FeedPresenter";
 import { FolloweePresenter } from "./presenters/PagedItem/Followx/FolloweePresenter";
 import { FollowerPresenter } from "./presenters/PagedItem/Followx/FollowerPresenter";
 import { StoryPresenter } from "./presenters/PagedItem/Status/StoryPresenter";
-import { LoginPresenter, LoginView } from "./presenters/LoginPresenter";
-import { RegisterPresenter } from "./presenters/RegisterPresenter";
+import { LoginPresenter, LoginView } from "./presenters/Authentication/LoginPresenter";
+import { RegisterPresenter } from "./presenters/Authentication/RegisterPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
