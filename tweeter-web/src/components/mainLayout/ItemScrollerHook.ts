@@ -4,7 +4,7 @@ import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 
 export interface ItemScrollerProps<T> {
-  presenterGenerator: (view: PagedItemView<T>) => PagedItemPresenter<T>;
+  presenterGenerator: (view: PagedItemView<T>) => PagedItemPresenter<T, any>;
 }
 
 interface ItemScroller<T> {
@@ -13,7 +13,7 @@ interface ItemScroller<T> {
   loadMoreItems(): Promise<void>;
 }
 
-const useItemScroller = <T,>(presenterGenerator: (view: PagedItemView<T>) => PagedItemPresenter<T>): ItemScroller<T> => {
+const useItemScroller = <T,U>(presenterGenerator: (view: PagedItemView<T>) => PagedItemPresenter<T, U>): ItemScroller<T> => {
 
   const { displayErrorMessage } = useToastListener();
   const [items, setItems] = useState<T[]>([]);

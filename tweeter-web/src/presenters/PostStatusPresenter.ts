@@ -6,8 +6,8 @@ export interface PostStatusView extends LoadingView, MessageView {
   setPost(postContent: string): void;
 }
 
-export class PostStatusPresenter extends LoadingPresenter<PostStatusView> {
-  protected statusService = new StatusService();
+export class PostStatusPresenter extends LoadingPresenter<PostStatusView, StatusService> {
+  override buildService() { return new StatusService(); }
 
   public async doPostStatus(authToken: AuthToken, currentUser: User, postContent: string) {
     await this.doTryOperation(async () => {
@@ -15,7 +15,7 @@ export class PostStatusPresenter extends LoadingPresenter<PostStatusView> {
 
       const status = new Status(postContent, currentUser, Date.now());
 
-      await this.statusService.postStatus(authToken!, status);
+      await this.service.postStatus(authToken!, status);
 
       this.view.setPost("");
       this.view.displayInfoMessage("Status posted!", 2000);

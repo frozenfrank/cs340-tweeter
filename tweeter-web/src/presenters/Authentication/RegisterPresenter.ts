@@ -18,7 +18,7 @@ export class RegisterPresenter extends AuthenticationPresenter<RegisterView> {
     rememberMe: boolean,
   ) {
     return this.doAuthentication(
-      () => this.userService.register(
+      () => this.service.register(
         firstName,
         lastName,
         alias,

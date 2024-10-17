@@ -11,7 +11,7 @@ export class LoginPresenter extends AuthenticationPresenter<LoginView> {
 
   public async doLogin(alias: string, password: string, rememberMe: boolean) {
     return this.doAuthentication(
-      () => this.userService.login(alias, password),
+      () => this.service.login(alias, password),
       rememberMe,
       !!this.view.originalUrl ? this.view.originalUrl : "/",
       "log user in"

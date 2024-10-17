@@ -1,3 +1,5 @@
+/// ### Standard Presenter ###
+
 export interface View {
   displayErrorMessage(message: string): void;
 }
@@ -32,12 +34,27 @@ export class Presenter<V extends View> {
   }
 }
 
+/// ### Service Presenter ###
+
+export abstract class ServicePresenter<V extends View, U> extends Presenter<V> {
+  private _service = this.buildService();
+
+  abstract buildService(): U;
+
+  get service() { return this._service; }
+}
+
+/// ### Loading Presenter ###
 
 export interface LoadingView extends View {
   setIsLoading(isLoading: boolean): void;
 }
 
-export class LoadingPresenter<V extends LoadingView> extends Presenter<V> {
+/**
+ * Since we are not allowed to perform multiple-inheritance, we will assume
+ * that every item loading data will be using a service to load it.
+ */
+export abstract class LoadingPresenter<V extends LoadingView, U> extends ServicePresenter<V, U> {
   protected override async doTryOperation<T>(...args: Parameters<Presenter<V>["doTryOperation"]>): Promise<T | void> {
     this.view.setIsLoading(true);
     await super.doTryOperation.apply(this, args);

@@ -1,11 +1,11 @@
 import { AuthToken } from "tweeter-shared";
-import { Presenter, View } from "../Presenter";
+import { ServicePresenter, View } from "../Presenter";
 
 export interface PagedItemView<T> extends View {
   addItems(newItems: T[]): void;
 }
 
-export abstract class PagedItemPresenter<T> extends Presenter<PagedItemView<T>> {
+export abstract class PagedItemPresenter<T, U> extends ServicePresenter<PagedItemView<T>, U> {
 
   private PAGE_SIZE = 10;
   private _hasMoreItems = true;

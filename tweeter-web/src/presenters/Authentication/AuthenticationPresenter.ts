@@ -8,8 +8,8 @@ export interface AuthenticationView extends LoadingView {
   navigate(url: string): void;
 }
 
-export class AuthenticationPresenter<V extends AuthenticationView> extends LoadingPresenter<V> {
-  protected userService = new UserService();
+export class AuthenticationPresenter<V extends AuthenticationView> extends LoadingPresenter<V, UserService> {
+  override buildService() { return new UserService(); }
 
   protected doAuthentication(
     doAuthenticate: () => Promise<[User, AuthToken]>,
