@@ -30,10 +30,10 @@ export class UserInfoPresenter extends LoadingPresenter<UserInfoView, FollowServ
   /// ### Set Num FollowX ###
 
   public setNumbFollowees = this.setNumFollowx.bind(
-    this, this.view.setFolloweeCount, this.service.getFolloweeCount, "get followees count");
+    this, x => this.view.setFolloweeCount(x), this.service.getFolloweeCount.bind(this.service), "get followees count");
 
   public setNumbFollowers = this.setNumFollowx.bind(
-    this, this.view.setFollowerCount, this.service.getFollowerCount, "get followers count");
+    this, x => this.view.setFollowerCount(x), this.service.getFollowerCount.bind(this.service), "get followers count");
 
   private setNumFollowx(
     setX: (count: number) => void,
@@ -51,10 +51,10 @@ export class UserInfoPresenter extends LoadingPresenter<UserInfoView, FollowServ
   /// ### Change Follow Status ###
 
   public followUser = this.changeFollowStatus.bind(
-    this, this.service.follow, "Following", "follow user", true);
+    this, this.service.follow.bind(this.service), "Following", "follow user", true);
 
   public unfollowUser = this.changeFollowStatus.bind(
-    this, this.service.unfollow, "Unfollowing", "unfollow user", false);
+    this, this.service.unfollow.bind(this.service), "Unfollowing", "unfollow user", false);
 
   private async changeFollowStatus(
     makeChange: (auth: AuthToken, user: User) => Promise<[number, number]>,
