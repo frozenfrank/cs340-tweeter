@@ -1,5 +1,6 @@
 import { instance, mock, spy, when } from "ts-mockito";
 import { Presenter, ServicePresenter, View } from "../src/presenters/Presenter";
+import { AuthToken, User } from "tweeter-shared";
 
 export function mockPresenter<V extends View, P extends Presenter<V>>(presenterGenerator: (view: V) => P) {
 
@@ -27,3 +28,6 @@ export function mockServicePresenter<V extends View, U, P extends ServicePresent
   // Return results
   return {mockPresenterView, mockStatusService, presenterInstance};
 }
+
+export const makeAuthToken = () => new AuthToken("_fake_auth_token", Date.now());
+export const makeUser = () => new User("Donald", "Duck", "@donald_duck", "s3://donald_duck.jpg");

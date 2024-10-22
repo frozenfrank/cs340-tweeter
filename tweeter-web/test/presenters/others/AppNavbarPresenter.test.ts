@@ -1,15 +1,14 @@
 import { anything, capture, verify, when } from "ts-mockito";
-import { AuthToken } from "tweeter-shared";
 import { UserService } from "../../../src/model/service/UserService";
 import { AppNavbarPresenter, AppNavbarView } from "../../../src/presenters/others/AppNavbarPresenter";
-import { mockServicePresenter } from "../../utils";
+import { makeAuthToken, mockServicePresenter } from "../../utils";
 
 describe('AppNavbarPresenter', () => {
   let mockAppNavbarPresenterView: AppNavbarView;
   let appNavbarPresenter: AppNavbarPresenter;
   let mockUserService: UserService;
 
-  const authToken = new AuthToken("_fake_auth_token", Date.now());
+  const authToken = makeAuthToken();
 
   beforeEach(() => {
     ({

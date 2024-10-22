@@ -1,16 +1,15 @@
 import { anyNumber, anyString, anything, capture, verify, when } from "ts-mockito";
-import { AuthToken, User } from "tweeter-shared";
 import { StatusService } from "../../../src/model/service/StatusService";
 import { PostStatusPresenter, PostStatusView } from "../../../src/presenters/others/PostStatusPresenter";
-import { mockServicePresenter } from "../../utils";
+import { makeAuthToken, makeUser, mockServicePresenter } from "../../utils";
 
 describe('PostStatusPresenter', () => {
   let mockPostStatusPresenterView: PostStatusView;
   let postStatusPresenter: PostStatusPresenter;
   let mockStatusService: StatusService;
 
-  const authToken = new AuthToken("_fake_auth_token", Date.now());
-  const currentUser = new User("Donald", "Duck", "@donald_duck", "s3://donald_duck.jpg");
+  const authToken = makeAuthToken();
+  const currentUser = makeUser();
   const postContent = "This is my fun post content 🦆";
 
   const STATUS_POSTING_MESSAGE = "Posting status...";
