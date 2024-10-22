@@ -33,7 +33,7 @@ const PostStatus = (props: Props) => {
   };
 
   const checkButtonStatus: () => boolean = () => {
-    return !post.trim() || !authToken || !currentUser;
+    return !post.trim();
   };
 
   return (
