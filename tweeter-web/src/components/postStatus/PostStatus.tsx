@@ -44,6 +44,7 @@ const PostStatus = (props: Props) => {
             className="form-control"
             id="postStatusTextArea"
             rows={10}
+            aria-label="post-content"
             placeholder="What's on your mind?"
             value={post}
             onChange={(event) => {
