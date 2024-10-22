@@ -1,4 +1,4 @@
-import { anyString, anything, capture, instance, mock, spy, verify, when } from "ts-mockito";
+import { anything, capture, instance, mock, spy, verify, when } from "ts-mockito";
 import { AuthToken } from "tweeter-shared";
 import { UserService } from "../../../src/model/service/UserService";
 import { AppNavbarPresenter, AppNavbarView } from "../../../src/presenters/others/AppNavbarPresenter";
