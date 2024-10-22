@@ -39,4 +39,12 @@ describe('AppNavbarPresenter', () => {
     let [capturedAuthToken] = capture(mockUserService.logout).last();
     expect(capturedAuthToken).toEqual(authToken);
   });
+
+  it('tells the view to clear the last info message and clear the user info', async () => {
+    await appNavbarPresenter.logOut(authToken);
+
+    verify(mockAppNavbarPresenterView.clearLastInfoMessage()).once();
+    verify(mockAppNavbarPresenterView.clearUserInfo()).once();
+  });
+
 });
