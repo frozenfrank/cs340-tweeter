@@ -1,4 +1,5 @@
 import { AuthToken, User } from "tweeter-shared";
+import { instance, mock, verify } from "ts-mockito";
 import PostStatus from "../../../src/components/postStatus/PostStatus";
 import useUserInfo from "../../../src/components/userInfo/UserInfoHook";
 import { PostStatusPresenter } from "../../../src/presenters/others/PostStatusPresenter";
@@ -57,7 +58,18 @@ describe('PostStatus Component', () => {
   });
 
   it("calls the presenter's postStatus method with the correct parameters when PostStatus button is pressed", async () => {
+    const mockPresenter = mock<PostStatusPresenter>();
+    const mockPresenterInstance = instance(mockPresenter);
 
+    const postContent = "Fun post content🚀";
+
+    const {textField, submitButton, user} =
+      renderPostStatusAndGetElements(mockPresenterInstance);
+
+    await user.type(textField, postContent);
+    await user.click(submitButton);
+
+    verify(mockPresenter.doPostStatus(authToken, currentUser, postContent)).once();
   });
 });
 
