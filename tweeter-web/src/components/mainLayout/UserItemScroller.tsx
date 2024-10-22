@@ -4,12 +4,10 @@ import ItemScroller from "./ItemScroller";
 import { ItemScrollerProps } from "./ItemScrollerHook";
 
 const UserItemScroller = (props: ItemScrollerProps<User>) => {
-  return (
-    <ItemScroller
-      presenterGenerator={props.presenterGenerator}
-      makeItem={item => <UserItem value={item}></UserItem>}>
-    </ItemScroller>
-  );
+  return ItemScroller({
+    ...props,
+    makeItem: (item) => <UserItem value={item}></UserItem>,
+  })
 };
 
 export default UserItemScroller;

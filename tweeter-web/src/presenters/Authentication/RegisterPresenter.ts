@@ -1,26 +1,15 @@
 import { Buffer } from "buffer";
-import { UserInfo } from "../components/userInfo/UserInfoProvider";
-import { UserService } from "../model/service/UserService";
+import { AuthenticationPresenter, AuthenticationView } from "./AuthenticationPresenter";
 
-export interface RegisterView {
-  updateUserInfo: UserInfo["updateUserInfo"];
-  setIsLoading(isLoading: boolean): void;
+export interface RegisterView extends AuthenticationView {
   setImageUrl(imageUrl: string): void;
-  displayErrorMessage(message: string): void;
   setImageFileExtension(ext: string): void;
-  navigate(url: string): void;
 }
 
-export class RegisterPresenter {
-  private userService = new UserService();
-
+export class RegisterPresenter extends AuthenticationPresenter<RegisterView> {
   private imageBytes: Uint8Array = new Uint8Array();
 
-  constructor(
-    private view: RegisterView,
-  ) { }
-
-  public async doRegister(
+  public doRegister(
     firstName: string,
     lastName: string,
     alias: string,
@@ -28,29 +17,18 @@ export class RegisterPresenter {
     imageFileExtension: string,
     rememberMe: boolean,
   ) {
-    try {
-      this.view.setIsLoading(true);
-
-      const [user, authToken] = await this.userService.register(
+    return this.doAuthentication(
+      () => this.service.register(
         firstName,
         lastName,
         alias,
         password,
         this.imageBytes,
         imageFileExtension
-      );
-
-      this.view.updateUserInfo(user, user, authToken, rememberMe);
-      this.view.navigate("/");
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to register user because of exception: ${error}`
-      );
-    } finally {
-      this.view.setIsLoading(false);
-    }
-  };
-
+      ),
+      rememberMe, "/", "register user",
+    );
+  }
 
   public getFileExtension(file: File): string | undefined {
     return file.name.split(".").pop();

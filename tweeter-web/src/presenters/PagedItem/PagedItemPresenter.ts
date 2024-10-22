@@ -1,11 +1,11 @@
 import { AuthToken } from "tweeter-shared";
+import { ServicePresenter, View } from "../Presenter";
 
-export interface ItemView<T> {
+export interface PagedItemView<T> extends View {
   addItems(newItems: T[]): void;
-  displayErrorMessage(message: string): void;
 }
 
-export abstract class ItemPresenter<T> {
+export abstract class PagedItemPresenter<T, U> extends ServicePresenter<PagedItemView<T>, U> {
 
   private PAGE_SIZE = 10;
   private _hasMoreItems = true;
@@ -13,11 +13,6 @@ export abstract class ItemPresenter<T> {
 
   protected abstract itemDescription: string;
 
-  public constructor(
-    private _view: ItemView<T>,
-  ) { }
-
-  get view() { return this._view; }
   get hasMoreItems() { return this._hasMoreItems; }
 
   protected abstract doLoadMoreItems(
@@ -28,7 +23,7 @@ export abstract class ItemPresenter<T> {
   ): Promise<[T[], boolean]>;
 
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
-    try {
+    return this.doTryOperation(async () => {
       const [newItems, hasMore] = await this.doLoadMoreItems(
         authToken!,
         userAlias,
@@ -39,11 +34,7 @@ export abstract class ItemPresenter<T> {
       this._hasMoreItems = hasMore;
       this.lastItem = newItems[newItems.length - 1];
       this.view.addItems(newItems);
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to load ${this.itemDescription} because of exception: ${error}`
-      );
-    }
+    }, `load ${this.itemDescription}`);
   };
 
   reset() {
