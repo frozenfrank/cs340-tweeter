@@ -1,7 +1,8 @@
-import { anything, capture, instance, mock, spy, verify, when } from "ts-mockito";
+import { anything, capture, verify, when } from "ts-mockito";
 import { AuthToken } from "tweeter-shared";
 import { UserService } from "../../../src/model/service/UserService";
 import { AppNavbarPresenter, AppNavbarView } from "../../../src/presenters/others/AppNavbarPresenter";
+import { mockServicePresenter } from "../../utils";
 
 describe('AppNavbarPresenter', () => {
   let mockAppNavbarPresenterView: AppNavbarView;
@@ -11,20 +12,11 @@ describe('AppNavbarPresenter', () => {
   const authToken = new AuthToken("_fake_auth_token", Date.now());
 
   beforeEach(() => {
-    // Prepare mock presenter view
-    mockAppNavbarPresenterView = mock<AppNavbarView>();
-    const mockAppNavbarPresenterViewInstance = instance(mockAppNavbarPresenterView);
-
-    // Prepare mock UserService
-    mockUserService = mock<UserService>();
-    const mockUserServiceInstance = instance(mockUserService);
-
-    // Prepare Presenter spy to use our mock service
-    const appNavbarPresenterSpy = spy(new AppNavbarPresenter(mockAppNavbarPresenterViewInstance));
-    when(appNavbarPresenterSpy.service).thenReturn(mockUserServiceInstance);
-
-    // Export presenter and service
-    appNavbarPresenter = instance(appNavbarPresenterSpy);
+    ({
+      mockPresenterView: mockAppNavbarPresenterView,
+      mockStatusService: mockUserService,
+      presenterInstance: appNavbarPresenter,
+    } = mockServicePresenter<AppNavbarView, UserService, AppNavbarPresenter>(v => new AppNavbarPresenter(v)));
   });
 
   it('tells the view to display a logging out message', async () => {

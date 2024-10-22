@@ -1,0 +1,29 @@
+import { instance, mock, spy, when } from "ts-mockito";
+import { Presenter, ServicePresenter, View } from "../src/presenters/Presenter";
+
+export function mockPresenter<V extends View, P extends Presenter<V>>(presenterGenerator: (view: V) => P) {
+
+  // Prepare mock view
+  const mockPresenterView = mock<V>();
+  const mockStatusPresenterInstance = instance(mockPresenterView) as V;
+
+  // Prepare presenter spy
+  const presenterSpy = spy(presenterGenerator(mockStatusPresenterInstance));
+  const presenterInstance = instance(presenterSpy);
+
+  // Return results
+  return {mockPresenterView, presenterInstance, presenterSpy};
+}
+
+export function mockServicePresenter<V extends View, U, P extends ServicePresenter<V, U>>(presenterGenerator: (view: V) => P) {
+
+  const {mockPresenterView, presenterInstance, presenterSpy} = mockPresenter(presenterGenerator);
+
+  // Prepare mock service
+  const mockStatusService = mock<U>();
+  const mockServiceInstance = instance(mockStatusService);
+  when(presenterSpy.service).thenReturn(mockServiceInstance);
+
+  // Return results
+  return {mockPresenterView, mockStatusService, presenterInstance};
+}

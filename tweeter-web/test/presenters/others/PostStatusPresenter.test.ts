@@ -1,7 +1,8 @@
-import { instance, mock, spy, verify, when } from "ts-mockito";
+import { verify } from "ts-mockito";
 import { AuthToken, User } from "tweeter-shared";
 import { StatusService } from "../../../src/model/service/StatusService";
 import { PostStatusPresenter, PostStatusView } from "../../../src/presenters/others/PostStatusPresenter";
+import { mockServicePresenter } from "../../utils";
 
 describe('PostStatusPresenter', () => {
   let mockPostStatusPresenterView: PostStatusView;
@@ -13,20 +14,11 @@ describe('PostStatusPresenter', () => {
   const postContent = "This is my fun post content 🦆";
 
   beforeEach(() => {
-    // Prepare mock view
-    mockPostStatusPresenterView = mock<PostStatusView>();
-    const mockStatusPresenterInstance = instance(mockPostStatusPresenterView);
-
-    // Prepare mock service
-    mockStatusService = mock<StatusService>();
-    const mockStatusServiceInstance = instance(mockStatusService);
-
-    // Prepare presenter spy
-    const postStatusPresenterSpy = spy(new PostStatusPresenter(mockStatusPresenterInstance));
-    when(postStatusPresenterSpy.service).thenReturn(mockStatusServiceInstance);
-
-    // Export presenter
-    postStatusPresenter = instance(postStatusPresenterSpy);
+    ({
+      mockPresenterView: mockPostStatusPresenterView,
+      mockStatusService: mockStatusService,
+      presenterInstance: postStatusPresenter,
+    } = mockServicePresenter<PostStatusView, StatusService, PostStatusPresenter>(v => new PostStatusPresenter(v)));
   });
 
   it('tells the view to display a posting status message', async () => {
