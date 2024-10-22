@@ -24,6 +24,7 @@
   },
   "scripts": {
     "start": "vite",
+    "test": "jest",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "reload": "npm run build && npm run serve"
@@ -45,6 +46,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js"
+    },
+    "testMatch": [
+      "<rootDir>/test/**/*.test.tsx",
+      "<rootDir>/test/**/*.test.ts"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest",
+      "\\.js$": "babel-jest"
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
