@@ -1,4 +1,4 @@
-import { anyNumber, capture, verify } from "ts-mockito";
+import { anyNumber, anyString, anything, capture, verify, when } from "ts-mockito";
 import { AuthToken, User } from "tweeter-shared";
 import { StatusService } from "../../../src/model/service/StatusService";
 import { PostStatusPresenter, PostStatusView } from "../../../src/presenters/others/PostStatusPresenter";
@@ -13,6 +13,9 @@ describe('PostStatusPresenter', () => {
   const currentUser = new User("Donald", "Duck", "@donald_duck", "s3://donald_duck.jpg");
   const postContent = "This is my fun post content 🦆";
 
+  const STATUS_POSTING_MESSAGE = "Posting status...";
+  const STATUS_POSTED_MESSAGE = "Status posted!";
+
   beforeEach(() => {
     ({
       mockPresenterView: mockPostStatusPresenterView,
@@ -23,7 +26,7 @@ describe('PostStatusPresenter', () => {
 
   it('tells the view to display a posting status message', async () => {
     await postStatusPresenter.doPostStatus(authToken, currentUser, postContent);
-    verify(mockPostStatusPresenterView.displayInfoMessage("Posting status...", 0)).once() ;
+    verify(mockPostStatusPresenterView.displayInfoMessage(STATUS_POSTING_MESSAGE, 0)).once() ;
   });
 
   it('calls postStatus on the post status service with the correct status string and auth token', async () => {
@@ -40,10 +43,19 @@ describe('PostStatusPresenter', () => {
 
     verify(mockPostStatusPresenterView.clearLastInfoMessage()).once();
     verify(mockPostStatusPresenterView.setPost("")).once();
-    verify(mockPostStatusPresenterView.displayInfoMessage("Status posted!", anyNumber())).once();
+    verify(mockPostStatusPresenterView.displayInfoMessage(STATUS_POSTED_MESSAGE, anyNumber())).once();
+    verify(mockPostStatusPresenterView.displayErrorMessage(anyString())).never();
   });
 
   it('On failure, tells the view to display an error message and clear the last info message and does not tell it to clear the post or display a status posted message', async () => {
+    const error = new Error("An error occurred");
+    when(mockStatusService.postStatus(anything(), anything())).thenThrow(error);
 
+    await postStatusPresenter.doPostStatus(authToken, currentUser, postContent);
+
+    verify(mockPostStatusPresenterView.displayErrorMessage(`Failed to post the status because of exception: An error occurred`)).once();
+    verify(mockPostStatusPresenterView.clearLastInfoMessage()).once();
+    verify(mockPostStatusPresenterView.setPost("")).never();
+    verify(mockPostStatusPresenterView.displayInfoMessage(STATUS_POSTED_MESSAGE, anyNumber())).never();
   });
 });
