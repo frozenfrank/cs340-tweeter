@@ -9,12 +9,31 @@ describe('PostStatus Component', () => {
     expect(clearButton).toBeDisabled();
   });
 
-  it('enables both buttons when the text field has text', async () => {
+  async function authorPostMessage(elements: ReturnType<typeof renderPostStatusAndGetElements>) {
+    const {textField, submitButton, clearButton, user} = elements;
+    await user.type(textField, "Post content...");
+    expect(submitButton).toBeEnabled();
+    expect(clearButton).toBeEnabled();
+  }
 
+  it('enables both buttons when the text field has text', async () => {
+    const elements = renderPostStatusAndGetElements();
+    authorPostMessage(elements);
   });
 
   it('disables both buttons when the text field is cleared', async () => {
+    const elements = renderPostStatusAndGetElements();
+    authorPostMessage(elements);
 
+    const {textField, submitButton, clearButton, user} = elements;
+
+    // Clear it once
+    await user.clear(textField);
+    expect(submitButton).toBeDisabled();
+    expect(clearButton).toBeDisabled();
+
+    // Reenables
+    authorPostMessage(elements);
   });
 
   it("calls the presenter's postStatus method with the correct parameters when PostStatus button is pressed", async () => {
