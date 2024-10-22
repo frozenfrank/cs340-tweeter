@@ -1,12 +1,8 @@
-import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { anything, instance, mock, verify } from "ts-mockito";
 import Login from "../../../../src/components/authentication/login/Login";
 import { LoginPresenter } from "../../../../src/presenters/Authentication/LoginPresenter";
-import "../../../ui-utils";
+import { userEvent, render, screen, React } from "../../../ui-utils";
 
 describe('Login Component', () => {
   it('starts  with the sign-in button disabled', () => {
