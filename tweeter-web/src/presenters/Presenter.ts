@@ -29,7 +29,7 @@ export class Presenter<V extends View> {
     try {
       return await operation();
     } catch (error) {
-      this.view.displayErrorMessage(`Failed to ${actionName} because of exception: ${error}`);
+      this.view.displayErrorMessage(`Failed to ${actionName} because of exception: ${(error as Error).message}`);
     }
   }
 }
