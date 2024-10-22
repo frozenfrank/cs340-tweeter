@@ -4,10 +4,11 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import Login from "../../../../src/components/authentication/login/Login";
 import "@testing-library/jest-dom";
+import { anything, instance, mock, verify } from "ts-mockito";
+import { LoginPresenter } from "../../../../src/presenters/Authentication/LoginPresenter";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import { LoginPresenter } from "../../../../src/presenters/Authentication/LoginPresenter";
 
 library.add(fab);
 
@@ -46,6 +47,25 @@ describe('Login Component', () => {
     // Try clearing password field
     await user.clear(passwordField);
     expect(signInButton).toBeDisabled();
+  });
+
+  it("calls the presenter's login method with correct parameters when the sign-in button is pressed", async () => {
+    const mockPresenter = mock<LoginPresenter>();
+    const mockPresenterInstance = instance(mockPresenter);
+
+    const originalUrl = "http://someurl.com";
+    const alias = "@cool_alias";
+    const password = "bad_password";
+
+    const {signInButton, aliasField, passwordField, user} =
+      renderLoginAndGetElement(originalUrl, mockPresenterInstance);
+
+    await user.type(aliasField, alias);
+    await user.type(passwordField, password);
+
+    await user.click(signInButton);
+
+    verify(mockPresenter.doLogin(alias, password, anything())).once();
   });
 });
 
