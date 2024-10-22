@@ -1,4 +1,4 @@
-import { verify } from "ts-mockito";
+import { capture, verify } from "ts-mockito";
 import { AuthToken, User } from "tweeter-shared";
 import { StatusService } from "../../../src/model/service/StatusService";
 import { PostStatusPresenter, PostStatusView } from "../../../src/presenters/others/PostStatusPresenter";
@@ -27,7 +27,12 @@ describe('PostStatusPresenter', () => {
   });
 
   it('calls postStatus on the post status service with the correct status string and auth token', async () => {
+    await postStatusPresenter.doPostStatus(authToken, currentUser, postContent);
 
+    const [capturedAuthToken, capturedStatus] = capture(mockStatusService.postStatus).last();
+    expect(capturedAuthToken).toEqual(authToken);
+    expect(capturedStatus.user).toEqual(currentUser);
+    expect(capturedStatus.post).toEqual(postContent);
   });
 
   it('On success, tells the view to clear the last info message, clear the post, and display a status posted message', async () => {
