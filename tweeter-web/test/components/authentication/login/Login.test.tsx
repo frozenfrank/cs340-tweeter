@@ -1,16 +1,12 @@
+import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import Login from "../../../../src/components/authentication/login/Login";
-import "@testing-library/jest-dom";
 import { anything, instance, mock, verify } from "ts-mockito";
+import Login from "../../../../src/components/authentication/login/Login";
 import { LoginPresenter } from "../../../../src/presenters/Authentication/LoginPresenter";
-
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { fab } from "@fortawesome/free-brands-svg-icons";
-
-library.add(fab);
+import "../../../ui-utils";
 
 describe('Login Component', () => {
   it('starts  with the sign-in button disabled', () => {
