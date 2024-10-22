@@ -1,4 +1,4 @@
-import { anything, capture, instance, mock, spy, verify, when } from "ts-mockito";
+import { anyString, anything, capture, instance, mock, spy, verify, when } from "ts-mockito";
 import { AuthToken } from "tweeter-shared";
 import { UserService } from "../../../src/model/service/UserService";
 import { AppNavbarPresenter, AppNavbarView } from "../../../src/presenters/others/AppNavbarPresenter";
@@ -43,8 +43,19 @@ describe('AppNavbarPresenter', () => {
   it('tells the view to clear the last info message and clear the user info', async () => {
     await appNavbarPresenter.logOut(authToken);
 
+    verify(mockAppNavbarPresenterView.displayErrorMessage(anything())).never();
     verify(mockAppNavbarPresenterView.clearLastInfoMessage()).once();
     verify(mockAppNavbarPresenterView.clearUserInfo()).once();
   });
 
+  it('display an error message and does not tell it to clear the last info message or clear the user info', async () => {
+    const error = new Error("An error occurred");
+    when(mockUserService.logout(authToken)).thenThrow(error);
+
+    await appNavbarPresenter.logOut(authToken);
+
+    verify(mockAppNavbarPresenterView.displayErrorMessage(`Failed to log user out because of exception: An error occurred`)).once();
+    verify(mockAppNavbarPresenterView.clearLastInfoMessage()).never();
+    verify(mockAppNavbarPresenterView.clearUserInfo()).never();
+  });
 });
