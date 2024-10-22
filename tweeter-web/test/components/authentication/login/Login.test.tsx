@@ -6,11 +6,11 @@ import { userEvent, render, screen, React } from "../../../ui-utils";
 
 describe('Login Component', () => {
   it('starts  with the sign-in button disabled', () => {
-    const {signInButton} = renderLoginAndGetElement("/");
+    const {signInButton} = renderLoginAndGetElements("/");
     expect(signInButton).toBeDisabled();
   });
 
-  async function enableSignInButton(elements: ReturnType<typeof renderLoginAndGetElement>) {
+  async function enableSignInButton(elements: ReturnType<typeof renderLoginAndGetElements>) {
     const {signInButton, aliasField, passwordField, user} = elements;
 
     await user.type(aliasField, "a");
@@ -20,12 +20,12 @@ describe('Login Component', () => {
   }
 
   it('enables the sign-in button if both alias and password fields have text', async () => {
-    const elements = renderLoginAndGetElement("/");
+    const elements = renderLoginAndGetElements("/");
     await enableSignInButton(elements);
   });
 
   it('disables the sign-in button if either field is cleared', async () => {
-    const elements = renderLoginAndGetElement("/");
+    const elements = renderLoginAndGetElements("/");
     await enableSignInButton(elements);
 
     const {signInButton, aliasField, passwordField, user} = elements;
@@ -50,7 +50,7 @@ describe('Login Component', () => {
     const password = "bad_password";
 
     const {signInButton, aliasField, passwordField, user} =
-      renderLoginAndGetElement(originalUrl, mockPresenterInstance);
+      renderLoginAndGetElements(originalUrl, mockPresenterInstance);
 
     await user.type(aliasField, alias);
     await user.type(passwordField, password);
@@ -73,7 +73,7 @@ const renderLogin = (originalUrl: string, presenter?: LoginPresenter) => {
   </MemoryRouter>);
 };
 
-const renderLoginAndGetElement = (originalUrl: string, presenter?: LoginPresenter) => {
+const renderLoginAndGetElements = (originalUrl: string, presenter?: LoginPresenter) => {
   const user = userEvent.setup();
 
   renderLogin(originalUrl, presenter);

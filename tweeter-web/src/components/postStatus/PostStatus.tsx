@@ -4,7 +4,11 @@ import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
 import "./PostStatus.css";
 
-const PostStatus = () => {
+interface Props {
+  presenter?: PostStatusPresenter;
+}
+
+const PostStatus = (props: Props) => {
   const { displayErrorMessage, displayInfoMessage, clearLastInfoMessage } =
     useToastListener();
 
@@ -16,7 +20,7 @@ const PostStatus = () => {
     setIsLoading, setPost,
     clearLastInfoMessage, displayInfoMessage, displayErrorMessage,
   };
-  const [presenter] = useState(() => new PostStatusPresenter(view));
+  const [presenter] = useState(() => props.presenter ?? new PostStatusPresenter(view));
 
   const submitPost = async (event: React.MouseEvent) => {
     event.preventDefault();
