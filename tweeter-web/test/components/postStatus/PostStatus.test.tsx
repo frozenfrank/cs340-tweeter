@@ -18,12 +18,12 @@ describe('PostStatus Component', () => {
 
   it('enables both buttons when the text field has text', async () => {
     const elements = renderPostStatusAndGetElements();
-    authorPostMessage(elements);
+    await authorPostMessage(elements);
   });
 
   it('disables both buttons when the text field is cleared', async () => {
     const elements = renderPostStatusAndGetElements();
-    authorPostMessage(elements);
+    await authorPostMessage(elements);
 
     const {textField, submitButton, clearButton, user} = elements;
 
@@ -33,7 +33,7 @@ describe('PostStatus Component', () => {
     expect(clearButton).toBeDisabled();
 
     // Reenables
-    authorPostMessage(elements);
+    await authorPostMessage(elements);
   });
 
   it("calls the presenter's postStatus method with the correct parameters when PostStatus button is pressed", async () => {
