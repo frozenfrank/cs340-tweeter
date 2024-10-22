@@ -10,6 +10,7 @@ import "./Login.css";
 
 interface Props {
   originalUrl?: string;
+  presenter?: LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -29,7 +30,7 @@ const Login = (props: Props) => {
     navigate,
     originalUrl: props.originalUrl,
   };
-  const [presenter] = useState(() => new LoginPresenter(view));
+  const [presenter] = useState(() => props.presenter ?? new LoginPresenter(view));
 
   const checkSubmitButtonStatus = () => presenter.checkSubmitButtonStatus(alias, password);
   const doLogin = () => presenter.doLogin(alias, password, rememberMe);

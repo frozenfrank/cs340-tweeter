@@ -7,6 +7,7 @@ import "@testing-library/jest-dom";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { LoginPresenter } from "../../../../src/presenters/Authentication/LoginPresenter";
 
 library.add(fab);
 
@@ -48,16 +49,22 @@ describe('Login Component', () => {
   });
 });
 
-const renderLogin = (originalUrl: string) => {
-  return render(<MemoryRouter>
-    <Login originalUrl={originalUrl}></Login>
+const renderLogin = (originalUrl: string, presenter?: LoginPresenter) => {
+  return render(
+  <MemoryRouter>
+    {!!presenter ?
+      (<Login originalUrl={originalUrl} presenter={presenter}></Login>)
+      :
+      (<Login originalUrl={originalUrl}></Login>)
+    }
+
   </MemoryRouter>);
 };
 
-const renderLoginAndGetElement = (originalUrl: string) => {
+const renderLoginAndGetElement = (originalUrl: string, presenter?: LoginPresenter) => {
   const user = userEvent.setup();
 
-  renderLogin(originalUrl);
+  renderLogin(originalUrl, presenter);
 
   const signInButton = screen.getByRole("button", {name: /Sign in/i});
   const aliasField = screen.getByLabelText("alias");
