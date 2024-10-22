@@ -1,4 +1,4 @@
-import { capture, verify } from "ts-mockito";
+import { anyNumber, capture, verify } from "ts-mockito";
 import { AuthToken, User } from "tweeter-shared";
 import { StatusService } from "../../../src/model/service/StatusService";
 import { PostStatusPresenter, PostStatusView } from "../../../src/presenters/others/PostStatusPresenter";
@@ -36,7 +36,11 @@ describe('PostStatusPresenter', () => {
   });
 
   it('On success, tells the view to clear the last info message, clear the post, and display a status posted message', async () => {
+    await postStatusPresenter.doPostStatus(authToken, currentUser, postContent);
 
+    verify(mockPostStatusPresenterView.clearLastInfoMessage()).once();
+    verify(mockPostStatusPresenterView.setPost("")).once();
+    verify(mockPostStatusPresenterView.displayInfoMessage("Status posted!", anyNumber())).once();
   });
 
   it('On failure, tells the view to display an error message and clear the last info message and does not tell it to clear the post or display a status posted message', async () => {
