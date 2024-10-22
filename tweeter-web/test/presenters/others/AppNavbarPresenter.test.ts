@@ -1,4 +1,4 @@
-import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import { anything, capture, instance, mock, spy, verify, when } from "ts-mockito";
 import { AuthToken } from "tweeter-shared";
 import { UserService } from "../../../src/model/service/UserService";
 import { AppNavbarPresenter, AppNavbarView } from "../../../src/presenters/others/AppNavbarPresenter";
@@ -35,5 +35,8 @@ describe('AppNavbarPresenter', () => {
   it('calls logout on the user service with the correct AuthToken', async () => {
     await appNavbarPresenter.logOut(authToken);
     verify(mockUserService.logout(anything())).once();
+
+    let [capturedAuthToken] = capture(mockUserService.logout).last();
+    expect(capturedAuthToken).toEqual(authToken);
   });
 });
