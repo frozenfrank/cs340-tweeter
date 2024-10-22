@@ -1,8 +1,28 @@
+import { AuthToken, User } from "tweeter-shared";
 import PostStatus from "../../../src/components/postStatus/PostStatus";
+import useUserInfo from "../../../src/components/userInfo/UserInfoHook";
 import { PostStatusPresenter } from "../../../src/presenters/others/PostStatusPresenter";
 import {userEvent, render, screen, React} from  "../../ui-utils";
+import { makeAuthToken, makeUser } from "../../utils";
+
+// Mock UserInfoHook to provide authentication status
+jest.mock("../../../src/components/userInfo/UserInfoHook", () => ({
+  ...jest.requireActual("../../../src/components/userInfo/UserInfoHook"),
+  __esModule: true,
+  default: jest.fn(),
+}));
 
 describe('PostStatus Component', () => {
+  let currentUser: User;
+  let authToken: AuthToken;
+
+  beforeAll(() => {
+    currentUser = makeUser();
+    authToken = makeAuthToken();
+
+    (useUserInfo as jest.Mock).mockReturnValue({currentUser, authToken});
+  });
+
   it('begins with PostStatus and Clear buttons disabled', async () => {
     const {submitButton, clearButton} = renderPostStatusAndGetElements();
     expect(submitButton).toBeDisabled();
