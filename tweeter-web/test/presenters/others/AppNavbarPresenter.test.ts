@@ -1,22 +1,39 @@
-import { instance, mock, verify } from "ts-mockito";
+import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { AuthToken } from "tweeter-shared";
+import { UserService } from "../../../src/model/service/UserService";
 import { AppNavbarPresenter, AppNavbarView } from "../../../src/presenters/others/AppNavbarPresenter";
 
 describe('AppNavbarPresenter', () => {
   let mockAppNavbarPresenterView: AppNavbarView;
   let appNavbarPresenter: AppNavbarPresenter;
+  let mockUserService: UserService;
 
   const authToken = new AuthToken("_fake_auth_token", Date.now());
 
   beforeEach(() => {
+    // Prepare mock presenter view
     mockAppNavbarPresenterView = mock<AppNavbarView>();
     const mockAppNavbarPresenterViewInstance = instance(mockAppNavbarPresenterView);
 
-    appNavbarPresenter = new AppNavbarPresenter(mockAppNavbarPresenterViewInstance);
+    // Prepare mock UserService
+    mockUserService = mock<UserService>();
+    const mockUserServiceInstance = instance(mockUserService);
+
+    // Prepare Presenter spy to use our mock service
+    const appNavbarPresenterSpy = spy(new AppNavbarPresenter(mockAppNavbarPresenterViewInstance));
+    when(appNavbarPresenterSpy.service).thenReturn(mockUserServiceInstance);
+
+    // Export presenter and service
+    appNavbarPresenter = instance(appNavbarPresenterSpy);
   });
 
-  it('tells the view to display a logging out message', () => {
-    appNavbarPresenter.logOut(authToken);
+  it('tells the view to display a logging out message', async () => {
+    await appNavbarPresenter.logOut(authToken);
     verify(mockAppNavbarPresenterView.displayInfoMessage("Logging Out...", 0)).once();
+  });
+
+  it('calls logout on the user service with the correct AuthToken', async () => {
+    await appNavbarPresenter.logOut(authToken);
+    verify(mockUserService.logout(anything())).once();
   });
 });
