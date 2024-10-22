@@ -16,14 +16,25 @@ If we want more details, we can always look at your source code.
 title: Story Service
 ---
 classDiagram
-    ItemScroller
-    ItemScroller <|-- StatusItemScroller
-    StatusItem
-    Post
 
+class StatusService
+class ItemScroller~ItemType~ {
+    # ReactNode makeItem()
+}
+ItemScroller <|-- StatusItemScroller
+StatusItem *-- Post
 
-    Presenter <|-- LoadingPresenter
-    Presenter <|-- ServicePresenter
-    
-    
+class Presenter~V~ {
+    - view V
+    # doTryOperation()
+}
+class ServicePresenter~V, U~ {
+    - service U
+}
+
+Presenter <|-- ServicePresenter
+ServicePresenter <|-- LoadingPresenter
+
+LoadingPresenter <|-- PostStatusPresenter
+
 ```
