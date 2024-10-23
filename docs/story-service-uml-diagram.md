@@ -11,6 +11,63 @@ If we want more details, we can always look at your source code.
 
 ## Diagram
 
+### Domain Models Class Diagram
+
+```mermaid
+
+---
+title: Tweeter — Domain Model Class Diagram
+---
+classDiagram
+
+%% ######################
+%% ### Domain Objects ###
+%% ######################
+
+namespace DomainObjects {
+    class AuthToken {
+        + token: string
+        + timestamp: number
+        + Generate() AuthToken$
+        + fromJson() AuthToken$
+        + toJson() string
+    }
+    class User {
+        + firstName: string
+        + lastName: string
+        + alias: string
+        + imageUrl: string
+    }
+
+    class Status {
+        + post: string
+        + user: User
+        + timestamp: number
+        + segments: PostSegment[]
+        + get formattedDate() string
+    }
+    class PostSegment {
+        + text: string
+        + startPosition: number
+        + endPosition: number
+        + type: PostSegmentType
+    }
+    class PostSegmentType {
+        <<enumeration>>
+        Text
+        Alias
+        URL
+        Newline
+    }
+}
+
+Status *-- "1.." PostSegment
+PostSegment *-- "1" PostSegmentType
+
+```
+
+### Story Service Class Diagram
+
 ```mermaid
 ---
 title: Tweeter — Story Service Class Diagram
@@ -37,6 +94,7 @@ namespace BasePresenters {
         + reset()
         # itemDescription*
         # doLoadMoreItems()*
+        - pageSize int
         - lastItem T
         - pageSize int
     }
@@ -56,8 +114,6 @@ namespace ItemScrollers {
     class ItemScroller~T~ {
         <<JSX>>
         - presenterGenerator(view)
-        - addItems(items)
-        - PAGE
     }
     class ItemScrollerHook~T~ {
         <<Hook>>
