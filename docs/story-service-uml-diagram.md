@@ -23,13 +23,16 @@ classDiagram
 
 namespace BasePresenters {
     class Presenter~V~ {
+        <<Abstract>>
         + get view V
         # doTryOperation()
     }
     class ServicePresenter~V, U~ {
+        <<Abstract>>
         + get service U
     }
     class PagedItemPresenter~T, U~ {
+        <<Abstract>>
         + loadMoreItems(authToken, userAlias)
         + reset()
         # itemDescription*
@@ -38,10 +41,6 @@ namespace BasePresenters {
         - pageSize int
     }
 }
-
-<<Abstract>> Presenter
-<<Abstract>> ServicePresenter
-<<Abstract>> PagedItemPresenter
 
 %% I would organize this to the tail of the file, but that messes with the rendering of the diagram
 ItemScrollerHook --> PagedItemPresenter
@@ -55,22 +54,22 @@ ServicePresenter <|-- PagedItemPresenter
 
 namespace ItemScrollers {
     class ItemScroller~T~ {
+        <<JSX>>
         - presenterGenerator(view)
         - addItems(items)
         - PAGE
     }
     class ItemScrollerHook~T~ {
+        <<Hook>>
         - presenterGenerator(view)
         + items: T[]
         + loadMoreItems()
         + hasMoreItems: bool
     }
-    class StatusItemScroller
+    class StatusItemScroller {
+        <<JSX>>
+    }
 }
-
-<<JSX Component>> ItemScroller
-<<JSX Component>> StatusItemScroller
-<<React Hook>> ItemScrollerHook
 
 ItemScroller <|-- StatusItemScroller
 StatusItemScroller *-- "*" StatusItem
@@ -79,8 +78,8 @@ StatusItem *-- "1" Post
 StatusItem : + status Status
 Post : + status Status
 
-<<JSX Component>> StatusItem
-<<JSX Component>> Post
+<<JSX>> StatusItem
+<<JSX>> Post
 
 %% ###############################################
 %% ### (Some) Services and their relationships ###
