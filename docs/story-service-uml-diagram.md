@@ -37,23 +37,16 @@ namespace BasePresenters {
         - pageSize int
     }
 
-%%    class LoadingPresenter~V, U~ {
-%%        # doTryOperation()
-%%    }
-
 }
 
 <<Abstract>> Presenter
 <<Abstract>> ServicePresenter
 <<Abstract>> PagedItemPresenter
-%% <<Abstract>> LoadingPresenter
 
 %% I would organize this to the tail of the file, but that messes with the rendering of the diagram
 ItemScrollerHook --> PagedItemPresenter  
 
 Presenter <|-- ServicePresenter
-%% ServicePresenter <|-- LoadingPresenter
-%% LoadingPresenter <|-- PostStatusPresenter %% Omitted for clarity on **displaying** stories
 ServicePresenter <|-- PagedItemPresenter
 
 %% Scrollers and their relationships
@@ -105,8 +98,6 @@ PagedItemPresenter <|-- StatusItemPresenter
 StatusItemPresenter <|.. StoryPresenter
 StatusItemPresenter <|.. FeedPresenter
 
-%% Omitted for focus on presentation of data
-%% StatusService <.. PostStatusPresenter
 StatusService <.. StatusItemPresenter
 
 
