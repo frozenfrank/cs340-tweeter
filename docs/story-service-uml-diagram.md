@@ -17,7 +17,9 @@ title: Tweeter — Story Service Class Diagram
 ---
 classDiagram
 
-%% Presenters and their relationships
+%% ##########################################
+%% ### Presenters and their relationships ###
+%% ##########################################
 
 namespace BasePresenters {
     class Presenter~V~ {
@@ -27,7 +29,6 @@ namespace BasePresenters {
     class ServicePresenter~V, U~ {
         + get service U
     }
-
     class PagedItemPresenter~T, U~ {
         + loadMoreItems(authToken, userAlias)
         + reset()
@@ -36,7 +37,6 @@ namespace BasePresenters {
         - lastItem T
         - pageSize int
     }
-
 }
 
 <<Abstract>> Presenter
@@ -44,12 +44,14 @@ namespace BasePresenters {
 <<Abstract>> PagedItemPresenter
 
 %% I would organize this to the tail of the file, but that messes with the rendering of the diagram
-ItemScrollerHook --> PagedItemPresenter  
+ItemScrollerHook --> PagedItemPresenter
 
 Presenter <|-- ServicePresenter
 ServicePresenter <|-- PagedItemPresenter
 
-%% Scrollers and their relationships
+%% #########################################
+%% ### Scrollers and their relationships ###
+%% #########################################
 
 namespace ItemScrollers {
     class ItemScroller~T~ {
@@ -64,8 +66,6 @@ namespace ItemScrollers {
         + hasMoreItems: bool
     }
     class StatusItemScroller
-
-
 }
 
 <<Abstract>> ItemScroller
@@ -77,7 +77,9 @@ StatusItem *-- "1" Post
 StatusItem : + status Status
 Post : + status Status
 
-%% (Some) Services and their relationships
+%% ###############################################
+%% ### (Some) Services and their relationships ###
+%% ###############################################
 
 namespace Services {
     class StatusService {
@@ -88,7 +90,9 @@ namespace Services {
 }
 
 
-%% Connecting Relationships
+%% ################################
+%% ### Connecting Relationships ###
+%% ################################
 
 class StoryPresenter
 class StatusItemPresenter
@@ -99,6 +103,5 @@ StatusItemPresenter <|.. StoryPresenter
 StatusItemPresenter <|.. FeedPresenter
 
 StatusService <.. StatusItemPresenter
-
 
 ```
