@@ -68,7 +68,9 @@ namespace ItemScrollers {
     class StatusItemScroller
 }
 
-<<Abstract>> ItemScroller
+<<JSX Component>> ItemScroller
+<<JSX Component>> StatusItemScroller
+<<React Hook>> ItemScrollerHook
 
 ItemScroller <|-- StatusItemScroller
 StatusItemScroller *-- "*" StatusItem
@@ -76,6 +78,9 @@ ItemScroller *-- "1" ItemScrollerHook
 StatusItem *-- "1" Post
 StatusItem : + status Status
 Post : + status Status
+
+<<JSX Component>> StatusItem
+<<JSX Component>> Post
 
 %% ###############################################
 %% ### (Some) Services and their relationships ###
