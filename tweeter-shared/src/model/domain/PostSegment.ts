@@ -7,7 +7,7 @@ export enum Type {
 
 export class PostSegment {
   private _text: string;
-  private _startPostion: number;
+  private _startPosition: number;
   private _endPosition: number;
   private _type: Type;
 
@@ -18,7 +18,7 @@ export class PostSegment {
     type: Type
   ) {
     this._text = text;
-    this._startPostion = startPosition;
+    this._startPosition = startPosition;
     this._endPosition = endPosition;
     this._type = type;
   }
@@ -28,7 +28,7 @@ export class PostSegment {
   }
 
   public get startPostion(): number {
-    return this._startPostion;
+    return this._startPosition;
   }
 
   public get endPosition(): number {

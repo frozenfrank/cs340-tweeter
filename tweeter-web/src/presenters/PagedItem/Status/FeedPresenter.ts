@@ -1,6 +1,6 @@
 import { StatusItemPresenter } from "./StatusItem";
 
 export class FeedPresenter extends StatusItemPresenter {
-  public itemDescription = "status items";
-  public doLoadMoreItems = this.service.loadMoreFeedItems.bind(this);
+  protected override itemDescription = "status items";
+  protected override doLoadMoreItems = this.service.loadMoreFeedItems.bind(this);
 }
