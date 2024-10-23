@@ -154,7 +154,6 @@ namespace Services {
 %% ### Connecting Relationships ###
 %% ################################
 
-class StoryPresenter
 class StatusItemPresenter
 <<Abstract>> StatusItemPresenter
 
