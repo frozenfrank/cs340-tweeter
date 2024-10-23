@@ -22,7 +22,7 @@ const Register = () => {
   const { updateUserInfo } = useUserInfo();
   const { displayErrorMessage } = useToastListener();
 
-  const checkSubmitButtonStatus = (): boolean => {
+  const isRegisterDisabled = (): boolean => {
     return (
       !firstName ||
       !lastName ||
@@ -46,7 +46,7 @@ const Register = () => {
   const doRegister = () => presenter.doRegister(firstName, lastName, alias, password, imageFileExtension, rememberMe);
 
   const registerOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key == "Enter" && !checkSubmitButtonStatus()) {
+    if (event.key == "Enter" && !isRegisterDisabled()) {
       doRegister();
     }
   };
@@ -115,7 +115,7 @@ const Register = () => {
       inputFieldGenerator={inputFieldGenerator}
       switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
       setRememberMe={setRememberMe}
-      submitButtonDisabled={checkSubmitButtonStatus}
+      submitButtonDisabled={isRegisterDisabled}
       isLoading={isLoading}
       submit={doRegister}
     />

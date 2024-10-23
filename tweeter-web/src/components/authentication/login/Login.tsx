@@ -32,11 +32,11 @@ const Login = (props: Props) => {
   };
   const [presenter] = useState(() => props.presenter ?? new LoginPresenter(view));
 
-  const checkSubmitButtonStatus = () => presenter.checkSubmitButtonStatus(alias, password);
+  const isLoginDisabled = () => presenter.isLoginDisabled(alias, password);
   const doLogin = () => presenter.doLogin(alias, password, rememberMe);
 
   const loginOnEnter = async (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key == "Enter" && !checkSubmitButtonStatus()) {
+    if (event.key == "Enter" && !isLoginDisabled()) {
       doLogin();
     }
   };
@@ -63,7 +63,7 @@ const Login = (props: Props) => {
       inputFieldGenerator={inputFieldGenerator}
       switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
       setRememberMe={setRememberMe}
-      submitButtonDisabled={checkSubmitButtonStatus}
+      submitButtonDisabled={isLoginDisabled}
       isLoading={isLoading}
       submit={doLogin}
     />

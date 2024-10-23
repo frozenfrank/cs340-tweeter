@@ -5,7 +5,7 @@ export interface LoginView extends AuthenticationView {
 }
 
 export class LoginPresenter extends AuthenticationPresenter<LoginView> {
-  public checkSubmitButtonStatus(alias: string, password: string): boolean {
+  public isLoginDisabled(alias: string, password: string): boolean {
     return !alias || !password;
   };
 
