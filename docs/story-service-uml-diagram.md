@@ -13,28 +13,101 @@ If we want more details, we can always look at your source code.
 
 ```mermaid
 ---
-title: Story Service
+title: Tweeter — Story Service Class Diagram
 ---
 classDiagram
 
-class StatusService
-class ItemScroller~ItemType~ {
-    # ReactNode makeItem()
-}
-ItemScroller <|-- StatusItemScroller
-StatusItem *-- Post
+%% Presenters and their relationships
 
-class Presenter~V~ {
-    - view V
-    # doTryOperation()
+namespace BasePresenters {
+    class Presenter~V~ {
+        + get view V
+        # doTryOperation()
+    }
+    class ServicePresenter~V, U~ {
+        + get service U
+    }
+
+    class PagedItemPresenter~T, U~ {
+        + loadMoreItems(authToken, userAlias)
+        + reset()
+        # itemDescription*
+        # doLoadMoreItems()*
+        - lastItem T
+        - pageSize int
+    }
+
+%%    class LoadingPresenter~V, U~ {
+%%        # doTryOperation()
+%%    }
+
 }
-class ServicePresenter~V, U~ {
-    - service U
-}
+
+<<Abstract>> Presenter
+<<Abstract>> ServicePresenter
+<<Abstract>> PagedItemPresenter
+%% <<Abstract>> LoadingPresenter
+
+%% I would organize this to the tail of the file, but that messes with the rendering of the diagram
+ItemScrollerHook --> PagedItemPresenter  
 
 Presenter <|-- ServicePresenter
-ServicePresenter <|-- LoadingPresenter
+%% ServicePresenter <|-- LoadingPresenter
+%% LoadingPresenter <|-- PostStatusPresenter %% Omitted for clarity on **displaying** stories
+ServicePresenter <|-- PagedItemPresenter
 
-LoadingPresenter <|-- PostStatusPresenter
+%% Scrollers and their relationships
+
+namespace ItemScrollers {
+    class ItemScroller~T~ {
+        - presenterGenerator(view)
+        - addItems(items)
+        - PAGE
+    }
+    class ItemScrollerHook~T~ {
+        - presenterGenerator(view)
+        + items: T[]
+        + loadMoreItems()
+        + hasMoreItems: bool
+    }
+    class StatusItemScroller
+
+
+}
+
+<<Abstract>> ItemScroller
+
+ItemScroller <|-- StatusItemScroller
+StatusItemScroller *-- "*" StatusItem
+ItemScroller *-- "1" ItemScrollerHook
+StatusItem *-- "1" Post
+StatusItem : + status Status
+Post : + status Status
+
+%% (Some) Services and their relationships
+
+namespace Services {
+    class StatusService {
+        + loadMoreFeedItems()
+        + loadMoreStoryItems()
+        + postStatus()
+    }
+}
+
+
+%% Connecting Relationships
+
+class StoryPresenter
+class StatusItemPresenter
+<<Abstract>> StatusItemPresenter
+
+PagedItemPresenter <|-- StatusItemPresenter
+StatusItemPresenter <|.. StoryPresenter
+StatusItemPresenter <|.. FeedPresenter
+
+%% Omitted for focus on presentation of data
+%% StatusService <.. PostStatusPresenter
+StatusService <.. StatusItemPresenter
+
 
 ```
