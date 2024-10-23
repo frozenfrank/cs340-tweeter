@@ -7,7 +7,7 @@ export interface PagedItemView<T> extends View {
 
 export abstract class PagedItemPresenter<T, U> extends ServicePresenter<PagedItemView<T>, U> {
 
-  private PAGE_SIZE = 10;
+  private pageSize = 10;
   private _hasMoreItems = true;
   private lastItem: T | null = null;
 
@@ -27,7 +27,7 @@ export abstract class PagedItemPresenter<T, U> extends ServicePresenter<PagedIte
       const [newItems, hasMore] = await this.doLoadMoreItems(
         authToken!,
         userAlias,
-        this.PAGE_SIZE,
+        this.pageSize,
         this.lastItem
       );
 
