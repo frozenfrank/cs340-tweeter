@@ -26,31 +26,31 @@ classDiagram
 
 namespace DomainObjects {
     class AuthToken {
-        + token: string
-        + timestamp: number
-        + Generate() AuthToken$
-        + fromJson() AuthToken$
-        + toJson() string
+        +string token
+        +number timestamp
+        +Generate() AuthToken$
+        +fromJson() AuthToken$
+        +toJson() string
     }
     class User {
-        + firstName: string
-        + lastName: string
-        + alias: string
-        + imageUrl: string
+        +string firstName
+        +string lastName
+        +string alias
+        +string imageUrl
     }
 
     class Status {
-        + post: string
-        + user: User
-        + timestamp: number
-        + segments: PostSegment[]
-        + get formattedDate() string
+        +string post
+        +User user
+        +number timestamp
+        +PostSegment[] segments
+        +get formattedDate() string
     }
     class PostSegment {
-        + text: string
-        + startPosition: number
-        + endPosition: number
-        + type: PostSegmentType
+        +string text
+        +number startPosition
+        +number endPosition
+        +PostSegmentType type
     }
     class PostSegmentType {
         <<enumeration>>
@@ -81,22 +81,22 @@ classDiagram
 namespace BasePresenters {
     class Presenter~V~ {
         <<Abstract>>
-        + get view V
-        # doTryOperation()
+        +get view() V
+        #doTryOperation()
     }
     class ServicePresenter~V, U~ {
         <<Abstract>>
-        + get service U
+        +get service() U
     }
     class PagedItemPresenter~T, U~ {
         <<Abstract>>
-        + loadMoreItems(authToken, userAlias)
-        + reset()
-        # itemDescription*
-        # doLoadMoreItems()*
-        - pageSize int
-        - lastItem T
-        - pageSize int
+        +loadMoreItems(authToken, userAlias)
+        +reset()
+        #itemDescription*
+        #doLoadMoreItems()*
+        -pageSize int
+        -lastItem T
+        -pageSize int
     }
 }
 
@@ -113,14 +113,14 @@ ServicePresenter <|-- PagedItemPresenter
 namespace ItemScrollers {
     class ItemScroller~T~ {
         <<JSX>>
-        - presenterGenerator(view)
+        -presenterGenerator(view)
     }
     class ItemScrollerHook~T~ {
         <<Hook>>
-        - presenterGenerator(view)
-        + items: T[]
-        + loadMoreItems()
-        + hasMoreItems: bool
+        -presenterGenerator(view)
+        +T[] items
+        +loadMoreItems()
+        +bool hasMoreItems
     }
     class StatusItemScroller {
         <<JSX>>
@@ -131,8 +131,8 @@ ItemScroller <|-- StatusItemScroller
 StatusItemScroller *-- "*" StatusItem
 ItemScroller *-- "1" ItemScrollerHook
 StatusItem *-- "1" Post
-StatusItem : + status Status
-Post : + status Status
+StatusItem : +status Status
+Post : +status Status
 
 <<JSX>> StatusItem
 <<JSX>> Post
@@ -143,9 +143,9 @@ Post : + status Status
 
 namespace Services {
     class StatusService {
-        + loadMoreFeedItems()
-        + loadMoreStoryItems()
-        + postStatus()
+        +loadMoreFeedItems()
+        +loadMoreStoryItems()
+        +postStatus()
     }
 }
 
