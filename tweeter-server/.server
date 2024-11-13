@@ -7,5 +7,8 @@ tweeterGetFolloweeCount       | lambda/follow/GetFolloweeCountLambda.handler
 tweeterGetFollowerCount       | lambda/follow/GetFollowerCountLambda.handler
 tweeterGetIsFollowStatus      | lambda/follow/GetIsFollowStatusLambda.handler
 tweeterUnfollowUser           | lambda/follow/UnfollowUserLambda.handler
+tweeterGetFeedItemsLambda     | lambda/status/GetFeedItemsLambdaLambda.handler
+tweeterGetStoryItemsLambda    | lambda/status/UnfollowUserLambda.handler
+tweeterPostStatus             | lambda/status/PostStatusLambda.handler
 '
 LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:043309350193:layer:CS340-Tweeter-Common-Layer:5'

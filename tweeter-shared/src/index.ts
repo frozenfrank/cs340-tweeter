@@ -24,6 +24,7 @@ export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";
 export type { UserRequestSingle } from "./model/net/request/UserRequestSingle";
 export type { UserRequestDouble } from "./model/net/request/UserRequestDouble";
+export type { PostStatusRequest } from "./model/net/request/PostStatusRequest";
 
 export type { TweeterResponse } from "./model/net/response/TweeterResponse";
 export type { PagedItemResponse } from "./model/net/response/PagedItemResponse";

@@ -12,3 +12,7 @@ export function packageResponse<T extends {}>(fields: T): T & TweeterResponse {
     success: true
   };
 }
+
+export function successfulEmptyResponse() {
+  return { success: true };
+}
