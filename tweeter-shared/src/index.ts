@@ -21,7 +21,7 @@ export type { UserDTO } from "./model/dto/UserDTO";
 // Requests & Responses
 //
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
-export type { PagedUserItemRequest } from "./model/net/request/PagedUserItemRequest";
+export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";
 export type { UserRequestSingle } from "./model/net/request/UserRequestSingle";
 export type { UserRequestDouble } from "./model/net/request/UserRequestDouble";
 
