@@ -34,7 +34,8 @@ Do the following for each of 14 endpoints. The numbers label the states.
 Along the way
 - [x] Create User DTOs
 - [x] Create Follow DTOs
-- [ ] Create Status DTOs
+- [x] Create Status DTOs
+- [ ] Consider converting to `model.toDTO()` rather than `model.dto`.
 
 ## Client
 - [ ] Introduce a network layer
