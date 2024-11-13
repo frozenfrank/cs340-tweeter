@@ -4,10 +4,10 @@
 
 Orchestrate end-to-end functionality for 14 endpoints. Numbers represent the _current state_ of each endpoint, assuming all previous states have been completed. If they haven't, then multiple numbers indicate multiple remaining items.
 * **User Service** (4)
-  - [ ] Register user [1]
-  - [ ] Login user [1]
-  - [ ] Logout user [1]
-  - [ ] Get user [1]
+  - [ ] Register user [2]
+  - [ ] Login user [2]
+  - [ ] Logout user [2]
+  - [ ] Get user [2]
 * **Follow Service** (7)
   - [ ] Follow user [2]
   - [ ] Unfollow user [2]
