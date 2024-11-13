@@ -5,7 +5,9 @@
   "scripts": {
     "build": "npm run compile",
     "compile": "npm run clean && tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "deps": "./bundle-deps.sh",
+    "deps:b": "./bundle-deps.sh --no-build"
   },
   "keywords": [],
   "author": "",
