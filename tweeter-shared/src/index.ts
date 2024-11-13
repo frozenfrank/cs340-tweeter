@@ -26,7 +26,7 @@ export type { UserRequestSingle } from "./model/net/request/UserRequestSingle";
 export type { UserRequestDouble } from "./model/net/request/UserRequestDouble";
 
 export type { TweeterResponse } from "./model/net/response/TweeterResponse";
-export type { PagedUserItemResponse } from "./model/net/response/PagedUserItemResponse";
+export type { PagedItemResponse } from "./model/net/response/PagedItemResponse";
 export type { ValueResponse } from "./model/net/response/ValueResponse";
 
 

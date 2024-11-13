@@ -1,6 +1,6 @@
 import {
   PagedUserItemRequest,
-  PagedUserItemResponse,
+  PagedItemResponse,
   User,
   UserDTO,
 } from "tweeter-shared";
@@ -16,7 +16,7 @@ export class ServerFacade {
   ): Promise<[User[], boolean]> {
     const response = await this.clientCommunicator.doPost<
       PagedUserItemRequest,
-      PagedUserItemResponse
+      PagedItemResponse
     >(request, "/followee/list");
 
     // Convert the UserDTO array returned by ClientCommunicator to a User array
