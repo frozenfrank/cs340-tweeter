@@ -11,18 +11,19 @@ Orchestrate end-to-end functionality for 14 endpoints. Numbers represent the _cu
 * **Follow Service** (7)
   - [ ] Follow user [2]
   - [ ] Unfollow user [2]
-  - [ ] Get followee count [3]
+  - [ ] Get followee count [4]
   - [ ] Get follower count [2]
   - [ ] Get is follower status [2]
   - [ ] load more followers [2]
   - [ ] load more followees [2]
 * **Status service** (3)
-  - [ ] load more feed items [1]
-  - [ ] load more story items [1]
-  - [ ] post status [1]
+  - [ ] load more feed items [2]
+  - [ ] load more story items [2]
+  - [ ] post status [2]
 
 Do the following for each of 14 endpoints. The numbers label the states.
 1. Transform server service classes
+2. Prepare Login/Response Objects
 2. Test from API Gateway
 3. Test from web application (later)
 4. Provide description documentation in API Gateway
