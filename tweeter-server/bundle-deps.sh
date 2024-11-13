@@ -16,7 +16,7 @@ fi
 # Bundle results properly
 echo "Bundling dependencies for Lambda"
 mkdir nodejs
-cp -R node_modules nodejs
+cp -RL node_modules nodejs
 zip -r nodejs.zip nodejs > /dev/null
 
 # Transfer to downloads
