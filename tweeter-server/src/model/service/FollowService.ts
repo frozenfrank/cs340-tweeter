@@ -65,8 +65,7 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastItem, pageSize, userAlias);
+    return this.getFakeData(userAlias, pageSize, lastItem);
   };
 
   public async loadMoreFollowees(
@@ -75,7 +74,16 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastItem, pageSize, userAlias);
+    return this.getFakeData(userAlias, pageSize, lastItem);
   };
+
+  private async getFakeData(
+    userAlias: string,
+    pageSize: number,
+    lastItem: UserDTO | null
+  ): Promise<PagedUserData> {
+    const [users, hasMore] = await FakeData.instance.getPageOfUsers(User.fromDto(lastItem), pageSize, userAlias);
+    const dtos = users.map(u => u.getDto());
+    return [dtos, hasMore];
+  }
 }
