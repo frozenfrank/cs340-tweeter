@@ -7,7 +7,9 @@
     "compile": "npm run clean && tsc",
     "clean": "rm -rf dist",
     "deps": "./bundle-deps.sh",
-    "deps:b": "./bundle-deps.sh --no-build"
+    "deps:b": "./bundle-deps.sh --no-build",
+    "lambdas": "./bundle-lambdas.sh",
+    "lambdas:b": "./bundle-lambdas.sh --no-build"
   },
   "keywords": [],
   "author": "",
