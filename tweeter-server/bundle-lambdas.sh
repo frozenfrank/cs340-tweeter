@@ -17,11 +17,13 @@ TARGET_FILE="dist.zip"
 FINAL_DIR="$HOME/Downloads"
 
 # Bundle results
-zip -r $TARGET_FILE dist/* > /dev/null
+cd dist/
+zip -r "../$TARGET_FILE" . > /dev/null
+cd ..
 
 # Transfer to downloads
 echo "Copying $TARGET_FILE to $FINAL_DIR"
-mv $TARGET_FILE $FINAL_DIR
+cp $TARGET_FILE $FINAL_DIR
 
 # Done
 echo Done
