@@ -1,3 +1,4 @@
+import { FollowDTO } from "../dto/FollowDTO";
 import { User } from "./User";
 
 export class Follow {
@@ -16,12 +17,25 @@ export class Follow {
     public set follower(value: User) {
         this._follower = value;
     }
-    
+
     public get followee(): User {
         return this._followee;
     }
 
     public set followee(value: User) {
         this._followee = value;
-    }    
+    }
+
+    public static fromDto(follow: FollowDTO | null): Follow | null {
+        return !follow ? null : new Follow(
+            User.fromDto(follow.follower)!,
+            User.fromDto(follow.followee)!);
+    }
+
+    getDto(): FollowDTO {
+        return {
+            followee: this._followee.dto,
+            follower: this._follower.dto,
+        };
+    }
 }

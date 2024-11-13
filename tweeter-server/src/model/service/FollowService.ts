@@ -83,7 +83,7 @@ export class FollowService {
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
     const [users, hasMore] = await FakeData.instance.getPageOfUsers(User.fromDto(lastItem), pageSize, userAlias);
-    const dtos = users.map(u => u.getDto());
+    const dtos = users.map(u => u.dto);
     return [dtos, hasMore];
   }
 }

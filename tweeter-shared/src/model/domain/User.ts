@@ -85,7 +85,7 @@ export class User {
     return !dto ? null : new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl);
   }
 
-  public getDto(): UserDTO {
+  public get dto(): UserDTO {
     return {
       firstName: this.firstName,
       lastName: this.lastName,

@@ -33,7 +33,7 @@ Do the following for each of 14 endpoints. The numbers label the states.
 
 Along the way
 - [x] Create User DTOs
-- [ ] Create Follow DTOs
+- [x] Create Follow DTOs
 - [ ] Create Status DTOs
 
 ## Client
