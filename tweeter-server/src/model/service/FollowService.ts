@@ -1,6 +1,7 @@
 import { FakeData, User, UserDTO } from "tweeter-shared";
+import { PagedData } from "./PagedItemsService";
 
-export type PagedUserData = [UserDTO[], boolean];
+export type PagedUserData = PagedData<UserDTO>;
 
 export type FollowBidirectionalCount = [followerCount: number, followeeCount: number];
 
