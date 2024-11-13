@@ -7,6 +7,9 @@
   ],
   "author": "JWilkerson",
   "license": "ISC",
+  "scripts": {
+    "package-lambdas": "./package-lambdas.sh"
+  },
   "dependencies": {
     "rimraf": "^5.0.5",
     "vite-plugin-dts": "^3.7.3"

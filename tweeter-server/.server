@@ -1,6 +1,11 @@
 BUCKET='byu-cs340-tweeter'
 LAMBDA_ROLE='arn:aws:iam::043309350193:role/CS340-Tweeter-Lambda'
 EDIT_LAMBDALIST='
-tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
+tweeterGetFollowees           | lambda/follow/GetFolloweesLambda.handler
+tweeterFollowUser             | lambda/follow/FollowUserLambda.handler
+tweeterGetFolloweeCount       | lambda/follow/GetFolloweeCountLambda.handler
+tweeterGetFollowerCount       | lambda/follow/GetFollowerCountLambda.handler
+tweeterGetIsFollowStatus      | lambda/follow/GetIsFollowStatusLambda.handler
+tweeterUnfollowUser           | lambda/follow/UnfollowUserLambda.handler
 '
-LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:043309350193:layer:CS340-Tweeter-Common-Layer:4'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:043309350193:layer:CS340-Tweeter-Common-Layer:5'
