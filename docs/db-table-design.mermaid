@@ -1,0 +1,26 @@
+---
+title: Tweeter — Database Table Design
+---
+classDiagram
+
+class User {
+    # PK = user alias
+    # SK = none
+}
+
+class AuthToken {
+    # PK = token
+    # SK = none
+}
+
+class Story {
+    # PK = sender alias
+    # SK = timestamp
+}
+
+class Feed {
+    # PK = receiver alias
+    # SK = ISO Date [sent date] + sender alias
+}
+
+User "1" --> "*" AuthToken
