@@ -40,7 +40,7 @@ Along the way
 - [ ] Introduce a network layer
   - [ ] Contains `Request` and `Response` objects that reflect the data transfer
   - [ ] Contains a `ServerFacade` with methods for every endpoint
-  - [ ] Contains a `ClientCommunicator` class that translates HTTP
+  - [x] Contains a `ClientCommunicator` class that translates HTTP
 - [ ] Update web services classes to call methods on `ServerFacade`
 - [ ] Ensure no further references to `FakeData` in web
 

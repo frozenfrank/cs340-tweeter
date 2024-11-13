@@ -16,8 +16,10 @@ export { AuthToken } from "./model/domain/AuthToken";
 export type { UserDTO } from "./model/dto/UserDTO";
 
 //
-// Requests
+// Requests & Responses
 //
+export type { TweeterRequest } from "./model/net/request/TweeterRequest";
+export type { TweeterResponse } from "./model/net/response/TweeterResponse";
 export type { PagedUserItemRequest } from "./model/net/request/PagedUserItemRequest";
 export type { PagedUserItemResponse } from "./model/net/response/PagedUserItemResponse";
 
