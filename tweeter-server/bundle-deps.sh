@@ -13,16 +13,20 @@ else
   npm run build
 fi
 
+ZIP_DIR="nodejs"
+TARGET_FILE="nodejs.zip"
+FINAL_DIR="$HOME/Downloads"
+
 # Bundle results properly
 echo "Bundling dependencies for Lambda"
-mkdir nodejs
-cp -RL node_modules nodejs
-zip -r nodejs.zip nodejs > /dev/null
+mkdir $ZIP_DIR
+cp -RL node_modules $ZIP_DIR
+zip -r $TARGET_FILE $ZIP_DIR > /dev/null
 
 # Transfer to downloads
-echo "Copying zip file to ~/Downloads"
-mv nodejs.zip ~/Downloads
-rm -rf nodejs
+echo "Copying zip file to $FINAL_DIR"
+mv $TARGET_FILE $FINAL_DIR
+rm -rf $ZIP_DIR
 
 # Done
 echo Done
