@@ -38,4 +38,5 @@ export type { ValueResponse } from "./model/net/response/ValueResponse";
 //
 // Other
 //
+export type { PagedData } from "./model/helper/PagedData";
 export { FakeData } from "./util/FakeData";

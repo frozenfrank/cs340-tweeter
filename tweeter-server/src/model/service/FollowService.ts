@@ -1,5 +1,4 @@
-import { FakeData, User, UserDTO } from "tweeter-shared";
-import { PagedData } from "./PagedItemsService";
+import { FakeData, PagedData, User, UserDTO } from "tweeter-shared";
 
 export type PagedUserData = PagedData<UserDTO>;
 
