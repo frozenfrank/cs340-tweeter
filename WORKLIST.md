@@ -9,13 +9,13 @@ Orchestrate end-to-end functionality for 14 endpoints. Numbers represent the _cu
   - [ ] Logout user [2]
   - [ ] Get user [2]
 * **Follow Service** (7)
-  - [ ] Follow user [2]
-  - [ ] Unfollow user [2]
+  - [ ] Follow user [3]
+  - [ ] Unfollow user [3]
   - [ ] Get followee count [4]
-  - [ ] Get follower count [2]
-  - [ ] Get is follower status [2]
-  - [ ] load more followers [2]
-  - [ ] load more followees [2]
+  - [ ] Get follower count [3]
+  - [ ] Get is follower status [3]
+  - [ ] load more followers [3]
+  - [ ] load more followees [3]
 * **Status service** (3)
   - [ ] load more feed items [2]
   - [ ] load more story items [2]
@@ -24,13 +24,13 @@ Orchestrate end-to-end functionality for 14 endpoints. Numbers represent the _cu
 Do the following for each of 14 endpoints. The numbers label the states.
 1. Transform server service classes
 2. Prepare Login/Response Objects
-2. Test from API Gateway
-3. Test from web application (later)
-4. Provide description documentation in API Gateway
-5. Define integration responses for all relevant HTTP status codes (200, 400, 500, etc)
-6. Enable CORS for each error response
-7. Provide the `Access-Control-Allow-Origin` header
-8. DONE
+3. Test from API Gateway
+4. Test from web application (later)
+5. Provide description documentation in API Gateway
+6. Define integration responses for all relevant HTTP status codes (200, 400, 500, etc)
+7. Enable CORS for each error response
+8. Provide the `Access-Control-Allow-Origin` header
+9. DONE
 
 Along the way
 - [x] Create User DTOs
