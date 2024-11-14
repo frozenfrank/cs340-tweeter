@@ -39,11 +39,11 @@ Along the way
 - [ ] Consider converting to `model.toDTO()` rather than `model.dto`.
 
 ## Client
-- [ ] Introduce a network layer
-  - [ ] Contains `Request` and `Response` objects that reflect the data transfer
-  - [ ] Contains a `ServerFacade` with methods for every endpoint
+- [x] Introduce a network layer
+  - [x] Contains `Request` and `Response` objects that reflect the data transfer
+  - [x] Contains a `ServerFacade` with methods for every endpoint
   - [x] Contains a `ClientCommunicator` class that translates HTTP
-- [ ] Update web services classes to call methods on `ServerFacade`
+- [x] Update web services classes to call methods on `ServerFacade`
 - [ ] Ensure no further references to `FakeData` in web
 
 **Pass off with TAs before 5pm**

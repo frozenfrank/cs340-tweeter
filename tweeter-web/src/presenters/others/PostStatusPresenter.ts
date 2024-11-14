@@ -7,7 +7,7 @@ export interface PostStatusView extends LoadingView, MessageView {
 }
 
 export class PostStatusPresenter extends LoadingPresenter<PostStatusView, StatusService> {
-  override buildService() { return new StatusService(); }
+  override buildService() { return new StatusService(this.server); }
 
   public async doPostStatus(authToken: AuthToken, currentUser: User, postContent: string) {
     await this.doTryOperation(async () => {
