@@ -19,8 +19,9 @@ read
 # Request the next lambda layer version number
 echo "Provide the new lambda layer version number. The previous layer version is provided for reference."
 echo "We will save this into the .server file for you. Press (enter) complete."
+source .server
 while true; do
-  printf "Lambda layer version (prev: $LAMBDALAYER_VERSION): "
+  printf "Lambda layer version (prev=$LAMBDALAYER_VERSION): "
   read new_lambda_layer_version
 
 
