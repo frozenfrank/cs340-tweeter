@@ -31,6 +31,7 @@ export class Presenter<V extends View> {
     try {
       return await operation();
     } catch (error) {
+      console.error(error);
       this.view.displayErrorMessage(`Failed to ${actionName} because of exception: ${(error as Error).message}`);
     }
   }
@@ -39,8 +40,8 @@ export class Presenter<V extends View> {
 /// ### Service Presenter ###
 
 export abstract class ServicePresenter<V extends View, U> extends Presenter<V> {
-  private _service = this.buildService();
   private _server = this.buildServer();
+  private _service = this.buildService();
 
   abstract buildService(): U;
   protected buildServer(): ServerFacade {
