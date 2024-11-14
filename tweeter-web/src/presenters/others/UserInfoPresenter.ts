@@ -9,7 +9,7 @@ export interface UserInfoView extends LoadingView, MessageView {
 }
 
 export class UserInfoPresenter extends LoadingPresenter<UserInfoView, FollowService> {
-  override buildService() { return new FollowService(); }
+  override buildService() { return new FollowService(this.server); }
 
   public setIsFollowerStatus(
     authToken: AuthToken,

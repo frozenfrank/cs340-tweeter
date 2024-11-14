@@ -7,7 +7,7 @@ export interface UserNavigationView extends View {
 }
 
 export class UserNavigationPresenter extends ServicePresenter<UserNavigationView, UserService> {
-  override buildService() { return new UserService(); }
+  override buildService() { return new UserService(this.server); }
 
   public async navigateToUser(authToken: AuthToken, currentUser: User, rawAlias: string) {
     return this.doTryOperation(async () => {

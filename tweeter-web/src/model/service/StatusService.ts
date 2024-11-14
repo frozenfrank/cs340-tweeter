@@ -1,15 +1,20 @@
-import { AuthToken, Status, FakeData } from "tweeter-shared";
+import { AuthToken, PagedData, Status } from "tweeter-shared";
+import { ServerFacade } from "../network/ServerFacade";
 
 export class StatusService {
+
+  constructor(private server: ServerFacade) { }
 
   public async loadMoreFeedItems(
     authToken: AuthToken,
     userAlias: string,
     pageSize: number,
     lastItem: Status | null
-  ): Promise<[Status[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+  ): Promise<PagedData<Status>> {
+    return this.server.loadMoreFeedItems({
+      token: authToken.token, userAlias,
+      pageSize, lastItem,
+    });
   };
 
   public async loadMoreStoryItems(
@@ -17,9 +22,11 @@ export class StatusService {
     userAlias: string,
     pageSize: number,
     lastItem: Status | null
-  ): Promise<[Status[], boolean]>  {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+  ): Promise<PagedData<Status>>  {
+    return this.server.loadMoreStoryItems({
+      token: authToken.token, userAlias,
+      pageSize, lastItem,
+    });
   };
 
 
@@ -27,10 +34,10 @@ export class StatusService {
     authToken: AuthToken,
     newStatus: Status
   ): Promise<void> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server to post the status
+    await this.server.postStatus({
+      token: authToken.token,
+      status: newStatus.dto,
+    });
   };
 
 }

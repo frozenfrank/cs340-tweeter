@@ -1,5 +1,7 @@
 /// ### Standard Presenter ###
 
+import { ServerFacade } from "../model/network/ServerFacade";
+
 export interface View {
   displayErrorMessage(message: string): void;
 }
@@ -29,6 +31,7 @@ export class Presenter<V extends View> {
     try {
       return await operation();
     } catch (error) {
+      console.error(error);
       this.view.displayErrorMessage(`Failed to ${actionName} because of exception: ${(error as Error).message}`);
     }
   }
@@ -37,11 +40,17 @@ export class Presenter<V extends View> {
 /// ### Service Presenter ###
 
 export abstract class ServicePresenter<V extends View, U> extends Presenter<V> {
+  private _server = this.buildServer();
   private _service = this.buildService();
 
   abstract buildService(): U;
+  protected buildServer(): ServerFacade {
+    // TODO: Consider a way to reuse this `ServerFacade` instance across presenters?
+    return new ServerFacade();
+  }
 
   get service() { return this._service; }
+  get server() { return this._server; }
 }
 
 /// ### Loading Presenter ###

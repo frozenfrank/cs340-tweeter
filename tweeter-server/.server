@@ -1,0 +1,20 @@
+BUCKET='byu-cs340-tweeter'
+LAMBDA_ROLE='arn:aws:iam::043309350193:role/CS340-Tweeter-Lambda'
+EDIT_LAMBDALIST='
+tweeterGetFollowees           | lambda/follow/GetFolloweesLambda.handler
+tweeterGetFollowers           | lambda/follow/GetFollowersLambda.handler
+tweeterFollowUser             | lambda/follow/FollowUserLambda.handler
+tweeterGetFolloweeCount       | lambda/follow/GetFolloweeCountLambda.handler
+tweeterGetFollowerCount       | lambda/follow/GetFollowerCountLambda.handler
+tweeterGetIsFollowerStatus    | lambda/follow/GetIsFollowerStatusLambda.handler
+tweeterUnfollowUser           | lambda/follow/UnfollowUserLambda.handler
+tweeterGetFeedItems           | lambda/status/GetFeedItemsLambda.handler
+tweeterGetStoryItems          | lambda/status/GetStoryItemsLambda.handler
+tweeterPostStatus             | lambda/status/PostStatusLambda.handler
+tweeterRegisterUser           | lambda/user/RegisterUserLambda.handler
+tweeterLoginUser              | lambda/user/LoginUserLambda.handler
+tweeterLogoutUser             | lambda/user/LogoutUserLambda.handler
+tweeterGetUser                | lambda/user/GetUserLambda.handler
+'
+LAMBDALAYER_VERSION=9
+LAMBDALAYER_ARN="arn:aws:lambda:us-east-1:043309350193:layer:CS340-Tweeter-Common-Layer:$LAMBDALAYER_VERSION"

@@ -1,7 +1,12 @@
 import { Buffer } from "buffer";
-import { AuthToken, FakeData, User } from "tweeter-shared";
+import { AuthToken, SignedInUserResponse, User } from "tweeter-shared";
+import { ServerFacade } from "../network/ServerFacade";
+
+type SignedInUser = [User, AuthToken];
 
 export class UserService {
+
+  constructor(private server: ServerFacade) { }
 
   public async register(
     firstName: string,
@@ -10,43 +15,41 @@ export class UserService {
     password: string,
     userImageBytes: Uint8Array,
     imageFileExtension: string
-  ): Promise<[User, AuthToken]> {
-    // Not needed now, but will be needed when you make the request to the server in milestone 3
+  ): Promise<SignedInUser> {
     const imageStringBase64: string = Buffer.from(userImageBytes).toString("base64");
+    const response = await this.server.registerUser({
+      firstName, lastName,
+      alias, password,
+      userImageBase64: imageStringBase64,
+      imageFileExtension,
+    });
 
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid registration");
-    }
-
-    return [user, FakeData.instance.authToken];
+    return this.extractSignedInUser(response);
   };
 
+  public async login(alias: string, password: string): Promise<SignedInUser> {
+    const response = await this.server.loginUser({
+      alias, password
+    });
+    return this.extractSignedInUser(response);
+  };
+
+  private extractSignedInUser(response: SignedInUserResponse): SignedInUser {
+    const user = User.fromDto(response.user) as User;
+    const authToken = new AuthToken(response.token, +new Date);
+    return [user, authToken];
+  }
 
   public async logout(authToken: AuthToken): Promise<void> {
-    // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    await new Promise((res) => setTimeout(res, 1000));
+    await this.server.logoutUser({token: authToken.token});
   };
-
-  public async login(alias: string, password: string): Promise<[User, AuthToken]> {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid alias or password");
-    }
-
-    return [user, FakeData.instance.authToken];
-  };
-
 
   public async getUser(
     authToken: AuthToken,
     alias: string
   ): Promise<User | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias);
+    return this.server.getUser({
+      token: authToken.token, alias
+    });
   };
 }
