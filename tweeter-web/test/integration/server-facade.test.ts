@@ -24,32 +24,35 @@ describe('Server Facade', () => {
   });
 
   it('should receive lists of followers, one page at a time', async () => {
+    const MAX_ITEMS_RECV = 30;
     let totalCount = 0;
     let batchCount: number;
     let totalBatches = 0;
     let lastItem: User | null = null;
 
-    let response: PagedData<User>;
     let sampleUser: User;
+    let users: User[];
+    let hasMore: boolean;
     do {
-      response = await server.loadMoreFollowers({
+      [users, hasMore] = await server.loadMoreFollowers({
         userAlias: user.alias,
         pageSize: 3,
         lastItem,
         token,
       });
 
-      sampleUser = response[0][0];
+      sampleUser = users[0];
       if (sampleUser) {
         // Expect the same fields to be coming over
         expect(Object.keys(sampleUser)).toEqual(Object.keys(user));
       }
 
       ++totalBatches;
-      batchCount = response[0]?.length || 0;
+      batchCount = users?.length || 0;
       totalCount += batchCount;
+      lastItem = hasMore ? users[users.length - 1] : null;
 
-    } while (batchCount > 0);
+    } while (hasMore && batchCount > 0 && totalCount < MAX_ITEMS_RECV);
 
     expect(totalCount).toBeGreaterThan(0);
     expect(totalBatches).toBeGreaterThan(0);
