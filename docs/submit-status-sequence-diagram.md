@@ -47,6 +47,8 @@ activate psc
 psc->>+psp: doPostStatus()
 psp->>+psp: doTryOperation()
 note over psc,psp: Presenter passes info to UI<br>via Observer pattern.
+psp->>+psc: setIsLoading(true)
+psc-->>-psp: void
 psp->>+psc: displayInfoMessage()
 psc->>-psp: void
 
@@ -65,6 +67,18 @@ psc->>-psp: void
             %% Work happens
             lambda->>+sss: postStatus(token, status)
             note over sss,db: Actual work will happen here.<br>Store post in table and <br> distribute to followers.<br><br>Additional DAO layers will exist <br>to facilitate communication here.
+            sss->>+db: getAuthToken()
+            db-->>-sss: AuthToken
+
+            break when AuthToken is invalid
+                sss-->>gate: throw new Error('Bad Request')
+                gate-->>cc: 400 Bad Request
+                cc-->>psp: throw new Error('Client communicator failed: Bad Request')
+                psp->>+psc: displayErrorMessage()
+                psc-->>-psp: void
+                psp-->>psp: void
+            end
+
             sss->>db: savePost()
             loop Every follower
             sss->>db: addFeedEntry()
@@ -87,6 +101,9 @@ psc-->>-psp: void
 psp->>+psc: displayInfoMessage()
 psc-->>-psp: void
 psp-->>-psp: void
+note over psp: Catch all errors here. Log <br>exceptional flows and proceed.
+psp->>+psc: setIsLoading(false)
+psc-->>-psp: void
 
 %% FINALLY, this happens no matter what
 psp->>+psc: clearLastInfoMessage()
