@@ -4,28 +4,28 @@
 
 Orchestrate end-to-end functionality for 14 endpoints. Numbers represent the _current state_ of each endpoint, assuming all previous states have been completed. If they haven't, then multiple numbers indicate multiple remaining items.
 * **User Service** (4)
-  - [ ] Register user [5]
-  - [ ] Login user [5]
-  - [ ] Logout user [5]
-  - [ ] Get user [5]
+  - [ ] Register user [6]
+  - [ ] Login user [6]
+  - [ ] Logout user [6]
+  - [ ] Get user [6]
 * **Follow Service** (7)
-  - [ ] Follow user [5]
-  - [ ] Unfollow user [5]
-  - [ ] Get followee count [5]
-  - [ ] Get follower count [5]
-  - [ ] Get is follower status [5]
-  - [ ] load more followers [5]
-  - [ ] load more followees [5]
+  - [ ] Follow user [6]
+  - [ ] Unfollow user [6]
+  - [ ] Get followee count [6]
+  - [ ] Get follower count [6]
+  - [ ] Get is follower status [6]
+  - [ ] load more followers [6]
+  - [ ] load more followees [6]
 * **Status service** (3)
-  - [ ] load more feed items [5]
-  - [ ] load more story items [5]
-  - [ ] post status [5]
+  - [ ] load more feed items [6]
+  - [ ] load more story items [6]
+  - [ ] post status [6]
 
 Do the following for each of 14 endpoints. The numbers label the states.
 1. ~Transform server service classes~
 2. ~Prepare Login/Response Objects~
 3. ~Test from API Gateway~
-4. Define integration responses for all relevant HTTP status codes (200, 400, 500, etc)
+4. ~Define integration responses for all relevant HTTP status codes (200, 400, 500, etc)~
   * Enable CORS while creating the resource
   * Add a "method" that correlates to the lambda function
   * Add the "Method responses" to the "POST" method
@@ -38,8 +38,8 @@ Do the following for each of 14 endpoints. The numbers label the states.
     * **500**: `^\[Server Error\].*`
     * Add the header: `Access-Control-Allow-Origin '*'`
 5. Provide description documentation in API Gateway
-7. Test from web application (later)
-8. DONE
+6. Test from web application (later)
+7. DONE
 
 Along the way
 - [x] Create User DTOs
