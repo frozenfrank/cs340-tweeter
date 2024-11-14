@@ -3,7 +3,7 @@ import { buildFollowService } from "../helper/factory";
 import { packageValueResponse } from "../helper/helper";
 
 export const handler = async (request: UserRequestSingle): Promise<ValueResponse<FollowBidirectionalCount>> => {
-  const followService = buildFollowService();
-  const result = await followService.unfollow(request.token, request.user);
+  const service = buildFollowService();
+  const result = await service.unfollow(request.token, request.user);
   return packageValueResponse(result);
 };

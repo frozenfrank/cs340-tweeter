@@ -3,8 +3,8 @@ import { buildUserService } from "../helper/factory";
 import { packageResponse } from "../helper/helper";
 
 export const handler = async (request: RegisterUserRequest): Promise<SignedInUserResponse> => {
-  const followService = buildUserService();
-  const [user, token] = await followService.register(
+  const service = buildUserService();
+  const [user, token] = await service.register(
     request.firstName,
     request.lastName,
     request.alias,

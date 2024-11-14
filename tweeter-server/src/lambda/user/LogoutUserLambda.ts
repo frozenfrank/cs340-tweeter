@@ -3,7 +3,7 @@ import { buildUserService } from "../helper/factory";
 import { successfulEmptyResponse } from "../helper/helper";
 
 export const handler = async (request: TweeterRequest): Promise<TweeterResponse> => {
-  const followService = buildUserService();
-  await followService.logout(request.token);
+  const service = buildUserService();
+  await service.logout(request.token);
   return successfulEmptyResponse();
 };
