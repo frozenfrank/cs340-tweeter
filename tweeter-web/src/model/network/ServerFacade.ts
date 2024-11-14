@@ -2,9 +2,14 @@ import {
   Follow,
   FollowBidirectionalCount,
   FollowDTO,
+  GetUserRequest,
+  GetUserResponse,
+  LoginUserRequest,
   PagedData,
   PagedItemRequest,
   PagedItemResponse,
+  RegisterUserRequest,
+  SignedInUserResponse,
   Status,
   StatusDTO,
   TweeterRequest,
@@ -14,14 +19,15 @@ import {
   UserRequestSingle,
   ValueResponse
 } from "tweeter-shared";
-import { ClientCommunicator } from "./ClientCommunicator";
 import { RudimentaryData } from "tweeter-shared/dist/model/net/response/ValueResponse";
+import { ClientCommunicator } from "./ClientCommunicator";
 
 export class ServerFacade {
   private SERVER_URL = "TODO: Set this value.";
   private clientCommunicator = new ClientCommunicator(this.SERVER_URL);
 
   private FOLLOW_BASE = "/follow";
+  private USER_BASE = "/user";
 
   private upscaleStatus = (dto: StatusDTO | null)  => Status.fromDto(dto);
   private upscaleUser   = (dto: UserDTO | null)    => User.fromDto(dto);
@@ -55,6 +61,33 @@ export class ServerFacade {
 
   public loadMoreFollowees(request: PagedItemRequest<User>): Promise<PagedData<User>> {
     return this.executePagedItemRequest<User, UserDTO>(request, this.FOLLOW_BASE + "/list/followees", this.upscaleUser);
+  }
+
+  // ### User Service ###
+
+  public registerUser(request: RegisterUserRequest): Promise<SignedInUserResponse> {
+    return this.executeAndExpectSignedInUser(request, this.USER_BASE + "/register");
+  }
+
+  public loginUser(request: LoginUserRequest): Promise<SignedInUserResponse> {
+    return this.executeAndExpectSignedInUser(request, this.USER_BASE + "/login");
+  }
+
+  public logoutUser(request: TweeterRequest): Promise<TweeterResponse> {
+    return this.doPost(request, this.USER_BASE + "/logout");
+  }
+
+  public async getUser<REQ extends GetUserRequest>(request: REQ): Promise<User | null> {
+    const response = await this.doPost<REQ, GetUserResponse>(request, this.USER_BASE + "/get");
+    return this.upscaleUser(response.user);
+  }
+
+  private async executeAndExpectSignedInUser<REQ extends TweeterRequest>(request: REQ, endpoint: string): Promise<SignedInUserResponse> {
+    const result = await this.doPost<REQ, SignedInUserResponse>(request, endpoint);
+    return {
+      ...result,
+      user: this.upscaleUser(result.user) as User
+    };
   }
 
 
