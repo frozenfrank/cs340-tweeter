@@ -1,5 +1,4 @@
-import { UserRequestSingle, ValueResponse } from "tweeter-shared";
-import { FollowBidirectionalCount } from "../../model/service/FollowService";
+import { FollowBidirectionalCount, UserRequestSingle, ValueResponse } from "tweeter-shared";
 import { buildFollowService } from "../helper/factory";
 import { packageValueResponse } from "../helper/helper";
 

@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 import { AuthToken, SignedInUserResponse, User } from "tweeter-shared";
 import { ServerFacade } from "../network/ServerFacade";
 
-export type SignedInUser = [User, AuthToken];
+type SignedInUser = [User, AuthToken];
 
 export class UserService {
 

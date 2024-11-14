@@ -1,5 +1,7 @@
 import { FakeData, User, UserDTO } from "tweeter-shared";
 
+type SignedInUser = [UserDTO, token: string];
+
 export class UserService {
 
   public async register(

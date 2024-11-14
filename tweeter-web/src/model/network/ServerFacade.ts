@@ -85,7 +85,8 @@ export class ServerFacade {
     return this.upscaleUser(response.user);
   }
 
-  private async executeAndExpectSignedInUser<REQ extends TweeterRequest>(request: REQ, endpoint: string): Promise<SignedInUserResponse> {
+  private async executeAndExpectSignedInUser<REQ>(request: REQ, endpoint: string): Promise<SignedInUserResponse> {
+    // @ts-expect-error The registration requests do not have the 'token' expected by `TweeterRequest`.
     const result = await this.doPost<REQ, SignedInUserResponse>(request, endpoint);
     return {
       ...result,
