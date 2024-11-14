@@ -17,6 +17,7 @@ import {
   TweeterResponse,
   User,
   UserDTO,
+  UserRequestDouble,
   UserRequestSingle,
   ValueResponse
 } from "tweeter-shared";
@@ -53,7 +54,7 @@ export class ServerFacade {
     return this.executePostForValue(request, this.FOLLOW_BASE + "/count/followees");
   }
 
-  public getIsFollowerStatus(request: UserRequestSingle): Promise<number> {
+  public getIsFollowerStatus(request: UserRequestDouble): Promise<boolean> {
     return this.executePostForValue(request, this.FOLLOW_BASE + "/is");
   }
 
