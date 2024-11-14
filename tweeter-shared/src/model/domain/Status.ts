@@ -283,7 +283,7 @@ export class Status {
       status.timestamp);
   }
 
-  public get dto() {
+  public get dto(): StatusDTO {
     return {
       post: this.post,
       user: this.user,

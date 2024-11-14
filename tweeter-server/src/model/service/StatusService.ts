@@ -25,6 +25,12 @@ export class StatusService {
   };
 
   private async getPageOfStatuses(lastItem: StatusDTO | null, pageSize: number): Promise<PagedStatusData> {
+    const [statuses, hasMore] = await this.doGetPageOfStatus(lastItem, pageSize);
+    const statusDTOs = statuses.map(s => s.dto);
+    return [statusDTOs, hasMore];
+  }
+
+  private async doGetPageOfStatus(lastItem: StatusDTO | null, pageSize: number): Promise<PagedData<Status>> {
     return FakeData.instance.getPageOfStatuses(
       Status.fromDto(lastItem)!,
       pageSize);
