@@ -8,6 +8,7 @@ import {
   PagedData,
   PagedItemRequest,
   PagedItemResponse,
+  PostStatusRequest,
   RegisterUserRequest,
   SignedInUserResponse,
   Status,
@@ -28,6 +29,7 @@ export class ServerFacade {
 
   private FOLLOW_BASE = "/follow";
   private USER_BASE = "/user";
+  private STATUS_BASE = "/status";
 
   private upscaleStatus = (dto: StatusDTO | null)  => Status.fromDto(dto);
   private upscaleUser   = (dto: UserDTO | null)    => User.fromDto(dto);
@@ -90,8 +92,22 @@ export class ServerFacade {
     };
   }
 
+  // ### Status Service ###
 
-  // ### Entry Points ###
+  public loadMoreFeedItems(request: PagedItemRequest<Status>): Promise<PagedData<Status>> {
+    return this.executePagedItemRequest<Status, StatusDTO>(request, this.STATUS_BASE + "/feed", this.upscaleStatus);
+  }
+
+  public loadMoreStoryItems(request: PagedItemRequest<Status>): Promise<PagedData<Status>> {
+    return this.executePagedItemRequest<Status, StatusDTO>(request, this.STATUS_BASE + "/story", this.upscaleStatus);
+  }
+
+  public postStatus(request: PostStatusRequest): Promise<TweeterResponse> {
+    return this.doPost(request, this.STATUS_BASE + "/post");
+  }
+
+
+  // ### Helper Entry Points ###
 
   private async executePagedItemRequest<MODEL extends {}, DTO extends {}>(
     request: PagedItemRequest<MODEL>,
@@ -124,7 +140,7 @@ export class ServerFacade {
     return response;
   }
 
-  // ### Helpers ###
+  // ### Internal Helpers ###
 
   /** Returns a new object with domain objects flattened into DTO objs.
    * Only works at the top level. */
