@@ -1,5 +1,11 @@
 #!/bin/bash
 
+git diff --quiet
+if [ $? -ne 0 ]; then
+  echo "Refusing to proceed without a clean working git directory."
+  exit 1
+fi
+
 # Terminate on error
 set -e
 
@@ -41,8 +47,15 @@ sed -i '' -E "s/LAMBDALAYER_VERSION=.*$/LAMBDALAYER_VERSION=$new_lambda_layer_ve
 npm run lambdas:b
 echo "Uploading lambdas"
 ./upload-lambdas.sh
+
+echo "Sleeping between upload operations"
+sleep 5
+
 echo "Updating lambda layers"
 ./update-layers.sh
+
+# Save adjustments to git
+git commit -am "Update Lambda Layer to version $new_lambda_layer_version"
 
 # Done
 echo "Done uploading. Manually test any new endpoints."
