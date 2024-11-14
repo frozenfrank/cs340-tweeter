@@ -1,6 +1,7 @@
 import { PagedData, PagedItemResponse, User } from "tweeter-shared";
 import { ServerFacade } from "../../src/model/network/ServerFacade";
 import { makeNUsers, makeStatus, makeUser } from "../utils";
+import "isomorphic-fetch"
 
 describe('Server Facade', () => {
   let token = "_fake_auth_token_";
