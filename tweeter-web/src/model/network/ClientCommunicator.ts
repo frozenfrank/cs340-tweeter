@@ -3,6 +3,8 @@ import { TweeterRequest, TweeterResponse } from "tweeter-shared";
 export class ClientCommunicator {
   private SERVER_URL: string;
 
+  private static DEBUG = false;
+
   public constructor(SERVER_URL: string) {
     this.SERVER_URL = SERVER_URL;
   }
@@ -20,7 +22,7 @@ export class ClientCommunicator {
       });
     }
 
-    console.log(`The request body is '${JSON.stringify(req)}'`);
+    if (ClientCommunicator.DEBUG) console.log(`The request body is '${JSON.stringify(req)}'`);
 
     const url = this.getUrl(endpoint);
     const params = this.getParams(
@@ -29,7 +31,7 @@ export class ClientCommunicator {
       req ? JSON.stringify(req) : req
     );
 
-    console.log(`Fetching '${url}' with params '${JSON.stringify(params)}'`);
+    if (ClientCommunicator.DEBUG) console.log(`Fetching '${url}' with params '${JSON.stringify(params)}'`);
 
     try {
       const resp: Response = await fetch(url, params);
