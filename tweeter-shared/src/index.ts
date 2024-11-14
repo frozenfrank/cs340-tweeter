@@ -38,5 +38,5 @@ export type { ValueResponse } from "./model/net/response/ValueResponse";
 //
 // Other
 //
-export type { PagedData, FollowBidirectionalCount, PagedUserData } from "./model/helper/assorted";
+export type { PagedData, FollowBidirectionalCount } from "./model/helper/assorted";
 export { FakeData } from "./util/FakeData";
