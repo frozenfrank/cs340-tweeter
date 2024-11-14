@@ -16,8 +16,25 @@ npm run deps:b
 echo "Please upload the new lambda layer. Press (enter) when complete."
 read
 
-echo "Please update the tweeter-server/.server with the new lambda version. Press (enter) when complete."
-read
+# Request the next lambda layer version number
+echo "Provide the new lambda layer version number. The previous layer version is provided for reference."
+echo "We will save this into the .server file for you. Press (enter) complete."
+while true; do
+  printf "Lambda layer version (prev: $LAMBDALAYER_VERSION): "
+  read new_lambda_layer_version
+
+
+  # Check if the input is a valid number
+  if [[ "$new_lambda_layer_version" =~ ^[0-9]+$ ]]; then
+      break  # Exit the loop if a valid number is entered
+  else
+      echo "You entered: $number"
+      echo "Error: Input is not a valid number. Please try again."
+  fi
+done
+
+# Update the value in the file
+sed -i '' -E "s/LAMBDALAYER_VERSION=.*$/LAMBDALAYER_VERSION=$new_lambda_layer_version/" .server
 
 # Update lambdas
 npm run lambdas:b
