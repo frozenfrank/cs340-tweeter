@@ -1,8 +1,4 @@
-import { FakeData, PagedData, User, UserDTO } from "tweeter-shared";
-
-export type PagedUserData = PagedData<UserDTO>;
-
-export type FollowBidirectionalCount = [followerCount: number, followeeCount: number];
+import { FakeData, FollowBidirectionalCount, PagedData, PagedUserData, User, UserDTO } from "tweeter-shared";
 
 export class FollowService {
 
