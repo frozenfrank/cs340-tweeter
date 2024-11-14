@@ -23,9 +23,9 @@ export class ServerFacade {
 
   private FOLLOW_BASE = "/follow";
 
-  private upscaleStatus = (dto: StatusDTO)  => Status.fromDto(dto);
-  private upscaleUser   = (dto: UserDTO)    => User.fromDto(dto);
-  private upscaleFollow = (dto: FollowDTO)  => Follow.fromDto(dto);
+  private upscaleStatus = (dto: StatusDTO | null)  => Status.fromDto(dto);
+  private upscaleUser   = (dto: UserDTO | null)    => User.fromDto(dto);
+  private upscaleFollow = (dto: FollowDTO | null)  => Follow.fromDto(dto);
 
   // ### Follow Service ###
 
@@ -67,7 +67,6 @@ export class ServerFacade {
   ): Promise<PagedData<MODEL>> {
     const flattenedRequest = this.flattenToDto(request) as unknown as PagedItemRequest<DTO>;
     const response = await this.doPost<PagedItemRequest<DTO>, PagedItemResponse<DTO>>(flattenedRequest, endpoint);
-    this.rejectOnError(response);
     if (!response.items) {
       throw new Error(`No items found`);
     }
@@ -85,9 +84,11 @@ export class ServerFacade {
     return this.returnValue(response);
   }
 
-  private doPost<REQ extends TweeterRequest, RES extends TweeterResponse>(request: REQ, endpoint: string): Promise<RES> {
+  private async doPost<REQ extends TweeterRequest, RES extends TweeterResponse>(request: REQ, endpoint: string): Promise<RES> {
     request = this.flattenToDto(request);
-    return this.clientCommunicator.doPost<REQ,RES>(request, endpoint);
+    const response = await this.clientCommunicator.doPost<REQ,RES>(request, endpoint);
+    this.rejectOnError(response);
+    return response;
   }
 
   // ### Helpers ###
@@ -110,7 +111,6 @@ export class ServerFacade {
   }
 
   private returnValue<T extends RudimentaryData>(response: ValueResponse<T>): T {
-    this.rejectOnError(response);
     return response.value;
   }
 }
