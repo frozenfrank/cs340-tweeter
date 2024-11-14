@@ -25,7 +25,7 @@ import { RudimentaryData } from "tweeter-shared/dist/model/net/response/ValueRes
 import { ClientCommunicator } from "./ClientCommunicator";
 
 export class ServerFacade {
-  private SERVER_URL = "TODO: Set this value.";
+  private SERVER_URL = "https://tjjqh0dxyg.execute-api.us-east-1.amazonaws.com/dev";
   private clientCommunicator = new ClientCommunicator(this.SERVER_URL);
 
   private FOLLOW_BASE = "/follow";
