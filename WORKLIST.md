@@ -63,12 +63,12 @@ Along the way
 - [x] Export Swagger documentation
   - [x] Publish the documentation
   - [x] Download as swagger to turn in on Canvas
-- [ ] Write **integration** tests to verify the system is working properly (only the following; success only):
-  - [ ] Register
-  - [ ] Get Followers
-  - [ ] GetFollowingCount and/or GetFollowersCount
+- [x] Write **integration** tests to verify the system is working properly (only the following; success only):
+  - [x] Register
+  - [x] Get Followers
+  - [x] GetFollowingCount and/or GetFollowersCount
 - [x] Sequence diagram showing _successful_ `postStatus()` operation
   * Include `client` and `server` objects
   * Include "API Gateway" bridging requests
   * Start with `submitPost()` and end with `displayInfoMessage()`
-- [ ] Turn in on Canvas
+- [x] Turn in on Canvas
