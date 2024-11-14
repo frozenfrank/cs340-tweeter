@@ -7,7 +7,7 @@ export interface AppNavbarView extends MessageView {
 }
 
 export class AppNavbarPresenter extends ServicePresenter<AppNavbarView, UserService> {
-  override buildService() { return new UserService(); }
+  override buildService() { return new UserService(this.server); }
 
   public async logOut(authToken: AuthToken) {
     this.view.displayInfoMessage("Logging Out...", 0);

@@ -9,7 +9,7 @@ export interface AuthenticationView extends LoadingView {
 }
 
 export class AuthenticationPresenter<V extends AuthenticationView> extends LoadingPresenter<V, UserService> {
-  override buildService() { return new UserService(); }
+  override buildService() { return new UserService(this.server); }
 
   protected doAuthentication(
     doAuthenticate: () => Promise<[User, AuthToken]>,
