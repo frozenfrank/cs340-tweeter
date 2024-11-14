@@ -1,4 +1,6 @@
-# Worklist
+# Work List
+
+This file contained my working progress counter to help me keep track of all the phase requirements.
 
 ## Lambdas
 
@@ -11,14 +13,14 @@ Orchestrate end-to-end functionality for 14 endpoints. Numbers represent the _cu
 * **Follow Service** (7)
   - [x] Follow user [7]
   - [x] Unfollow user [7]
-  - [x] Get followee count [y]
-  - [x] Get follower count [y]
+  - [x] Get followee count [7]
+  - [x] Get follower count [7]
   - [x] Get is follower status [7]
   - [x] load more followers [7]
   - [x] load more followees [7]
 * **Status service** (3)
-  - [ ] load more feed items [6]
-  - [ ] load more story items [6]
+  - [x] load more feed items [7]
+  - [x] load more story items [7]
   - [x] post status [7]
 
 Do the following for each of 14 endpoints. The numbers label the states.
@@ -38,8 +40,8 @@ Do the following for each of 14 endpoints. The numbers label the states.
     * **500**: `^\[Server Error\].*`
     * Add the header: `Access-Control-Allow-Origin '*'`
 5. ~Provide description documentation in API Gateway~
-6. Test from web application (later)
-7. DONE
+6. ~Test from web application (later)~
+7. **DONE**
 
 Along the way
 - [x] Create User DTOs
