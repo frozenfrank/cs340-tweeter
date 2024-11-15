@@ -41,11 +41,13 @@ describe('AppNavbarPresenter', () => {
 
   it('display an error message and does not tell it to clear the last info message or clear the user info', async () => {
     const error = new Error("An error occurred");
+    appNavbarPresenter.reportError = jest.fn();
     when(mockUserService.logout(authToken)).thenThrow(error);
 
     await appNavbarPresenter.logOut(authToken);
 
     verify(mockAppNavbarPresenterView.displayErrorMessage(`Failed to log user out because of exception: An error occurred`)).once();
+    expect(appNavbarPresenter.reportError).toHaveBeenCalled();
     verify(mockAppNavbarPresenterView.clearLastInfoMessage()).never();
     verify(mockAppNavbarPresenterView.clearUserInfo()).never();
   });

@@ -48,11 +48,13 @@ describe('PostStatusPresenter', () => {
 
   it('On failure, tells the view to display an error message and clear the last info message and does not tell it to clear the post or display a status posted message', async () => {
     const error = new Error("An error occurred");
+    postStatusPresenter.reportError = jest.fn();
     when(mockStatusService.postStatus(anything(), anything())).thenThrow(error);
 
     await postStatusPresenter.doPostStatus(authToken, currentUser, postContent);
 
     verify(mockPostStatusPresenterView.displayErrorMessage(`Failed to post the status because of exception: An error occurred`)).once();
+    expect(postStatusPresenter.reportError).toHaveBeenCalled();
     verify(mockPostStatusPresenterView.clearLastInfoMessage()).once();
     verify(mockPostStatusPresenterView.setPost("")).never();
     verify(mockPostStatusPresenterView.displayInfoMessage(STATUS_POSTED_MESSAGE, anyNumber())).never();

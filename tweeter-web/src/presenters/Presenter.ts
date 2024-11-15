@@ -18,6 +18,7 @@ export class Presenter<V extends View> {
     this._view = view;
   }
 
+  public reportError(error: any): void { console.error(error); }
   get view() { return this._view; }
 
   /**
@@ -31,7 +32,7 @@ export class Presenter<V extends View> {
     try {
       return await operation();
     } catch (error) {
-      console.error(error);
+      this.reportError(error);
       this.view.displayErrorMessage(`Failed to ${actionName} because of exception: ${(error as Error).message}`);
     }
   }
