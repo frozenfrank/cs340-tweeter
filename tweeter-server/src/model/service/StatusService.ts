@@ -1,12 +1,13 @@
-import { FakeData, PagedData, Status, StatusDTO } from "tweeter-shared";
+import { StatusDTO } from "tweeter-shared";
+import { PagedStatusData, StatusDAO } from "../dao/interface/StatusDAO";
 import { AuthService } from "./AuthService";
 
-type PagedStatusData = PagedData<StatusDTO>;
 
 export class StatusService {
 
   constructor(
     private authService: AuthService,
+    private statusDao: StatusDAO,
   ) { }
 
   public async loadMoreFeedItems(
@@ -16,8 +17,7 @@ export class StatusService {
     lastItem: StatusDTO | null
   ): Promise<PagedStatusData> {
     await this.authService.assertToken(token);
-    // NOTE: You should be able to complete all the things normally occurring in the house.
-    return this.getPageOfStatuses(lastItem, pageSize);
+    return this.statusDao.getFeedPage(userAlias, pageSize, lastItem);
   };
 
   public async loadMoreStoryItems(
@@ -27,21 +27,8 @@ export class StatusService {
     lastItem: StatusDTO | null
   ): Promise<PagedStatusData>  {
     await this.authService.assertToken(token);
-    // NOTE: You should be able to complete all the things normally occurring in the house.
-    return this.getPageOfStatuses(lastItem, pageSize);
+    return this.statusDao.getStoryPage(userAlias, pageSize, lastItem);
   };
-
-  private async getPageOfStatuses(lastItem: StatusDTO | null, pageSize: number): Promise<PagedStatusData> {
-    const [statuses, hasMore] = await this.doGetPageOfStatus(lastItem, pageSize);
-    const statusDTOs = statuses.map(s => s.dto);
-    return [statusDTOs, hasMore];
-  }
-
-  private async doGetPageOfStatus(lastItem: StatusDTO | null, pageSize: number): Promise<PagedData<Status>> {
-    return FakeData.instance.getPageOfStatuses(
-      Status.fromDto(lastItem)!,
-      pageSize);
-  }
 
 
   public async postStatus(
@@ -49,7 +36,7 @@ export class StatusService {
     newStatus: StatusDTO
   ): Promise<void> {
     await this.authService.assertToken(token);
-    // TODO: Implement method
+    await this.statusDao.createStatus(newStatus);
   };
 
 }

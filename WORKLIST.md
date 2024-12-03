@@ -9,13 +9,13 @@ This file contained my working progress counter to help me keep track of all the
   - [x] UserDAO
   - [ ] FollowDAO
   - [x] ImageDAO
-  - [ ] StatusDAO
+  - [x] StatusDAO
 - [ ] use DAOs
   - [x] AuthDAO
   - [x] UserDAO
   - [ ] FollowDAO
   - [x] ImageDAO
-  - [ ] StatusDAO
+  - [x] StatusDAO
 - [ ] Implement DAOs
   - [ ] AuthDAO
     - [x] Store alias in AuthToken
