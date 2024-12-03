@@ -14,29 +14,40 @@ export class FakeData {
     return this._authToken;
   }
 
+  private makeUser(
+    firstName: string,
+    lastName: string,
+    alias: string,
+    imageUrl: string
+  ): User {
+    return new User(
+      firstName, lastName, alias, imageUrl,
+      "Insecure_Password_HASHED_543q")
+  }
+
   private readonly allUsers: User[] = [
-    new User("Allen", "Anderson", "@allen", MALE_IMAGE_URL),
-    new User("Amy", "Ames", "@amy", FEMALE_IMAGE_URL),
-    new User("Bob", "Bobson", "@bob", MALE_IMAGE_URL),
-    new User("Bonnie", "Beatty", "@bonnie", FEMALE_IMAGE_URL),
-    new User("Chris", "Colston", "@chris", MALE_IMAGE_URL),
-    new User("Cindy", "Coats", "@cindy", FEMALE_IMAGE_URL),
-    new User("Dan", "Donaldson", "@dan", MALE_IMAGE_URL),
-    new User("Dee", "Dempsey", "@dee", FEMALE_IMAGE_URL),
-    new User("Elliott", "Enderson", "@elliott", MALE_IMAGE_URL),
-    new User("Elizabeth", "Engle", "@elizabeth", FEMALE_IMAGE_URL),
-    new User("Frank", "Frandson", "@frank", MALE_IMAGE_URL),
-    new User("Fran", "Franklin", "@fran", FEMALE_IMAGE_URL),
-    new User("Gary", "Gilbert", "@gary", MALE_IMAGE_URL),
-    new User("Giovanna", "Giles", "@giovanna", FEMALE_IMAGE_URL),
-    new User("Henry", "Henderson", "@henry", MALE_IMAGE_URL),
-    new User("Helen", "Hopwell", "@helen", FEMALE_IMAGE_URL),
-    new User("Igor", "Isaacson", "@igor", MALE_IMAGE_URL),
-    new User("Isabel", "Isaacson", "@isabel", FEMALE_IMAGE_URL),
-    new User("Justin", "Jones", "@justin", MALE_IMAGE_URL),
-    new User("Jill", "Johnson", "@jill", FEMALE_IMAGE_URL),
-    new User("Kent", "Knudson", "@kent", MALE_IMAGE_URL),
-    new User("Kathy", "Kunzler", "@kathy", FEMALE_IMAGE_URL),
+    this.makeUser("Allen", "Anderson", "@allen", MALE_IMAGE_URL),
+    this.makeUser("Amy", "Ames", "@amy", FEMALE_IMAGE_URL),
+    this.makeUser("Bob", "Bobson", "@bob", MALE_IMAGE_URL),
+    this.makeUser("Bonnie", "Beatty", "@bonnie", FEMALE_IMAGE_URL),
+    this.makeUser("Chris", "Colston", "@chris", MALE_IMAGE_URL),
+    this.makeUser("Cindy", "Coats", "@cindy", FEMALE_IMAGE_URL),
+    this.makeUser("Dan", "Donaldson", "@dan", MALE_IMAGE_URL),
+    this.makeUser("Dee", "Dempsey", "@dee", FEMALE_IMAGE_URL),
+    this.makeUser("Elliott", "Enderson", "@elliott", MALE_IMAGE_URL),
+    this.makeUser("Elizabeth", "Engle", "@elizabeth", FEMALE_IMAGE_URL),
+    this.makeUser("Frank", "Frandson", "@frank", MALE_IMAGE_URL),
+    this.makeUser("Fran", "Franklin", "@fran", FEMALE_IMAGE_URL),
+    this.makeUser("Gary", "Gilbert", "@gary", MALE_IMAGE_URL),
+    this.makeUser("Giovanna", "Giles", "@giovanna", FEMALE_IMAGE_URL),
+    this.makeUser("Henry", "Henderson", "@henry", MALE_IMAGE_URL),
+    this.makeUser("Helen", "Hopwell", "@helen", FEMALE_IMAGE_URL),
+    this.makeUser("Igor", "Isaacson", "@igor", MALE_IMAGE_URL),
+    this.makeUser("Isabel", "Isaacson", "@isabel", FEMALE_IMAGE_URL),
+    this.makeUser("Justin", "Jones", "@justin", MALE_IMAGE_URL),
+    this.makeUser("Jill", "Johnson", "@jill", FEMALE_IMAGE_URL),
+    this.makeUser("Kent", "Knudson", "@kent", MALE_IMAGE_URL),
+    this.makeUser("Kathy", "Kunzler", "@kathy", FEMALE_IMAGE_URL),
   ];
 
   // Allows mocking of fake users
@@ -105,7 +116,7 @@ export class FakeData {
             : this.fakeUsers[0];
 
         const post = `Post ${i} ${j}
-        My friend ${mention.alias} likes this website: http://byu.edu. Do you? 
+        My friend ${mention.alias} likes this website: http://byu.edu. Do you?
         Or do you prefer this one: http://cs.byu.edu?`;
         const timestamp =
           timestampStart + 30000000000 * (i * this.fakeUsers.length + j);
