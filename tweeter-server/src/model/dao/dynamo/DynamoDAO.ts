@@ -31,6 +31,7 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
   protected readonly client = DynamoDBDocumentClient.from(new DynamoDBClient({region: 'us-west-2'}));
 
   protected abstract tableName: string;
+  protected keyAttr?: string;
 
   // Simple, prebuilt commands
 
@@ -88,6 +89,11 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
   }
 
   // Sending helpers
+
+  protected generateDefaultKey(value: string): object {
+    if (!this.keyAttr) throw new Error(`The key attribute has not been defined.`);
+    return { [this.keyAttr]: value };
+  }
 
   protected readItems(items: T[] | undefined): U[] {
     const out: U[] = [];

@@ -3,15 +3,15 @@ import { FollowxStats } from "../../dto/FollowxStats";
 import { DynamoDAO } from "./DynamoDAO";
 
 export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
-  protected tableName = 'tweeter-follows-stats';
-
   private aliasAttr = "alias";
   private followersAttr = "followers";
   private followeesAttr = "followees";
 
+  protected tableName = 'tweeter-follows-stats';
+  protected override keyAttr = this.aliasAttr;
 
   public getStats(alias: string, consistentRead = false): Promise<FollowxStats> {
-    return this.getItem(this.generateKey(alias), consistentRead)
+    return this.getItem(this.generateDefaultKey(alias), consistentRead)
       // Provide empty values when the item doesn't exist
       .then(stats => (stats || { alias, followees: 0, followers: 0}));
   }
@@ -20,7 +20,7 @@ export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
     const updateAttr = followersOrNot ? this.followersAttr : this.followeesAttr;
     const command = new UpdateCommand({
       TableName: this.tableName,
-      Key: this.generateKey(alias),
+      Key: this.generateDefaultKey(alias),
       UpdateExpression: `SET ${updateAttr} = ${updateAttr} + :inc`,
       ExpressionAttributeValues: {
         ":inc": delta,
@@ -31,7 +31,4 @@ export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
     return this.send(command).then();
   }
 
-  private generateKey(alias: string) {
-    return { [this.aliasAttr]: alias };
-  }
 }

@@ -16,6 +16,7 @@ export class DynamoAuthDAO extends DynamoDAO<AuthTokenEntity, AuthToken> impleme
   private timestampAttr = 'timestamp';
   private aliasAttr = 'alias';
 
+  protected override keyAttr = this.aliasAttr;
 
   insertToken(auth: AuthToken): Promise<void> {
     return this.putItem({
@@ -25,18 +26,14 @@ export class DynamoAuthDAO extends DynamoDAO<AuthTokenEntity, AuthToken> impleme
     }).then();
   }
   getToken(token: string): Promise<AuthToken | null> {
-    return this.getItem(this.generateKey(token));
+    return this.getItem(this.generateDefaultKey(token));
   }
   deleteToken(token: string): Promise<void> {
-    return this.deleteItem(this.generateKey(token));
+    return this.deleteItem(this.generateDefaultKey(token));
   }
 
   protected override readItem(data: Record<string, any>): AuthToken {
     return new AuthToken(data[this.tokenAttr], data[this.timestampAttr], data[this.aliasAttr]);
-  }
-
-  private generateKey(token: string) {
-    return { [this.tokenAttr]: token };
   }
 
 }
