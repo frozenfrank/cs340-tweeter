@@ -28,7 +28,7 @@ export class DynamoAuthDAO extends DynamoDAO<AuthTokenEntity, AuthToken> impleme
     return this.getItem(this.generateKey(token));
   }
   deleteToken(token: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    return this.deleteItem(this.generateKey(token));
   }
 
   protected override readItem(data: Record<string, any>): AuthToken {

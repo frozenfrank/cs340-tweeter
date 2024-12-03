@@ -1,4 +1,4 @@
-import { DeleteCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { DataPage, DynamoDAO } from "./DynamoDAO";
 
 
@@ -67,14 +67,8 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
   }
 
   /** Deletes the indicated "follow" relationship, if it exists. */
-  async deleteFollow(followHandles: FollowHandles): Promise<void> {
-    const command = new DeleteCommand({
-      TableName: this.tableName,
-      Key: this.generateFollowKey(followHandles),
-      ReturnValues: "NONE",
-    });
-
-    this.send(command);
+  deleteFollow(followHandles: FollowHandles): Promise<void> {
+    return this.deleteItem(this.generateFollowKey(followHandles)).then();
   }
 
   /** Gets a single page of followees of a particular user. */

@@ -1,5 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
+  DeleteCommand,
   DynamoDBDocumentClient,
   DynamoDBDocumentClientCommand,
   GetCommand,
@@ -47,6 +48,16 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
     const command = new PutCommand({
       TableName: this.tableName,
       Item: { ...item },
+    });
+
+    return this.send(command).then();
+  }
+
+  async deleteItem(key: object): Promise<void> {
+    const command = new DeleteCommand({
+      TableName: this.tableName,
+      Key: key,
+      ReturnValues: "NONE",
     });
 
     return this.send(command).then();

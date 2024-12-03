@@ -18,7 +18,7 @@ This file contained my working progress counter to help me keep track of all the
   - [x] ImageDAO
   - [x] StatusDAO
 - [ ] Implement DAOs
-  - [ ] AuthDAO
+  - [x] AuthDAO
   - [ ] UserDAO
     - [ ] Install Bcrypt
   - [ ] FollowDAO
