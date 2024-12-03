@@ -9,8 +9,8 @@ export class AuthService {
     private authDao: AuthDAO,
   ) { }
 
-  public async generateToken(): Promise<string> {
-    const auth = AuthToken.Generate();
+  public async generateToken(alias: string): Promise<string> {
+    const auth = AuthToken.Generate(alias);
     await this.authDao.insertToken(auth);
     return auth.token;
   }

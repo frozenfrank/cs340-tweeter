@@ -28,7 +28,8 @@ namespace DomainObjects {
     class AuthToken {
         +string token
         +number timestamp
-        +Generate() AuthToken$
+        +string alias
+        +Generate(alias) AuthToken$
         +fromJson() AuthToken$
         +toJson() string
     }
@@ -37,6 +38,7 @@ namespace DomainObjects {
         +string lastName
         +string alias
         +string imageUrl
+        +string hashedPassword
     }
 
     class Status {

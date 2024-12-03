@@ -62,7 +62,7 @@ export class UserService {
   };
 
   private async returnSignedInUser(user: UserDTO): Promise<SignedInUser> {
-    const token = await this.authService.generateToken();
+    const token = await this.authService.generateToken(user.alias);
     return [user, token];
   }
 

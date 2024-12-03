@@ -8,7 +8,7 @@ const FEMALE_IMAGE_URL: string =
   "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/daisy_duck.png";
 
 export class FakeData {
-  private readonly _authToken: AuthToken = AuthToken.Generate();
+  private readonly _authToken: AuthToken = AuthToken.Generate("MISSING_ALIAS");
 
   public get authToken() {
     return this._authToken;
