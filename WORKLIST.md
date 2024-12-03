@@ -20,6 +20,7 @@ This file contained my working progress counter to help me keep track of all the
 - [ ] Implement DAOs
   - [x] AuthDAO
   - [ ] UserDAO
+    - [x] Provide implementation
     - [ ] Install Bcrypt
   - [ ] FollowDAO
     - [x] Basic CRUD operations
