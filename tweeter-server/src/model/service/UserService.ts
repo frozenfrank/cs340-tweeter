@@ -1,4 +1,5 @@
-import { FakeData, User, UserDTO } from "tweeter-shared";
+import { FakeData, UserDTO } from "tweeter-shared";
+import { AuthDAO } from "../dao/interface/AuthDAO";
 import { ImageDAO } from "../dao/interface/ImageDAO";
 import { UserDAO } from "../dao/interface/UserDAO";
 
@@ -7,8 +8,9 @@ type SignedInUser = [UserDTO, token: string];
 export class UserService {
 
   constructor(
-    private userDao: UserDAO,
+    private authDao: AuthDAO,
     private imageDao: ImageDAO,
+    private userDao: UserDAO,
   ) { }
 
   public async register(
@@ -39,29 +41,33 @@ export class UserService {
   };
 
 
-  public async logout(token: string): Promise<void> {
-    // TODO: Implement method
+  public logout(token: string): Promise<void> {
+    return this.authDao.deleteToken(token);
   };
 
   public async login(alias: string, password: string): Promise<SignedInUser> {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
+    const INVALID_CREDS_MSG = "Invalid alias or password";
 
+    const user = await this.userDao.getByAlias(alias);
     if (user === null) {
-      throw new Error("Invalid alias or password");
+      throw new Error(INVALID_CREDS_MSG);
+    }
+
+    console.warn("😈 Don't forget to compare password hashes to each other!")
+    if (user.passwordHash !== password) {
+      throw new Error(INVALID_CREDS_MSG);
     }
 
     return this.returnSignedInUser(user);
   };
 
-  private async returnSignedInUser(user: User): Promise<SignedInUser> {
+  private async returnSignedInUser(user: UserDTO): Promise<SignedInUser> {
     const token = FakeData.instance.authToken.token;
-    return [user.dto, token];
+    return [user, token];
   }
 
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias)?.dto || null;
+    return this.userDao.getByAlias(alias);
   };
 }

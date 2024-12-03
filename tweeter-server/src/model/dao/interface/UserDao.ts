@@ -1,4 +1,4 @@
-import { User } from "tweeter-shared";
+import { UserDTO } from "tweeter-shared";
 
 export interface UserDAO {
   /** Registers the user and returns the resulting user. */
@@ -8,5 +8,8 @@ export interface UserDAO {
     alias: string,
     hashedPassword: string,
     imageUrl: string
-  ): Promise<User>;
+  ): Promise<UserDTO>;
+
+  /** Gets a user by their Alias. */
+  getByAlias(alias: string): Promise<UserDTO|null>;
 }
