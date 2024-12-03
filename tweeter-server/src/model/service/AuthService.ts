@@ -35,7 +35,7 @@ export class AuthService {
     return true;
   }
 
-  public async invalidateToken(token: string): Promise<void> {
-    this.authDao.deleteToken(token);
+  public invalidateToken(token: string): Promise<void> {
+    return this.authDao.deleteToken(token);
   }
 }
