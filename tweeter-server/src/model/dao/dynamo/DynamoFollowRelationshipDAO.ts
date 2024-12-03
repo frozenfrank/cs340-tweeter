@@ -128,11 +128,6 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
     return this.readPagedQueryCommand(command);
   }
 
-
-  protected override readItem(item: Record<string, any>): FollowEntity {
-    return item as FollowEntity; // Easy for now because the `Follow` interface exactly matches the database.
-  }
-
   private generateFollowKey(followHandles: FollowHandles): Record<string, any> {
     return {
       [this.followerHandleAttr]: followHandles.follower_handle,

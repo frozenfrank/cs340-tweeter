@@ -9,9 +9,6 @@ export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
   private followersAttr = "followers";
   private followeesAttr = "followees";
 
-  protected override readItem(data: Record<string, any>): FollowxStats {
-    return data as FollowxStats; // Easy for now
-  }
 
   public getStats(alias: string, consistentRead = false): Promise<FollowxStats> {
     return this.getItem(this.generateKey(alias), consistentRead)

@@ -30,7 +30,9 @@ export abstract class DynamoDAO<T> {
 
   protected abstract tableName: string;
 
-  protected abstract readItem(data: Record<string, any>): T;
+  protected readItem(data: Record<string, any>): T {
+    return data as T; // Assume that the data row is a POJO matching the entity type
+  }
 
   // Getting commands
 
