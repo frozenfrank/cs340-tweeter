@@ -24,6 +24,7 @@ This file contained my working progress counter to help me keep track of all the
   - [ ] FollowDAO
     - [x] Basic CRUD operations
     - [x] Getting pages of followx
+    - [x] Follow stats
     - [ ] Provide the rest of the user data
   - [ ] ImageDAO
   - [ ] StatusDAO

@@ -3,25 +3,35 @@ import { FollowxStats } from "../../dto/FollowxStats";
 import { FollowDAO, PagedUserData } from "../interface/FollowDAO";
 import { DynamoFollowRelationshipDAO, FollowEntity } from "./DynamoFollowRelationshipDAO";
 import { DataPage } from "./DynamoDAO";
+import { DynamoFollowStatsDAO } from "./DynamoFollowStatsDAO";
 
 export class DynamoFollowDAO implements FollowDAO {
   private relationships = new DynamoFollowRelationshipDAO();
+  private stats = new DynamoFollowStatsDAO();
 
   getFollowStats(alias: string): Promise<FollowxStats> {
-    throw new Error("Method not implemented.");
+    return this.stats.getStats(alias);
   }
 
   addFollow(followeeAlias: string, followerAlias: string): Promise<void> {
-    return this.relationships.putFollow({
-      follower_handle: followerAlias,
-      followee_handle: followeeAlias,
-    }).then();
+    return Promise.all([
+      this.stats.incrementValue(followeeAlias, true, 1),
+      this.stats.incrementValue(followerAlias, false, 1),
+      this.relationships.putFollow({
+        follower_handle: followerAlias,
+        followee_handle: followeeAlias,
+      }),
+    ]).then();
   }
   removeFollow(followeeAlias: string, followerAlias: string): Promise<void> {
-    return this.relationships.deleteFollow({
-      follower_handle: followerAlias,
-      followee_handle: followeeAlias,
-    });
+    return Promise.all([
+      this.stats.incrementValue(followeeAlias, true, -1),
+      this.stats.incrementValue(followerAlias, false, -1),
+      this.relationships.deleteFollow({
+        follower_handle: followerAlias,
+        followee_handle: followeeAlias,
+      }),
+    ]).then();
   }
 
   getIsFollower(followeeAlias: string, followerAlias: string): Promise<boolean> {
