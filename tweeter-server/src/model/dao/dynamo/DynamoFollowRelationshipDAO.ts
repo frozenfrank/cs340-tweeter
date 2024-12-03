@@ -135,7 +135,7 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
   }
 
 
-  override readItem(item: Record<string, any>): FollowEntity {
+  protected override readItem(item: Record<string, any>): FollowEntity {
     return item as FollowEntity; // Easy for now because the `Follow` interface exactly matches the database.
   }
 

@@ -30,17 +30,12 @@ export abstract class DynamoDAO<T> {
 
   protected abstract tableName: string;
 
-  abstract readItem(data: Record<string, any>): T;
+  protected abstract readItem(data: Record<string, any>): T;
 
-
-  protected readItems(items: Record<string, any>[] | undefined): T[] {
-    const out: T[] = [];
-    items?.forEach(item => out.push(this.readItem(item)));
-    return out;
-  }
 
   // Sending commands
-  async sendGetCommand(command: GetCommand): Promise<T | null> {
+
+  protected async sendGetCommand(command: GetCommand): Promise<T | null> {
     const response = await this.send<GetCommandOutput>(command);
     if (response.Item) {
       return this.readItem(response.Item);
@@ -48,7 +43,7 @@ export abstract class DynamoDAO<T> {
     return null;
   }
 
-  async readPagedQueryCommand(command: QueryCommand): Promise<DataPage<T>> {
+  protected async readPagedQueryCommand(command: QueryCommand): Promise<DataPage<T>> {
     const response = await this.send<QueryCommandOutput>(command);
     const hasMorePages = response.LastEvaluatedKey !== undefined;
     const items = this.readItems(response.Items);
@@ -56,15 +51,24 @@ export abstract class DynamoDAO<T> {
     return new DataPage(items, hasMorePages);
   }
 
-  async send<OUT extends object>(command: DynamoDBDocumentClientCommand<any, OUT, any, any, any>): Promise<OUT> {
+  protected async send<OUT extends object>(command: DynamoDBDocumentClientCommand<any, OUT, any, any, any>): Promise<OUT> {
     const response = await this.client.send(command);
     this.logResponseOnError(response);
     return response;
   }
 
-  logResponseOnError(response: MetadataBearer): void {
-    const statusCategory = Math.floor((response.$metadata.httpStatusCode || 0) / 100);
+  // Sending helpers
+
+  protected readItems(items: Record<string, any>[] | undefined): T[] {
+    const out: T[] = [];
+    items?.forEach(item => out.push(this.readItem(item)));
+    return out;
+  }
+
+  protected logResponseOnError(response: MetadataBearer): void {
+    const statusCode = response.$metadata.httpStatusCode || 0;
+    const statusCategory = Math.floor(statusCode / 100);
     if (statusCategory === 2) return;
-    console.warn("Received non-200 status code:", response);
+    console.warn(`Received ${statusCode} status code:`, response);
   }
 }
