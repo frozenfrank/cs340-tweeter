@@ -5,17 +5,20 @@ export class User {
   private _lastName: string;
   private _alias: string;
   private _imageUrl: string;
+  private _passwordHash: string;
 
   public constructor(
     firstName: string,
     lastName: string,
     alias: string,
-    imageUrl: string
+    imageUrl: string,
+    passwordHash: string,
   ) {
     this._firstName = firstName;
     this._lastName = lastName;
     this._alias = alias;
     this._imageUrl = imageUrl;
+    this._passwordHash = passwordHash;
   }
 
   public get firstName(): string {
@@ -54,6 +57,14 @@ export class User {
     this._imageUrl = value;
   }
 
+  public get passwordHash(): string {
+    return this._passwordHash;
+  }
+
+  public set passwordHash(value: string) {
+    this._passwordHash = value;
+  }
+
   public equals(other: User): boolean {
     return this._alias === other._alias;
   }
@@ -65,12 +76,14 @@ export class User {
         _lastName: string;
         _alias: string;
         _imageUrl: string;
+        _passwordHash: string;
       } = JSON.parse(json);
       return new User(
         jsonObject._firstName,
         jsonObject._lastName,
         jsonObject._alias,
-        jsonObject._imageUrl
+        jsonObject._imageUrl,
+        jsonObject._passwordHash,
       );
     } else {
       return null;
@@ -82,7 +95,7 @@ export class User {
   }
 
   public static fromDto(dto: UserDTO | null): User | null {
-    return !dto ? null : new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl);
+    return !dto ? null : new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl, dto.passwordHash);
   }
 
   public get dto(): UserDTO {
@@ -91,6 +104,7 @@ export class User {
       lastName: this.lastName,
       alias: this.alias,
       imageUrl: this.imageUrl,
+      passwordHash: this._passwordHash,
     };
   }
 }
