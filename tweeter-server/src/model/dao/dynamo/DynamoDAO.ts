@@ -27,18 +27,14 @@ export class DataPage<T> {
   }
 }
 
-export abstract class DynamoDAO<T extends Record<string, any>> {
+export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<string, any> = T> {
   protected readonly client = DynamoDBDocumentClient.from(new DynamoDBClient({region: 'us-west-2'}));
 
   protected abstract tableName: string;
 
-  protected readItem(data: Record<string, any>): T {
-    return data as T; // Assume that the data row is a POJO matching the entity type
-  }
-
   // Simple, prebuilt commands
 
-  protected async getItem(key: object, consistentRead = false): Promise<T|null> {
+  protected async getItem(key: object, consistentRead = false): Promise<U|null> {
     const command = new GetCommand({
       TableName: this.tableName,
       Key: key,
@@ -59,18 +55,18 @@ export abstract class DynamoDAO<T extends Record<string, any>> {
 
   // Sending commands
 
-  protected async sendGetCommand(command: GetCommand): Promise<T | null> {
+  protected async sendGetCommand(command: GetCommand): Promise<U | null> {
     const response = await this.send<GetCommandOutput>(command);
     if (response.Item) {
-      return this.readItem(response.Item);
+      return this.readItem(response.Item as T);
     }
     return null;
   }
 
-  protected async readPagedQueryCommand(command: QueryCommand): Promise<DataPage<T>> {
+  protected async readPagedQueryCommand(command: QueryCommand): Promise<DataPage<U>> {
     const response = await this.send<QueryCommandOutput>(command);
     const hasMorePages = response.LastEvaluatedKey !== undefined;
-    const items = this.readItems(response.Items);
+    const items = this.readItems(response.Items as T[]);
 
     return new DataPage(items, hasMorePages);
   }
@@ -83,10 +79,16 @@ export abstract class DynamoDAO<T extends Record<string, any>> {
 
   // Sending helpers
 
-  protected readItems(items: Record<string, any>[] | undefined): T[] {
-    const out: T[] = [];
+  protected readItems(items: T[] | undefined): U[] {
+    const out: U[] = [];
     items?.forEach(item => out.push(this.readItem(item)));
     return out;
+  }
+
+  /** OVERRIDE ME! Replace this assumptive guess with more precise logic as needed. */
+  protected readItem(data: T): U {
+    // Override me!
+    return data as unknown as U; // Assume that the data row is a POJO matching the entity type
   }
 
   protected logResponseOnError(response: MetadataBearer): void {
