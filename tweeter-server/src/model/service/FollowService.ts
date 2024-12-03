@@ -1,13 +1,19 @@
 import { FakeData, FollowBidirectionalCount, PagedData, User, UserDTO } from "tweeter-shared";
+import { AuthService } from "./AuthService";
 
 export type PagedUserData = PagedData<UserDTO>;
 
 export class FollowService {
 
+  constructor(
+    private authService: AuthService,
+  ) { }
+
   public async follow(
     token: string,
     userToFollow: UserDTO,
   ): Promise<FollowBidirectionalCount> {
+    await this.authService.assertToken(token);
     // TODO: Fulfill actual behavior
     return this.getBidirectionalCount(token, userToFollow);
   };
@@ -16,6 +22,7 @@ export class FollowService {
     token: string,
     userToUnfollow: UserDTO,
   ): Promise<FollowBidirectionalCount> {
+    await this.authService.assertToken(token);
     // TODO: Fulfill actual behavior
     return this.getBidirectionalCount(token, userToUnfollow);
   };
@@ -34,6 +41,7 @@ export class FollowService {
     token: string,
     user: UserDTO,
   ): Promise<number> {
+    await this.authService.assertToken(token);
     // TODO: Fulfill actual behavior
     return FakeData.instance.getFollowerCount(user.alias);
   };
@@ -42,6 +50,7 @@ export class FollowService {
     token: string,
     user: UserDTO
   ): Promise<number> {
+    await this.authService.assertToken(token);
     // TODO: Fulfill actual behavior
     return FakeData.instance.getFolloweeCount(user.alias);
   };
@@ -51,6 +60,7 @@ export class FollowService {
     user: UserDTO,
     selectedUser: UserDTO
   ): Promise<boolean> {
+    await this.authService.assertToken(token);
     // TODO: Fulfill actual behavior
     return FakeData.instance.isFollower();
   };
@@ -61,6 +71,7 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
+    await this.authService.assertToken(token);
     return this.getFakeData(userAlias, pageSize, lastItem);
   };
 
@@ -70,6 +81,7 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
+    await this.authService.assertToken(token);
     return this.getFakeData(userAlias, pageSize, lastItem);
   };
 
