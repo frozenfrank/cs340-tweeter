@@ -1,5 +1,13 @@
 import { UserDTO } from "../dto/UserDTO";
 
+export interface UserJsonObj {
+  _firstName: string;
+  _lastName: string;
+  _alias: string;
+  _imageUrl: string;
+  _passwordHash: string;
+}
+
 export class User {
   private _firstName: string;
   private _lastName: string;
@@ -71,23 +79,21 @@ export class User {
 
   public static fromJson(json: string | null | undefined): User | null {
     if (!!json) {
-      const jsonObject: {
-        _firstName: string;
-        _lastName: string;
-        _alias: string;
-        _imageUrl: string;
-        _passwordHash: string;
-      } = JSON.parse(json);
-      return new User(
-        jsonObject._firstName,
-        jsonObject._lastName,
-        jsonObject._alias,
-        jsonObject._imageUrl,
-        jsonObject._passwordHash,
-      );
+      const jsonObject: UserJsonObj = JSON.parse(json);
+      return this.fromJsonObj(jsonObject);
     } else {
       return null;
     }
+  }
+
+  public static fromJsonObj(jsonObject: UserJsonObj): User {
+    return new User(
+      jsonObject._firstName,
+      jsonObject._lastName,
+      jsonObject._alias,
+      jsonObject._imageUrl,
+      jsonObject._passwordHash,
+    );
   }
 
   public toJson(): string {
