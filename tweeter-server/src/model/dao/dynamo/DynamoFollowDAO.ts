@@ -14,6 +14,7 @@ export class DynamoFollowDAO implements FollowDAO {
   }
 
   addFollow(followeeAlias: string, followerAlias: string): Promise<void> {
+    // TODO: Use a transaction to guarantee atomicity
     return Promise.all([
       this.stats.incrementValue(followeeAlias, true, 1),
       this.stats.incrementValue(followerAlias, false, 1),
@@ -24,6 +25,7 @@ export class DynamoFollowDAO implements FollowDAO {
     ]).then();
   }
   removeFollow(followeeAlias: string, followerAlias: string): Promise<void> {
+    // TODO: Use a transaction to guarantee atomicity
     return Promise.all([
       this.stats.incrementValue(followeeAlias, true, -1),
       this.stats.incrementValue(followerAlias, false, -1),
