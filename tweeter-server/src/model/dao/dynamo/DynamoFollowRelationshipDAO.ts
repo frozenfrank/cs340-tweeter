@@ -61,13 +61,7 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
 
   /** Get a particular follow relationship, or `null` if it doesn't exist. */
   async getSomeFollow(followHandles: FollowHandles, consistentRead = false): Promise<FollowEntity|null> {
-    const command = new GetCommand({
-      TableName: this.tableName,
-      Key: this.generateFollowKey(followHandles),
-      ConsistentRead: consistentRead,
-    });
-
-    return this.sendGetCommand(command);
+    return this.getItem(this.generateFollowKey(followHandles), consistentRead);
   }
 
   /** Updates the names of the follower and followee, if it exists, given their handles are provided. */

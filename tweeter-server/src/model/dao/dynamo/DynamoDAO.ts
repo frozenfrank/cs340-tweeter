@@ -32,6 +32,17 @@ export abstract class DynamoDAO<T> {
 
   protected abstract readItem(data: Record<string, any>): T;
 
+  // Getting commands
+
+  protected async getItem(key: object, consistentRead = false): Promise<T|null> {
+    const command = new GetCommand({
+      TableName: this.tableName,
+      Key: key,
+      ConsistentRead: consistentRead,
+    });
+
+    return this.sendGetCommand(command);
+  }
 
   // Sending commands
 
