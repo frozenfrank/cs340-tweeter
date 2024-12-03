@@ -15,10 +15,9 @@ export class FollowService {
     token: string,
     userToFollow: UserDTO,
   ): Promise<FollowBidirectionalCount> {
-    await this.authService.assertToken(token);
+    const auth = await this.authService.assertToken(token);
 
-    const actingUserAlias = "FAKE_ALIAS";
-    console.warn("🏴‍☠️ Look up the alias of the user of the auth token");
+    const actingUserAlias = auth.alias;
     await this.followDao.addFollow(userToFollow.alias, actingUserAlias);
 
     return this.getBidirectionalCount(token, userToFollow);
@@ -28,10 +27,9 @@ export class FollowService {
     token: string,
     userToUnfollow: UserDTO,
   ): Promise<FollowBidirectionalCount> {
-    await this.authService.assertToken(token);
+    const auth = await this.authService.assertToken(token);
 
-    const actingUserAlias = "FAKE_ALIAS";
-    console.warn("🏴‍☠️ Look up the alias of the user of the auth token");
+    const actingUserAlias = auth.alias;
     await this.followDao.addFollow(userToUnfollow.alias, actingUserAlias);
 
     return this.getBidirectionalCount(token, userToUnfollow);

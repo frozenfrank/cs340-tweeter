@@ -15,15 +15,16 @@ export class AuthService {
     return auth.token;
   }
 
-  public async assertToken(token: string): Promise<void|never> {
-    if (!await this.verifyToken(token)){
-      throw new Error("Invalid token");
+  public async assertToken(token: string): Promise<AuthToken|never> {
+    const auth = await this.authDao.getToken(token);
+    if (!auth || !this.verifyAuth(auth)){
+      throw new Error("Invalid authorization");
     }
+    return auth;
   }
 
-  public async verifyToken(token: string): Promise<boolean> {
+  public verifyAuth(auth: AuthToken|null): boolean {
     // Verify token existence
-    const auth = await this.authDao.getToken(token);
     if (!auth) return false;
 
     // Verify recent generation
