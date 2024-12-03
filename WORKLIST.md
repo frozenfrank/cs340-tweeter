@@ -18,9 +18,12 @@ This file contained my working progress counter to help me keep track of all the
   - [ ] StatusDAO
 - [ ] Implement DAOs
   - [ ] AuthDAO
+    - Store alias in AuthToken
   - [ ] UserDAO
     - Install Bcrypt
   - [ ] FollowDAO
+    - Basic CRUD operations
+    - Getting pages of followx
   - [ ] ImageDAO
   - [ ] StatusDAO
 - [ ] Use Abstract Factory pattern
