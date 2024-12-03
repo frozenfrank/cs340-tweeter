@@ -5,7 +5,6 @@ import {
   GetCommand,
   GetCommandOutput,
   PutCommand,
-  PutCommandOutput,
   QueryCommand,
   QueryCommandOutput
 } from "@aws-sdk/lib-dynamodb";
@@ -44,13 +43,13 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
     return this.sendGetCommand(command);
   }
 
-  protected async putItem(item: T): Promise<PutCommandOutput> {
+  protected async putItem(item: T): Promise<void> {
     const command = new PutCommand({
       TableName: this.tableName,
       Item: { ...item },
     });
 
-    return this.send(command);
+    return this.send(command).then();
   }
 
   // Sending commands

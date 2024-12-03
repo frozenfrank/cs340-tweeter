@@ -1,9 +1,4 @@
-import {
-  DeleteCommand,
-  PutCommandOutput,
-  QueryCommand,
-  UpdateCommand
-} from "@aws-sdk/lib-dynamodb";
+import { DeleteCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { DataPage, DynamoDAO } from "./DynamoDAO";
 
 
@@ -46,17 +41,17 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
    * @param followee The person being followed
    * @param follower The person following another
    */
-  async putFollow(follow: FollowEntity): Promise<PutCommandOutput> {
+  putFollow(follow: FollowEntity): Promise<void> {
     return this.putItem(follow);
   }
 
   /** Get a particular follow relationship, or `null` if it doesn't exist. */
-  async getSomeFollow(followHandles: FollowHandles, consistentRead = false): Promise<FollowEntity|null> {
+  getSomeFollow(followHandles: FollowHandles, consistentRead = false): Promise<FollowEntity|null> {
     return this.getItem(this.generateFollowKey(followHandles), consistentRead);
   }
 
   /** Updates the names of the follower and followee, if it exists, given their handles are provided. */
-  async updateFollow(withUpdatedFollowNames: FollowEntity): Promise<void> {
+  updateFollow(withUpdatedFollowNames: FollowEntity): Promise<void> {
     const command = new UpdateCommand({
       TableName: this.tableName,
       Key: this.generateFollowKey(withUpdatedFollowNames),
@@ -68,7 +63,7 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
       ReturnValues: "NONE",
     });
 
-    this.send(command);
+    return this.send(command).then();
   }
 
   /** Deletes the indicated "follow" relationship, if it exists. */
