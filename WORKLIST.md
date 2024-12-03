@@ -27,7 +27,7 @@ This file contained my working progress counter to help me keep track of all the
   - [ ] ImageDAO
   - [ ] StatusDAO
 - [ ] Use Abstract Factory pattern
-- [ ] Remove entirely FakeData
+- [x] Remove entirely FakeData
 - [ ] Verify compliance with [User & session data](https://byu.instructure.com/courses/27157/pages/course-project-2) requirements
 
 
