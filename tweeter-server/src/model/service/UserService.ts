@@ -1,14 +1,14 @@
-import { FakeData, UserDTO } from "tweeter-shared";
-import { AuthDAO } from "../dao/interface/AuthDAO";
+import { UserDTO } from "tweeter-shared";
 import { ImageDAO } from "../dao/interface/ImageDAO";
 import { UserDAO } from "../dao/interface/UserDAO";
+import { AuthService } from "./AuthService";
 
 type SignedInUser = [UserDTO, token: string];
 
 export class UserService {
 
   constructor(
-    private authDao: AuthDAO,
+    private authService: AuthService,
     private imageDao: ImageDAO,
     private userDao: UserDAO,
   ) { }
@@ -42,7 +42,7 @@ export class UserService {
 
 
   public logout(token: string): Promise<void> {
-    return this.authDao.deleteToken(token);
+    return this.authService.invalidateToken(token);
   };
 
   public async login(alias: string, password: string): Promise<SignedInUser> {
@@ -62,12 +62,13 @@ export class UserService {
   };
 
   private async returnSignedInUser(user: UserDTO): Promise<SignedInUser> {
-    const token = FakeData.instance.authToken.token;
+    const token = await this.authService.generateToken();
     return [user, token];
   }
 
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
+    await this.authService.assertToken(token);
     return this.userDao.getByAlias(alias);
   };
 }
