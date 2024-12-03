@@ -1,7 +1,6 @@
 import { User } from "tweeter-shared";
-import { DAO } from "./DAO";
 
-export interface UserDAO extends DAO {
+export interface UserDAO {
   /** Registers the user and returns the resulting user. */
   register(
     firstName: string,
