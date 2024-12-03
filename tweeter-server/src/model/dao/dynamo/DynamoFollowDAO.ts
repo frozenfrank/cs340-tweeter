@@ -1,30 +1,13 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DeleteCommand,
-  DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
   PutCommandOutput,
   QueryCommand,
-  UpdateCommand,
+  UpdateCommand
 } from "@aws-sdk/lib-dynamodb";
-import { MetadataBearer } from "@aws-sdk/types";
+import { DataPage, DynamoDAO } from "./DynamoDAO";
 
-
-/**
- * A page of data returned by the database.
- *
- * @param <T> type of data objects being returned.
- */
-class DataPage<T> {
-  values: T[]; // page of values returned by the database
-  hasMorePages: boolean; // Indicates whether there are more pages of data available to be retrieved
-
-  constructor(values: T[], hasMorePages: boolean) {
-    this.values = values;
-    this.hasMorePages = hasMorePages;
-  }
-}
 
 /**
  * Represents a "follows" relationship between two users.
@@ -51,15 +34,14 @@ interface Follow {
 type FollowHandles = Pick<Follow, "followee_handle" | "follower_handle">;
 
 
-export class FollowDAO {
-  private readonly tableName = "tweeter-follows";
+export class FollowDAO extends DynamoDAO<Follow> {
+  protected override readonly tableName = "tweeter-follows";
+
   private readonly followerHandleAttr = "follower_handle";
   private readonly followeeHandleAttr = "followee_handle";
   private readonly followerNameAttr = "follower_name";
   private readonly followeeNameAttr = "followee_name";
   private readonly followeeIndexName = "follows-index";
-
-  private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient({region: 'us-west-2'}));
 
   /**
    * Records a new
@@ -74,9 +56,7 @@ export class FollowDAO {
       }
     });
 
-    const response = await this.client.send(command);
-    this.logResponseOnError(response);
-    return response;
+    return this.send(command);
   }
 
   /** Get a particular follow relationship, or `null` if it doesn't exist. */
@@ -87,12 +67,7 @@ export class FollowDAO {
       ConsistentRead: consistentRead,
     });
 
-    const response = await this.client.send(command);
-    this.logResponseOnError(response);
-    if (response.Item) {
-      return this.readFollow(response.Item);
-    }
-    return null;
+    return this.sendGetCommand(command);
   }
 
   /** Updates the names of the follower and followee, if it exists, given their handles are provided. */
@@ -108,8 +83,7 @@ export class FollowDAO {
       ReturnValues: "NONE",
     });
 
-    const response = await this.client.send(command);
-    this.logResponseOnError(response);
+    this.send(command);
   }
 
   /** Deletes the indicated "follow" relationship, if it exists. */
@@ -120,8 +94,7 @@ export class FollowDAO {
       ReturnValues: "NONE",
     });
 
-    const response = await this.client.send(command);
-    this.logResponseOnError(response);
+    this.send(command);
   }
 
   /** Gets a single page of followees of a particular user. */
@@ -161,21 +134,8 @@ export class FollowDAO {
     return this.readPagedQueryCommand(command);
   }
 
-  private async readPagedQueryCommand(command: QueryCommand): Promise<DataPage<Follow>> {
-    const response = await this.client.send(command);
-    const hasMorePages = response.LastEvaluatedKey !== undefined;
-    const items = this.readItems(response.Items);
 
-    return new DataPage(items, hasMorePages);
-  }
-
-  private readItems(items: Record<string, any>[] | undefined): Follow[] {
-    const out: Follow[] = [];
-    items?.forEach(item => out.push(this.readFollow(item)));
-    return out;
-  }
-
-  private readFollow(item: Record<string, any>): Follow {
+  override readItem(item: Record<string, any>): Follow {
     return item as Follow; // Easy for now because the `Follow` interface exactly matches the database.
   }
 
@@ -184,12 +144,6 @@ export class FollowDAO {
       [this.followerHandleAttr]: followHandles.follower_handle,
       [this.followeeHandleAttr]: followHandles.followee_handle,
     };
-  }
-
-  private logResponseOnError(response: MetadataBearer): void {
-    const statusCategory = Math.floor((response.$metadata.httpStatusCode || 0) / 100);
-    if (statusCategory === 2) return;
-    console.warn("Received non-200 status code:", response);
   }
 
 }
