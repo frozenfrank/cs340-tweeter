@@ -10,7 +10,7 @@ import { DataPage, DynamoDAO } from "./DynamoDAO";
 
 
 /**
- * Represents a "follows" relationship between two users.
+ * Represents a "follows" relationship between two users, in the DB.
  *
  * Key terms:
  * * **Follower**: The user who is following another user
@@ -19,22 +19,22 @@ import { DataPage, DynamoDAO } from "./DynamoDAO";
  * In this table, relationships between any pair of handlers
  * (`follower_handle` <-> `followee_handle`) can be retrieved.
  */
-interface Follow {
+export interface FollowEntity {
   /** **Primary key** The handle of the follower. */
   "follower_handle": string;
   /** The name of the follower. */
-  "follower_name": string;
+  "follower_name"?: string;
 
   /** **Sort key** The handler of the followee. */
   "followee_handle": string;
   /** The name of the followee. */
-  "followee_name": string;
+  "followee_name"?: string;
 }
 
-type FollowHandles = Pick<Follow, "followee_handle" | "follower_handle">;
+type FollowHandles = Pick<FollowEntity, "followee_handle" | "follower_handle">;
 
 
-export class FollowDAO extends DynamoDAO<Follow> {
+export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
   protected override readonly tableName = "tweeter-follows";
 
   private readonly followerHandleAttr = "follower_handle";
@@ -48,7 +48,7 @@ export class FollowDAO extends DynamoDAO<Follow> {
    * @param followee The person being followed
    * @param follower The person following another
    */
-  async putFollow(follow: Follow): Promise<PutCommandOutput> {
+  async putFollow(follow: FollowEntity): Promise<PutCommandOutput> {
     const command = new PutCommand({
       TableName: this.tableName,
       Item: {
@@ -60,7 +60,7 @@ export class FollowDAO extends DynamoDAO<Follow> {
   }
 
   /** Get a particular follow relationship, or `null` if it doesn't exist. */
-  async getSomeFollow(followHandles: FollowHandles, consistentRead = false): Promise<Follow|null> {
+  async getSomeFollow(followHandles: FollowHandles, consistentRead = false): Promise<FollowEntity|null> {
     const command = new GetCommand({
       TableName: this.tableName,
       Key: this.generateFollowKey(followHandles),
@@ -71,7 +71,7 @@ export class FollowDAO extends DynamoDAO<Follow> {
   }
 
   /** Updates the names of the follower and followee, if it exists, given their handles are provided. */
-  async updateFollow(withUpdatedFollowNames: Follow): Promise<void> {
+  async updateFollow(withUpdatedFollowNames: FollowEntity): Promise<void> {
     const command = new UpdateCommand({
       TableName: this.tableName,
       Key: this.generateFollowKey(withUpdatedFollowNames),
@@ -98,7 +98,7 @@ export class FollowDAO extends DynamoDAO<Follow> {
   }
 
   /** Gets a single page of followees of a particular user. */
-  getPageOfFollowees(followerHandle: string, pageSize: number, lastFolloweeHandle: string | undefined): Promise<DataPage<Follow>> {
+  getPageOfFollowees(followerHandle: string, pageSize: number, lastFolloweeHandle: string | undefined): Promise<DataPage<FollowEntity>> {
     const command = new QueryCommand({
       TableName: this.tableName,
       Limit: pageSize,
@@ -116,7 +116,7 @@ export class FollowDAO extends DynamoDAO<Follow> {
   }
 
   /** Gets a single page of followers of a particular user. */
-  getPageOfFollowers(followeeHandle: string, pageSize: number, lastFollowerHandle: string | undefined): Promise<DataPage<Follow>> {
+  getPageOfFollowers(followeeHandle: string, pageSize: number, lastFollowerHandle: string | undefined): Promise<DataPage<FollowEntity>> {
     const command = new QueryCommand({
       TableName: this.tableName,
       Limit: pageSize,
@@ -135,8 +135,8 @@ export class FollowDAO extends DynamoDAO<Follow> {
   }
 
 
-  override readItem(item: Record<string, any>): Follow {
-    return item as Follow; // Easy for now because the `Follow` interface exactly matches the database.
+  override readItem(item: Record<string, any>): FollowEntity {
+    return item as FollowEntity; // Easy for now because the `Follow` interface exactly matches the database.
   }
 
   private generateFollowKey(followHandles: FollowHandles): Record<string, any> {
