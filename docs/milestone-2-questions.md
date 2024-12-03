@@ -2,15 +2,15 @@
 
 ## Prompt
 Answer the following questions:
-1. Pick one place where you use the observer pattern. 
+1. Pick one place where you use the observer pattern.
     * Which class was the subject?
-    * Which class was the observer? 
+    * Which class was the observer?
     * Which layer did the subject belong to and which layer did the observer belong to? (Model, View, or Presenter layer)
-1. Pick one place where you used generics. 
-    * What class was it in? 
+1. Pick one place where you used generics.
+    * What class was it in?
     * What classes can the generic type `T` be?
-1. Pick one place where you used the template method pattern. 
-    * Show the template method. What class is it in? 
+1. Pick one place where you used the template method pattern.
+    * Show the template method. What class is it in?
     * Show the step of the algorithm that is deferred to the class's subclass. What class is it in?
 
 ## Answers
@@ -44,17 +44,17 @@ Answer the following questions:
                   // Prepare mock view
                   const mockPresenterView = mock<V>();
                   const mockStatusPresenterInstance = instance(mockPresenterView) as V;
-                
+
                   // Prepare presenter spy
                   const presenterSpy = spy(presenterGenerator(mockStatusPresenterInstance));
                   const presenterInstance = instance(presenterSpy);
-                
+
                   // Return results
                   return {mockPresenterView, presenterInstance, presenterSpy};
                 }
-              
+
                 // USAGE
-                const {mockPresenterView, presenterInstance, presenterSpy} 
+                const {mockPresenterView, presenterInstance, presenterSpy}
                   = mockPresenter((view: RegisterView) => new RegisterPresenter(view));
               ```
 1. **Template Method Pattern**
@@ -70,7 +70,7 @@ Answer the following questions:
                 this.pageSize,
                 this.lastItem
               );
-        
+
               this._hasMoreItems = hasMore;
               this.lastItem = newItems[newItems.length - 1];
               this.view.addItems(newItems);
