@@ -1,7 +1,5 @@
 import {
   DeleteCommand,
-  GetCommand,
-  PutCommand,
   PutCommandOutput,
   QueryCommand,
   UpdateCommand
@@ -49,14 +47,7 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
    * @param follower The person following another
    */
   async putFollow(follow: FollowEntity): Promise<PutCommandOutput> {
-    const command = new PutCommand({
-      TableName: this.tableName,
-      Item: {
-        ...follow
-      }
-    });
-
-    return this.send(command);
+    return this.putItem(follow);
   }
 
   /** Get a particular follow relationship, or `null` if it doesn't exist. */

@@ -4,6 +4,8 @@ import {
   DynamoDBDocumentClientCommand,
   GetCommand,
   GetCommandOutput,
+  PutCommand,
+  PutCommandOutput,
   QueryCommand,
   QueryCommandOutput
 } from "@aws-sdk/lib-dynamodb";
@@ -25,7 +27,7 @@ export class DataPage<T> {
   }
 }
 
-export abstract class DynamoDAO<T> {
+export abstract class DynamoDAO<T extends Record<string, any>> {
   protected readonly client = DynamoDBDocumentClient.from(new DynamoDBClient({region: 'us-west-2'}));
 
   protected abstract tableName: string;
@@ -34,7 +36,7 @@ export abstract class DynamoDAO<T> {
     return data as T; // Assume that the data row is a POJO matching the entity type
   }
 
-  // Getting commands
+  // Simple, prebuilt commands
 
   protected async getItem(key: object, consistentRead = false): Promise<T|null> {
     const command = new GetCommand({
@@ -44,6 +46,15 @@ export abstract class DynamoDAO<T> {
     });
 
     return this.sendGetCommand(command);
+  }
+
+  protected async putItem(item: T): Promise<PutCommandOutput> {
+    const command = new PutCommand({
+      TableName: this.tableName,
+      Item: { ...item },
+    });
+
+    return this.send(command);
   }
 
   // Sending commands
