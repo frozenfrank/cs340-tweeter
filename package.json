@@ -14,5 +14,8 @@
     "@aws-sdk/lib-dynamodb": "^3.704.0",
     "rimraf": "^5.0.5",
     "vite-plugin-dts": "^3.7.3"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6"
   }
 }

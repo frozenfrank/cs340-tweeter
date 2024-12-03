@@ -1,9 +1,8 @@
+import { compareSync, hashSync } from "bcryptjs";
 import { UserDTO } from "tweeter-shared";
 import { ImageDAO } from "../dao/interface/ImageDAO";
 import { UserDAO } from "../dao/interface/UserDAO";
 import { AuthService } from "./AuthService";
-
-const bcrypt = require('bcryptjs');
 
 type SignedInUser = [UserDTO, token: string];
 
@@ -31,7 +30,7 @@ export class UserService {
       throw new Error("Profile image did not upload");
     }
 
-    const hashedPassword = bcrypt.hashSync(password, this.HASHING_ROUNDS);
+    const hashedPassword = hashSync(password, this.HASHING_ROUNDS);
 
     const user = await this.userDao.register(firstName, lastName, alias, hashedPassword, profileImgUrl);
     if (!user) {
@@ -48,7 +47,7 @@ export class UserService {
 
   public async login(alias: string, password: string): Promise<SignedInUser> {
     const user = await this.userDao.getByAlias(alias);
-    if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+    if (!user || !compareSync(password, user.passwordHash)) {
       throw new Error("Invalid alias or password");
     }
 
