@@ -4,21 +4,21 @@ This file contained my working progress counter to help me keep track of all the
 
 ## Data Access Layer
 
-- [ ] Define DAOs
+- [x] Define DAOs
   - [x] AuthDAO
   - [x] UserDAO
-  - [ ] FollowDAO
+  - [x] FollowDAO
   - [x] ImageDAO
   - [x] StatusDAO
-- [ ] use DAOs
+- [x] use DAOs
   - [x] AuthDAO
+    - [x] Store alias in AuthToken
   - [x] UserDAO
-  - [ ] FollowDAO
+  - [x] FollowDAO
   - [x] ImageDAO
   - [x] StatusDAO
 - [ ] Implement DAOs
   - [ ] AuthDAO
-    - [x] Store alias in AuthToken
   - [ ] UserDAO
     - [ ] Install Bcrypt
   - [ ] FollowDAO

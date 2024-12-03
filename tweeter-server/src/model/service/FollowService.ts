@@ -1,8 +1,6 @@
-import { FakeData, FollowBidirectionalCount, PagedData, User, UserDTO } from "tweeter-shared";
+import { FollowBidirectionalCount, UserDTO } from "tweeter-shared";
+import { FollowDAO, PagedUserData } from "../dao/interface/FollowDAO";
 import { AuthService } from "./AuthService";
-import { FollowDAO } from "../dao/interface/FollowDAO";
-
-export type PagedUserData = PagedData<UserDTO>;
 
 export class FollowService {
 
@@ -76,7 +74,7 @@ export class FollowService {
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
     await this.authService.assertToken(token);
-    return this.getFakeData(userAlias, pageSize, lastItem);
+    return this.followDao.getFollowersPage(userAlias, pageSize, lastItem);
   };
 
   public async loadMoreFollowees(
@@ -86,16 +84,6 @@ export class FollowService {
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
     await this.authService.assertToken(token);
-    return this.getFakeData(userAlias, pageSize, lastItem);
+    return this.followDao.getFolloweesPage(userAlias, pageSize, lastItem);
   };
-
-  private async getFakeData(
-    userAlias: string,
-    pageSize: number,
-    lastItem: UserDTO | null
-  ): Promise<PagedUserData> {
-    const [users, hasMore] = await FakeData.instance.getPageOfUsers(User.fromDto(lastItem), pageSize, userAlias);
-    const dtos = users.map(u => u.dto);
-    return [dtos, hasMore];
-  }
 }

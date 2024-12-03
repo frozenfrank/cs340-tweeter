@@ -1,4 +1,7 @@
+import { PagedData, UserDTO } from "tweeter-shared";
 import { FollowxStats } from "../../dto/FollowxStats";
+
+export type PagedUserData = PagedData<UserDTO>;
 
 export interface FollowDAO {
   /** Returns statistics pertaining to the total followers/followees of a user. */
@@ -12,4 +15,7 @@ export interface FollowDAO {
 
   /** Reports whether the {@linkcode followerAlias} is actually a follower of {@linkcode followeeAlias}. */
   getIsFollower(followeeAlias: string, followerAlias: string): Promise<boolean>;
+
+  getFollowersPage( alias: string, pageSize: number, lastItem: UserDTO|null): Promise<PagedUserData>;
+  getFolloweesPage(  alias: string, pageSize: number, lastItem: UserDTO|null): Promise<PagedUserData>;
 }
