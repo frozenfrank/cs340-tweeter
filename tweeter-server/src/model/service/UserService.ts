@@ -3,9 +3,13 @@ import { ImageDAO } from "../dao/interface/ImageDAO";
 import { UserDAO } from "../dao/interface/UserDAO";
 import { AuthService } from "./AuthService";
 
+const bcrypt = require('bcryptjs');
+
 type SignedInUser = [UserDTO, token: string];
 
 export class UserService {
+
+  private readonly HASHING_ROUNDS = 8;
 
   constructor(
     private authService: AuthService,
@@ -27,10 +31,7 @@ export class UserService {
       throw new Error("Profile image did not upload");
     }
 
-    const hashedPassword = password; // TODO: Install and hash with bcrypt
-    if (hashedPassword === password) {
-      console.warn("😈 You haven't yet hashed the password, my friend.")
-    }
+    const hashedPassword = bcrypt.hashSync(password, this.HASHING_ROUNDS);
 
     const user = await this.userDao.register(firstName, lastName, alias, hashedPassword, profileImgUrl);
     if (!user) {
@@ -46,16 +47,9 @@ export class UserService {
   };
 
   public async login(alias: string, password: string): Promise<SignedInUser> {
-    const INVALID_CREDS_MSG = "Invalid alias or password";
-
     const user = await this.userDao.getByAlias(alias);
-    if (user === null) {
-      throw new Error(INVALID_CREDS_MSG);
-    }
-
-    console.warn("😈 Don't forget to compare password hashes to each other!")
-    if (user.passwordHash !== password) {
-      throw new Error(INVALID_CREDS_MSG);
+    if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+      throw new Error("Invalid alias or password");
     }
 
     return this.returnSignedInUser(user);
