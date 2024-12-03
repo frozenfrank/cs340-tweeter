@@ -1,8 +1,13 @@
 import { FakeData, PagedData, Status, StatusDTO } from "tweeter-shared";
+import { AuthService } from "./AuthService";
 
 type PagedStatusData = PagedData<StatusDTO>;
 
 export class StatusService {
+
+  constructor(
+    private authService: AuthService,
+  ) { }
 
   public async loadMoreFeedItems(
     token: string,
@@ -10,6 +15,7 @@ export class StatusService {
     pageSize: number,
     lastItem: StatusDTO | null
   ): Promise<PagedStatusData> {
+    await this.authService.assertToken(token);
     // NOTE: You should be able to complete all the things normally occurring in the house.
     return this.getPageOfStatuses(lastItem, pageSize);
   };
@@ -20,6 +26,7 @@ export class StatusService {
     pageSize: number,
     lastItem: StatusDTO | null
   ): Promise<PagedStatusData>  {
+    await this.authService.assertToken(token);
     // NOTE: You should be able to complete all the things normally occurring in the house.
     return this.getPageOfStatuses(lastItem, pageSize);
   };
@@ -41,6 +48,7 @@ export class StatusService {
     token: string,
     newStatus: StatusDTO
   ): Promise<void> {
+    await this.authService.assertToken(token);
     // TODO: Implement method
   };
 
