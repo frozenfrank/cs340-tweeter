@@ -42,10 +42,10 @@ export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDA
     const followerAliases: string[] = [];
 
     let lastItem: FollowEntity|undefined = undefined;
-    let dataPage: DataPage<FollowEntity> | undefined = undefined;
+    let dataPage: DataPage<FollowEntity>;
     do {
       dataPage = await this.followDao.listFollowers(alias, 100, lastItem || null);
-      lastItem = dataPage?.values[dataPage.values.length];
+      lastItem = dataPage.values[dataPage.values.length];
       followerAliases.push(...dataPage.values.map(follow => follow.follower_handle));
     } while (dataPage.hasMorePages);
 
