@@ -1,13 +1,18 @@
 import { UserDTO } from "tweeter-shared";
 import { FollowxStats } from "../../dto/FollowxStats";
 import { FollowDAO, PagedUserData } from "../interface/FollowDAO";
-import { DynamoFollowRelationshipDAO, FollowEntity } from "./DynamoFollowRelationshipDAO";
+import { UserDAO } from "../interface/UserDAO";
 import { DataPage } from "./DynamoDAO";
+import { DynamoFollowRelationshipDAO, FollowEntity } from "./DynamoFollowRelationshipDAO";
 import { DynamoFollowStatsDAO } from "./DynamoFollowStatsDAO";
 
 export class DynamoFollowDAO implements FollowDAO {
   private relationships = new DynamoFollowRelationshipDAO();
   private stats = new DynamoFollowStatsDAO();
+
+  constructor(
+    private userDao: UserDAO,
+  ) { }
 
   getFollowStats(alias: string): Promise<FollowxStats> {
     return this.stats.getStats(alias);
@@ -52,21 +57,18 @@ export class DynamoFollowDAO implements FollowDAO {
       .then(p => this.convertToPagedUserData(p, false));
   }
 
-  private convertToPagedUserData(dataPage: DataPage<FollowEntity>, followers: boolean): PagedUserData {
-    const users: UserDTO[] = dataPage.values.map((entity): UserDTO => {
-      const alias = followers ? entity.follower_handle : entity.followee_handle;
-      const name = (followers ? entity.follower_name : entity.followee_name) || alias;
+  private convertToPagedUserData(dataPage: DataPage<FollowEntity>, followers: boolean): Promise<PagedUserData> {
+    const alias_field = followers ? "follower_handle" : "followee_handle";
+    const aliases = dataPage.values.map(u => u[alias_field]);
+    return this.fetchUserData(aliases, dataPage.hasMorePages);
+  }
 
-      // TODO: I'll need to actually fetch this information rather than force it into the wrong shape
-      return {
-        firstName: name,
-        lastName: name,
-        alias,
-        imageUrl: "",
-        passwordHash: ""
-      }
-    });
-    return [users, dataPage.hasMorePages];
+  private async fetchUserData(aliases: string[], hasMoreData: boolean): Promise<PagedUserData> {
+    const users = await Promise.all(
+      aliases.map(alias => this.userDao.getByAlias(alias))
+    );
+    const existingUsers = users.filter(u => u) as UserDTO[];
+    return [existingUsers, hasMoreData];
   }
 
 }

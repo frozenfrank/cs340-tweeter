@@ -22,11 +22,11 @@ This file contained my working progress counter to help me keep track of all the
   - [x] UserDAO
     - [x] Provide implementation
     - [x] Install Bcrypt
-  - [ ] FollowDAO
+  - [x] FollowDAO
     - [x] Basic CRUD operations
     - [x] Getting pages of followx
     - [x] Follow stats
-    - [ ] Provide the rest of the user data
+    - [x] Provide the rest of the user data
   - [ ] ImageDAO
   - [ ] StatusDAO
 - [ ] Use Abstract Factory pattern
