@@ -1,7 +1,7 @@
 import { PagedData, UserDTO } from "tweeter-shared";
 import { DataPage } from "../../../model/dto/DataPage";
+import { FollowEntity } from "../../dto/FollowEntity";
 import { FollowxStats } from "../../dto/FollowxStats";
-import { FollowEntity } from "../dynamo/DynamoFollowRelationshipDAO";
 
 export type PagedUserData = PagedData<UserDTO>;
 

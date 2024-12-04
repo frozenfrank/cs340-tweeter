@@ -3,10 +3,10 @@ import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { StatusDTO } from "tweeter-shared";
 import { DataPage } from "../../../model/dto/DataPage";
 import { FeedStoryDTO } from "../../dto/FeedStoryDTO";
+import { FollowEntity } from "../../dto/FollowEntity";
 import { FollowDAO } from "../interface/FollowDAO";
 import { PagedStatusData, StatusDAO } from "../interface/StatusDAO";
 import { DynamoDAO } from "./DynamoDAO";
-import { FollowEntity } from "./DynamoFollowRelationshipDAO";
 
 export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDAO {
   private storyTableName = "tweeter-story";

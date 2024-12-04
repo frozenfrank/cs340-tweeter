@@ -1,9 +1,10 @@
 import { UserDTO } from "tweeter-shared";
+import { DataPage } from "../../../model/dto/DataPage";
+import { FollowEntity } from "../../dto/FollowEntity";
 import { FollowxStats } from "../../dto/FollowxStats";
 import { FollowDAO, PagedUserData } from "../interface/FollowDAO";
 import { UserDAO } from "../interface/UserDAO";
-import { DataPage } from "../../../model/dto/DataPage";
-import { DynamoFollowRelationshipDAO, FollowEntity } from "./DynamoFollowRelationshipDAO";
+import { DynamoFollowRelationshipDAO } from "./DynamoFollowRelationshipDAO";
 import { DynamoFollowStatsDAO } from "./DynamoFollowStatsDAO";
 
 export class DynamoFollowDAO implements FollowDAO {
