@@ -11,7 +11,6 @@
     "package-lambdas": "./package-lambdas.sh"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.704.0",
     "rimraf": "^5.0.5",
     "vite-plugin-dts": "^3.7.3"
   },
