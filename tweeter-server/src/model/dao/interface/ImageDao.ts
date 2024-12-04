@@ -3,5 +3,6 @@ export interface ImageDAO {
   uploadProfileImage(
     imageBase64: string,
     fileExtension: string,
+    userAlias?: string,
   ): Promise<string>;
 }

@@ -25,7 +25,7 @@ export class UserService {
     imageFileExtension: string
   ): Promise<SignedInUser> {
 
-    const profileImgUrl = await this.imageDao.uploadProfileImage(userImageBase64, imageFileExtension);
+    const profileImgUrl = await this.imageDao.uploadProfileImage(userImageBase64, imageFileExtension, alias);
     if (!profileImgUrl) {
       throw new Error("Profile image did not upload");
     }

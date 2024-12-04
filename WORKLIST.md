@@ -17,7 +17,7 @@ This file contained my working progress counter to help me keep track of all the
   - [x] FollowDAO
   - [x] ImageDAO
   - [x] StatusDAO
-- [ ] Implement DAOs
+- [x] Implement DAOs
   - [x] AuthDAO
   - [x] UserDAO
     - [x] Provide implementation
@@ -27,7 +27,7 @@ This file contained my working progress counter to help me keep track of all the
     - [x] Getting pages of followx
     - [x] Follow stats
     - [x] Provide the rest of the user data
-  - [ ] ImageDAO
+  - [x] ImageDAO
   - [x] StatusDAO
 - [x] Use Abstract Factory pattern
 - [x] Remove entirely FakeData

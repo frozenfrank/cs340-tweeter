@@ -6,6 +6,7 @@ import { StatusDAO } from "../interface/StatusDAO";
 import { UserDAO } from "../interface/UserDAO";
 import { DynamoAuthDAO } from "./DynamoAuthDAO";
 import { DynamoFollowDAO } from "./DynamoFollowDAO";
+import { S3ImageDao } from "./S3ImageDAO";
 import { DynamoStatusDAO } from "./DynamoStatusDAO";
 import { DynamoUserDAO } from "./DynamoUserDAO";
 
@@ -28,7 +29,8 @@ export class DynamoDaoFactory implements DAOFactory {
     return this.follow;
   }
   getImageDao(): ImageDAO {
-    throw new Error("Method not implemented.");
+    this.image ||= new S3ImageDao();
+    return this.image;
   }
   getStatusDao(): StatusDAO {
     this.status ||= new DynamoStatusDAO(this.getFollowDao());
