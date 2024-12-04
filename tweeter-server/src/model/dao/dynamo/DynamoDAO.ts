@@ -45,9 +45,9 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
     return this.sendGetCommand(command);
   }
 
-  protected async putItem(item: T): Promise<void> {
+  protected async putItem(item: T, tableName?: string): Promise<void> {
     const command = new PutCommand({
-      TableName: this.tableName,
+      TableName: tableName ?? this.tableName,
       Item: { ...item },
     });
 
