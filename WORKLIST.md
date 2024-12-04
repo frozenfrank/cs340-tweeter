@@ -36,8 +36,8 @@ This file contained my working progress counter to help me keep track of all the
 
 ## Database
 
-- [ ] Create DynamoDb tables/indexes
-- [ ] Organize S3 bucket for uploading images
+- [x] Create DynamoDb tables/indexes
+- [x] Organize S3 bucket for uploading images
 
 ## Population
 
