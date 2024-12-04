@@ -5,7 +5,7 @@ import { DynamoDAO } from "./DynamoDAO";
 // TODO: Convert this into a common DTO object
 interface AuthTokenEntity {
   token: string;
-  timestamp: number;
+  created: number;
   alias: string;
 }
 
@@ -13,15 +13,15 @@ export class DynamoAuthDAO extends DynamoDAO<AuthTokenEntity, AuthToken> impleme
   protected tableName = 'tweeter-auth';
 
   private tokenAttr = 'token';
-  private timestampAttr = 'timestamp';
+  private createdAttr = 'created';
   private aliasAttr = 'alias';
 
-  protected override keyAttr = this.aliasAttr;
+  protected override keyAttr = this.tokenAttr;
 
   insertToken(auth: AuthToken): Promise<void> {
     return this.putItem({
       token: auth.token,
-      timestamp: auth.timestamp,
+      created: auth.timestamp,
       alias: auth.alias,
     }).then();
   }
@@ -33,7 +33,7 @@ export class DynamoAuthDAO extends DynamoDAO<AuthTokenEntity, AuthToken> impleme
   }
 
   protected override readItem(data: Record<string, any>): AuthToken {
-    return new AuthToken(data[this.tokenAttr], data[this.timestampAttr], data[this.aliasAttr]);
+    return new AuthToken(data[this.tokenAttr], data[this.createdAttr], data[this.aliasAttr]);
   }
 
 }
