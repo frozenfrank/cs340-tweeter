@@ -8,7 +8,13 @@ export class DynamoUserDAO extends DynamoDAO<UserDTO> implements UserDAO {
   private aliasAttr = "alias";
   protected override keyAttr = this.aliasAttr;
 
-  register(firstName: string, lastName: string, alias: string, hashedPassword: string, imageUrl: string): Promise<UserDTO> {
+  register(
+    firstName: string,
+    lastName: string,
+    alias: string,
+    hashedPassword: string,
+    imageUrl: string,
+  ): Promise<UserDTO> {
     const userDTO: UserDTO = {
       firstName, lastName, alias,
       imageUrl, passwordHash: hashedPassword,
