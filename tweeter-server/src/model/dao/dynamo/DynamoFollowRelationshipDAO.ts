@@ -1,5 +1,6 @@
 import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { DataPage, DynamoDAO } from "./DynamoDAO";
+import { DataPage } from "../../../model/dto/DataPage";
+import { DynamoDAO } from "./DynamoDAO";
 
 
 /**

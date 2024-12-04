@@ -1,10 +1,11 @@
 
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { StatusDTO } from "tweeter-shared";
+import { DataPage } from "../../../model/dto/DataPage";
 import { FeedStoryDTO } from "../../dto/FeedStoryDTO";
 import { FollowDAO } from "../interface/FollowDAO";
 import { PagedStatusData, StatusDAO } from "../interface/StatusDAO";
-import { DataPage, DynamoDAO } from "./DynamoDAO";
+import { DynamoDAO } from "./DynamoDAO";
 import { FollowEntity } from "./DynamoFollowRelationshipDAO";
 
 export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDAO {
