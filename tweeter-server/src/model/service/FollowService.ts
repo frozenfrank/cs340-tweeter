@@ -1,14 +1,23 @@
-import { FakeData, FollowBidirectionalCount, PagedData, User, UserDTO } from "tweeter-shared";
-
-export type PagedUserData = PagedData<UserDTO>;
+import { FollowBidirectionalCount, UserDTO } from "tweeter-shared";
+import { FollowDAO, PagedUserData } from "../dao/interface/FollowDAO";
+import { AuthService } from "./AuthService";
 
 export class FollowService {
+
+  constructor(
+    private authService: AuthService,
+    private followDao: FollowDAO,
+  ) { }
 
   public async follow(
     token: string,
     userToFollow: UserDTO,
   ): Promise<FollowBidirectionalCount> {
-    // TODO: Fulfill actual behavior
+    const auth = await this.authService.assertToken(token);
+
+    const actingUserAlias = auth.alias;
+    await this.followDao.addFollow(userToFollow.alias, actingUserAlias);
+
     return this.getBidirectionalCount(token, userToFollow);
   };
 
@@ -16,7 +25,11 @@ export class FollowService {
     token: string,
     userToUnfollow: UserDTO,
   ): Promise<FollowBidirectionalCount> {
-    // TODO: Fulfill actual behavior
+    const auth = await this.authService.assertToken(token);
+
+    const actingUserAlias = auth.alias;
+    await this.followDao.removeFollow(userToUnfollow.alias, actingUserAlias);
+
     return this.getBidirectionalCount(token, userToUnfollow);
   };
 
@@ -24,26 +37,25 @@ export class FollowService {
     token: string,
     otherUser: UserDTO,
   ): Promise<FollowBidirectionalCount> {
-    return Promise.all([
-      this.getFollowerCount(token, otherUser),
-      this.getFolloweeCount(token, otherUser),
-    ]);
+    await this.authService.assertToken(token);
+    const followxStats = await this.followDao.getFollowStats(otherUser.alias);
+    return [followxStats.followers, followxStats.followees];
   }
 
   public async getFollowerCount(
     token: string,
     user: UserDTO,
   ): Promise<number> {
-    // TODO: Fulfill actual behavior
-    return FakeData.instance.getFollowerCount(user.alias);
+    const [followers, _followees] = await this.getBidirectionalCount(token, user);
+    return followers;
   };
 
   public async getFolloweeCount(
     token: string,
     user: UserDTO
   ): Promise<number> {
-    // TODO: Fulfill actual behavior
-    return FakeData.instance.getFolloweeCount(user.alias);
+    const [_followers, followees] = await this.getBidirectionalCount(token, user);
+    return followees;
   };
 
   public async getIsFollowerStatus(
@@ -51,8 +63,8 @@ export class FollowService {
     user: UserDTO,
     selectedUser: UserDTO
   ): Promise<boolean> {
-    // TODO: Fulfill actual behavior
-    return FakeData.instance.isFollower();
+    await this.authService.assertToken(token);
+    return this.followDao.getIsFollower(selectedUser.alias, user.alias);
   };
 
   public async loadMoreFollowers(
@@ -61,7 +73,8 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
-    return this.getFakeData(userAlias, pageSize, lastItem);
+    await this.authService.assertToken(token);
+    return this.followDao.getFollowersPage(userAlias, pageSize, lastItem);
   };
 
   public async loadMoreFollowees(
@@ -70,16 +83,7 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDTO | null
   ): Promise<PagedUserData> {
-    return this.getFakeData(userAlias, pageSize, lastItem);
+    await this.authService.assertToken(token);
+    return this.followDao.getFolloweesPage(userAlias, pageSize, lastItem);
   };
-
-  private async getFakeData(
-    userAlias: string,
-    pageSize: number,
-    lastItem: UserDTO | null
-  ): Promise<PagedUserData> {
-    const [users, hasMore] = await FakeData.instance.getPageOfUsers(User.fromDto(lastItem), pageSize, userAlias);
-    const dtos = users.map(u => u.dto);
-    return [dtos, hasMore];
-  }
 }

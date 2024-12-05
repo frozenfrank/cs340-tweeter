@@ -1,7 +1,7 @@
+import { format } from "date-fns";
 import { StatusDTO } from "../dto/StatusDTO";
 import { PostSegment, Type } from "./PostSegment";
-import { User } from "./User";
-import { format } from "date-fns";
+import { User, UserJsonObj } from "./User";
 
 export class Status {
   private _post: string;
@@ -248,23 +248,13 @@ export class Status {
     if (!!json) {
       const jsonObject: {
         _post: string;
-        _user: {
-          _firstName: string;
-          _lastName: string;
-          _alias: string;
-          _imageUrl: string;
-        };
+        _user: UserJsonObj;
         _timestamp: number;
         _segments: PostSegment[];
       } = JSON.parse(json);
       return new Status(
         jsonObject._post,
-        new User(
-          jsonObject._user._firstName,
-          jsonObject._user._lastName,
-          jsonObject._user._alias,
-          jsonObject._user._imageUrl
-        ),
+        User.fromJsonObj(jsonObject._user),
         jsonObject._timestamp
       );
     } else {

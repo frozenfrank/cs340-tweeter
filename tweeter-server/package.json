@@ -8,14 +8,18 @@
     "clean": "rm -rf dist",
     "deps": "./bundle-deps.sh",
     "deps:b": "./bundle-deps.sh --no-build",
-    "lambdas": "./bundle-lambdas.sh",
-    "lambdas:b": "./bundle-lambdas.sh --no-build"
+    "lambdas": "npm run lambdas:bundle && npm run lambdas:upload",
+    "lambdas:bundle": "./bundle-lambdas.sh",
+    "lambdas:upload": "./upload-lambdas.sh "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.705.0",
+    "@aws-sdk/lib-dynamodb": "^3.705.0",
+    "bcryptjs": "^2.4.3",
     "date-fns": "^3.3.1",
     "tweeter-shared": "file:../tweeter-shared",
     "uuid": "^9.0.1"

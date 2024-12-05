@@ -1,8 +1,20 @@
-import { FakeData, User, UserDTO } from "tweeter-shared";
+import { compareSync, hashSync } from "bcryptjs";
+import { UserDTO } from "tweeter-shared";
+import { ImageDAO } from "../dao/interface/ImageDAO";
+import { UserDAO } from "../dao/interface/UserDAO";
+import { AuthService } from "./AuthService";
 
 type SignedInUser = [UserDTO, token: string];
 
 export class UserService {
+
+  private readonly HASHING_ROUNDS = 8;
+
+  constructor(
+    private authService: AuthService,
+    private imageDao: ImageDAO,
+    private userDao: UserDAO,
+  ) { }
 
   public async register(
     firstName: string,
@@ -13,10 +25,15 @@ export class UserService {
     imageFileExtension: string
   ): Promise<SignedInUser> {
 
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
+    const profileImgUrl = await this.imageDao.uploadProfileImage(userImageBase64, imageFileExtension, alias);
+    if (!profileImgUrl) {
+      throw new Error("Profile image did not upload");
+    }
 
-    if (user === null) {
+    const hashedPassword = hashSync(password, this.HASHING_ROUNDS);
+
+    const user = await this.userDao.register(firstName, lastName, alias, hashedPassword, profileImgUrl);
+    if (!user) {
       throw new Error("Invalid registration");
     }
 
@@ -24,29 +41,27 @@ export class UserService {
   };
 
 
-  public async logout(token: string): Promise<void> {
-    // TODO: Implement method
+  public logout(token: string): Promise<void> {
+    return this.authService.invalidateToken(token);
   };
 
   public async login(alias: string, password: string): Promise<SignedInUser> {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
+    const user = await this.userDao.getByAlias(alias);
+    if (!user || !compareSync(password, user.passwordHash)) {
       throw new Error("Invalid alias or password");
     }
 
     return this.returnSignedInUser(user);
   };
 
-  private async returnSignedInUser(user: User): Promise<SignedInUser> {
-    const token = FakeData.instance.authToken.token;
-    return [user.dto, token];
+  private async returnSignedInUser(user: UserDTO): Promise<SignedInUser> {
+    const token = await this.authService.generateToken(user.alias);
+    return [user, token];
   }
 
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias)?.dto || null;
+    await this.authService.assertToken(token);
+    return this.userDao.getByAlias(alias);
   };
 }

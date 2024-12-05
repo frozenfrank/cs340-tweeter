@@ -36,7 +36,7 @@ export class UserService {
 
   private extractSignedInUser(response: SignedInUserResponse): SignedInUser {
     const user = User.fromDto(response.user) as User;
-    const authToken = new AuthToken(response.token, +new Date);
+    const authToken = new AuthToken(response.token, +new Date, user.alias);
     return [user, authToken];
   }
 

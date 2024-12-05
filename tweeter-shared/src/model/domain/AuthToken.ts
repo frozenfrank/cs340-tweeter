@@ -2,11 +2,12 @@ import { v4 as uuid } from "uuid";
 export class AuthToken {
   private _token: string;
   private _timestamp: number;
+  private _alias: string;
 
-  public static Generate(): AuthToken {
+  public static Generate(alias: string): AuthToken {
     const token: string = AuthToken.generateToken();
     const timestamp: number = Date.now();
-    return new AuthToken(token, timestamp);
+    return new AuthToken(token, timestamp, alias);
   }
 
   private static generateToken(): string {
@@ -28,9 +29,10 @@ export class AuthToken {
     }
   }
 
-  public constructor(token: string, timestamp: number) {
+  public constructor(token: string, timestamp: number, alias: string) {
     this._token = token;
     this._timestamp = timestamp;
+    this._alias = alias;
   }
 
   public get token(): string {
@@ -49,11 +51,19 @@ export class AuthToken {
     this._timestamp = value;
   }
 
+  public get alias(): string {
+    return this._alias;
+  }
+
+  public set alias(value: string) {
+    this._alias = value;
+  }
+
   public static fromJson(json: string | null | undefined): AuthToken | null {
     if (!!json) {
-      const jsonObject: { _token: string; _timestamp: number } =
+      const jsonObject: { _token: string; _timestamp: number; _alias: string; } =
         JSON.parse(json);
-      return new AuthToken(jsonObject._token, jsonObject._timestamp);
+      return new AuthToken(jsonObject._token, jsonObject._timestamp, jsonObject._alias);
     } else {
       return null;
     }

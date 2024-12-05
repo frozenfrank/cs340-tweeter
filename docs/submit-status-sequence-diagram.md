@@ -84,9 +84,9 @@ psc->>-psp: void
             sss->>db: addFeedEntry()
             end
             sss-->>-lambda: void
-        
+
         lambda-->>-gate: TweeterResponse
-        note right of cc: Response over the internet    
+        note right of cc: Response over the internet
         gate-->>-cc: 200 TweeterResponse
 
     cc-->>-sf: RES
