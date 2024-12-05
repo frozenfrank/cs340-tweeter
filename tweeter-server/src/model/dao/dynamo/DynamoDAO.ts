@@ -21,30 +21,36 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
   // Simple, prebuilt commands
 
   protected async getItem(key: object, consistentRead = false): Promise<U|null> {
-    const command = new GetCommand({
+    const params = {
       TableName: this.tableName,
       Key: key,
       ConsistentRead: consistentRead,
-    });
+    };
+    console.log(`DynamoDAO getItem with key '${JSON.stringify(key)}', params '${JSON.stringify(params)}'`);
+    const command = new GetCommand(params);
 
     return this.sendGetCommand(command);
   }
 
   protected async putItem(item: T, tableName?: string): Promise<void> {
-    const command = new PutCommand({
+    const params = {
       TableName: tableName ?? this.tableName,
       Item: { ...item },
-    });
+    };
+    console.log(`DynamoDAO getItem with item '${JSON.stringify(item)}', params '${JSON.stringify(params)}'`);
+    const command = new PutCommand(params);
 
     return this.send(command).then();
   }
 
   async deleteItem(key: object): Promise<void> {
-    const command = new DeleteCommand({
+    const params = {
       TableName: this.tableName,
       Key: key,
-      ReturnValues: "NONE",
-    });
+      ReturnValues: "NONE" as "NONE",
+    };
+    console.log(`DynamoDAO getItem with key '${JSON.stringify(key)}', params '${JSON.stringify(params)}'`);
+    const command = new DeleteCommand(params);
 
     return this.send(command).then();
   }
@@ -95,7 +101,10 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
   protected logResponseOnError(response: MetadataBearer): void {
     const statusCode = response.$metadata.httpStatusCode || 0;
     const statusCategory = Math.floor(statusCode / 100);
-    if (statusCategory === 2) return;
+    if (statusCategory === 2) {
+      console.log(`Received successful status code (${statusCode}):`, response);
+      return;
+    }
     console.warn(`Received ${statusCode} status code:`, response);
   }
 }

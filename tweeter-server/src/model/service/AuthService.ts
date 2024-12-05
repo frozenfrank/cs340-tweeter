@@ -16,10 +16,13 @@ export class AuthService {
   }
 
   public async assertToken(token: string): Promise<AuthToken|never> {
+    console.log("Asserting auth token");
     const auth = await this.authDao.getToken(token);
+    console.log(`Received auth token: ${auth}`);
     if (!auth || !this.verifyAuth(auth)){
       throw new Error("Invalid authorization");
     }
+    console.log("Auth token validated");
     return auth;
   }
 
