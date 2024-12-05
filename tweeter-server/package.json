@@ -8,8 +8,9 @@
     "clean": "rm -rf dist",
     "deps": "./bundle-deps.sh",
     "deps:b": "./bundle-deps.sh --no-build",
-    "lambdas": "./bundle-lambdas.sh",
-    "lambdas:b": "./bundle-lambdas.sh --no-build"
+    "lambdas": "npm run lambdas:bundle && npm run lambdas:upload",
+    "lambdas:bundle": "./bundle-lambdas.sh",
+    "lambdas:upload": "./upload-lambdas.sh "
   },
   "keywords": [],
   "author": "",
