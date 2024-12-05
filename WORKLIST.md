@@ -42,7 +42,7 @@ This file contained my working progress counter to help me keep track of all the
 ## Population
 
 - [ ] Populate at least 10 items (follows, posts, etc...)
-- [ ] Upload new lambdas to AWS
+- [x] Upload new lambdas to AWS
 
 ## Testing
 

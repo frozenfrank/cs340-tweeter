@@ -37,7 +37,7 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
       TableName: tableName ?? this.tableName,
       Item: { ...item },
     };
-    console.log(`DynamoDAO getItem with item '${JSON.stringify(item)}', params '${JSON.stringify(params)}'`);
+    console.log(`DynamoDAO putItem with item '${JSON.stringify(item)}', params '${JSON.stringify(params)}'`);
     const command = new PutCommand(params);
 
     return this.send(command).then();
@@ -49,7 +49,7 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
       Key: key,
       ReturnValues: "NONE" as "NONE",
     };
-    console.log(`DynamoDAO getItem with key '${JSON.stringify(key)}', params '${JSON.stringify(params)}'`);
+    console.log(`DynamoDAO deleteItem with key '${JSON.stringify(key)}', params '${JSON.stringify(params)}'`);
     const command = new DeleteCommand(params);
 
     return this.send(command).then();

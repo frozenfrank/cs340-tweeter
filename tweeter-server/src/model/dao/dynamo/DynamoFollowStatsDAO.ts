@@ -18,7 +18,7 @@ export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
 
   public incrementValue(alias: string, followersOrNot: boolean, delta: number): Promise<void> {
     const updateAttr = followersOrNot ? this.followersAttr : this.followeesAttr;
-    const command = new UpdateCommand({
+    const params = {
       TableName: this.tableName,
       Key: this.generateDefaultKey(alias),
       UpdateExpression: `SET ${updateAttr} = if_not_exists(${updateAttr}, :start) + :inc`,
@@ -26,8 +26,10 @@ export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
         ":inc": delta,
         ":start": 0, // default starting value if the attribute does not exist
       },
-      ReturnValues: "NONE",
-    });
+      ReturnValues: "NONE" as "NONE",
+    };
+    console.log(`DynamoFollowStatsDAO incrementValue with alias '${JSON.stringify(alias)}', params '${JSON.stringify(params)}'`);
+    const command = new UpdateCommand(params);
 
     return this.send(command).then();
   }
