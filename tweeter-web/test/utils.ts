@@ -29,8 +29,8 @@ export function mockServicePresenter<V extends View, U, P extends ServicePresent
   return {mockPresenterView, mockStatusService, presenterInstance};
 }
 
-export const makeAuthToken = () => new AuthToken("_fake_auth_token", Date.now());
-export const makeUser = () => new User("Donald", "Duck", "@donald_duck", "s3://donald_duck.jpg");
+export const makeAuthToken = () => new AuthToken("_fake_auth_token", Date.now(), "testing");
+export const makeUser = () => new User("Donald", "Duck", "@donald_duck", "s3://donald_duck.jpg", "$HASHED_PASSWORD$");
 export const makeStatus = (postContent = "Hello, world!") => new Status(postContent, makeUser(), +new Date);
 
 export const makeNUsers = (N: number) => Array.from({ length: N }, () => makeUser());
