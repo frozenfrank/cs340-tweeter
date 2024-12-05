@@ -10,14 +10,21 @@ const daoFactory: DAOFactory = new DynamoDaoFactory();
 
 const authService = new AuthService(daoFactory.getAuthDao())
 
+let follow: FollowService;
+let user: UserService;
+let status: StatusService;
+
 export const buildFollowService = (): FollowService => {
-  return new FollowService(authService, daoFactory.getFollowDao());
+  follow ??= new FollowService(authService, daoFactory.getFollowDao());
+  return follow;
 }
 
 export const buildUserService = (): UserService => {
-  return new UserService(authService, daoFactory.getImageDao(), daoFactory.getUserDao());
+  user ??= new UserService(authService, daoFactory.getImageDao(), daoFactory.getUserDao());
+  return user;
 }
 
 export const buildStatusService = (): StatusService => {
-  return new StatusService(authService, daoFactory.getStatusDao());
+  status ??= new StatusService(authService, daoFactory.getStatusDao());
+  return status;
 }
