@@ -21,9 +21,10 @@ export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
     const command = new UpdateCommand({
       TableName: this.tableName,
       Key: this.generateDefaultKey(alias),
-      UpdateExpression: `SET ${updateAttr} = ${updateAttr} + :inc`,
+      UpdateExpression: `SET ${updateAttr} = if_not_exists(${updateAttr}, :start) + :inc`,
       ExpressionAttributeValues: {
         ":inc": delta,
+        ":start": 0, // default starting value if the attribute does not exist
       },
       ReturnValues: "NONE",
     });
