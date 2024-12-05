@@ -28,7 +28,7 @@ export class FollowService {
     const auth = await this.authService.assertToken(token);
 
     const actingUserAlias = auth.alias;
-    await this.followDao.addFollow(userToUnfollow.alias, actingUserAlias);
+    await this.followDao.removeFollow(userToUnfollow.alias, actingUserAlias);
 
     return this.getBidirectionalCount(token, userToUnfollow);
   };
