@@ -30,6 +30,10 @@ export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDA
     this.postStatusToFeeds(feedItem, followers);
   }
 
+  postStatusToFollowers(feedItem: FeedStoryDTO, followers: string[]): Promise<void> {
+    return this.postStatusToFeeds(feedItem, followers);
+  }
+
   private makeFeedStoryItem(status: StatusDTO): FeedStoryDTO {
     const alias = status.user.alias;
     const timestamp = new Date(status.timestamp);
