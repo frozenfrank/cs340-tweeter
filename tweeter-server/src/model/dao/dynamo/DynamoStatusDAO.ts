@@ -1,6 +1,6 @@
 
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { StatusDTO } from "tweeter-shared";
+import { PagedData, StatusDTO } from "tweeter-shared";
 import { DataPage } from "../../../model/dto/DataPage";
 import { FeedStoryDTO } from "../../dto/FeedStoryDTO";
 import { FollowEntity } from "../../dto/FollowEntity";
@@ -14,6 +14,7 @@ export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDA
   protected tableName = this.storyTableName;
 
   private aliasAttr = "alias";
+  private timestampAttr = "timestamp_unique";
 
   constructor(
     private followDao: FollowDAO,
@@ -61,22 +62,24 @@ export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDA
     }
   }
 
-  getFeedPage(alias: string, pageSize: number, lastItem: StatusDTO | null): Promise<PagedStatusData> {
+  /** Requires a special StatusDTO which has the {@linkcode timestamp_unique} field populated. */
+  getFeedPage(alias: string, pageSize: number, lastItem: StatusDTO | null): Promise<PagedData<StatusDTO>> {
     return this.getFeedItems(alias, pageSize, lastItem, this.feedTableName);
   }
 
-  getStoryPage(alias: string, pageSize: number, lastItem: StatusDTO | null): Promise<PagedStatusData> {
+  /** Requires a special StatusDTO which has the {@linkcode timestamp_unique} field populated. */
+  getStoryPage(alias: string, pageSize: number, lastItem: StatusDTO | null): Promise<PagedData<StatusDTO>> {
     return this.getFeedItems(alias, pageSize, lastItem, this.storyTableName);
   }
 
 
   private readDataPage(command: QueryCommand): Promise<PagedStatusData> {
     return this.readPagedQueryCommand(command)
-      .then(p => [p.values.map(f => f.status), p.hasMorePages]);
+      .then(p => [p.values.map(f => ({...f.status, timestamp_unique: f.timestamp_unique })), p.hasMorePages]);
   }
 
 
-  private getFeedItems(alias: string, pageSize: number, lastItem: StatusDTO | null, tableName: string): Promise<PagedStatusData> {
+  private getFeedItems(alias: string, pageSize: number, lastItem: StatusDTO | null, tableName: string): Promise<PagedData<StatusDTO>> {
     const command = new QueryCommand({
       TableName: tableName,
       Limit: pageSize,
@@ -85,10 +88,20 @@ export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDA
         ":alias": alias,
       },
       ScanIndexForward: false,
-      ExclusiveStartKey: !lastItem ? undefined : this.generateDefaultKey(lastItem.user.alias),
+      ExclusiveStartKey: !lastItem ? undefined : this.makeKey(alias, lastItem.timestamp_unique!),
     });
 
     return this.readDataPage(command);
+  }
+
+  private makeKey(alias: string, timestamp_unique: string) {
+    if (!timestamp_unique) {
+      throw new Error(`Cannot generate DynamoStatusDAO unique key without a timestamp_unique field.`);
+    }
+    return {
+      [this.aliasAttr]: alias,
+      [this.timestampAttr]: timestamp_unique,
+    }
   }
 
 }
