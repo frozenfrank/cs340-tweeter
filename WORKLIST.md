@@ -2,51 +2,40 @@
 
 This file contained my working progress counter to help me keep track of all the phase requirements.
 
-## Data Access Layer
+## Previous Milestone Fixes
 
-- [x] Define DAOs
-  - [x] AuthDAO
-  - [x] UserDAO
-  - [x] FollowDAO
-  - [x] ImageDAO
-  - [x] StatusDAO
-- [x] use DAOs
-  - [x] AuthDAO
-    - [x] Store alias in AuthToken
-  - [x] UserDAO
-  - [x] FollowDAO
-  - [x] ImageDAO
-  - [x] StatusDAO
-- [x] Implement DAOs
-  - [x] AuthDAO
-  - [x] UserDAO
-    - [x] Provide implementation
-    - [x] Install Bcrypt
-  - [x] FollowDAO
-    - [x] Basic CRUD operations
-    - [x] Getting pages of followx
-    - [x] Follow stats
-    - [x] Provide the rest of the user data
-  - [x] ImageDAO
-  - [x] StatusDAO
-- [x] Use Abstract Factory pattern
-- [x] Remove entirely FakeData
-- [x] Verify compliance with [User & session data](https://byu.instructure.com/courses/27157/pages/course-project-2) requirements
+- [x] Items indicated on my repo issue board
 
+## Database Population
 
-## Database
+- [ ] Register 10000 users
+  - [ ] Upload a few more small sized profile pictures
+  - [ ] Use a round robin of my already uploaded profile pictures
+  - [ ] Prepare upload script
+  - [ ] Increase WCU limit on Follows table
+  - [ ] Run script
+  - [ ] Decrease WCU limit on Follows table
 
-- [x] Create DynamoDb tables/indexes
-- [x] Organize S3 bucket for uploading images
+## Processing Architecture
 
-## Population
+- [ ] Install post status queue
+  - [ ] Consider batch read follower aliases?
+  - [ ] Write follower aliases in chunks to processing queue
+  - [ ] Create queue
+- [ ] Install post status processing queue
+  - [ ] Fiddle with asynchronous levels
+  - [ ] Create lambda for reading from queue
+  - [ ] Install intentional backoff
 
-- [ ] Populate at least 10 items (follows, posts, etc...)
-- [x] Upload new lambdas to AWS
+## Verify Performance
+
+- [ ] Perceived post status latency is < 1 second
+- [ ] New status finishes processing in < 120 seconds
+- [ ] Individual feed returns in < 1 second
 
 ## Testing
 
-- [ ] Verify error responses work
-  - Test failed login
+- [ ] Create automated post status integration test
+- [ ] Consider disabling or deleting previous integration tests (for this class, not life)
 
 **Pass off with TAs before 5pm**
