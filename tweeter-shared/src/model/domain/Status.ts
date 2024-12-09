@@ -8,11 +8,13 @@ export class Status {
   private _user: User;
   private _timestamp: number;
   private _segments: PostSegment[];
+  private _timestamp_unique?: string;
 
-  public constructor(post: string, user: User, timestamp: number) {
+  public constructor(post: string, user: User, timestamp: number, timestamp_unique?: string) {
     this._post = post;
     this._user = user;
     this._timestamp = timestamp;
+    this._timestamp_unique = timestamp_unique;
     this._segments = this.getPostSegments(post);
   }
 
@@ -228,6 +230,14 @@ export class Status {
     this._timestamp = value;
   }
 
+  public get timestamp_unique(): string | undefined {
+    return this._timestamp_unique;
+  }
+
+  public set timestamp_unique(value: string) {
+    this._timestamp_unique = value;
+  }
+
   public get segments(): PostSegment[] {
     return this._segments;
   }
@@ -250,12 +260,14 @@ export class Status {
         _post: string;
         _user: UserJsonObj;
         _timestamp: number;
+        _timestamp_unique?: string;
         _segments: PostSegment[];
       } = JSON.parse(json);
       return new Status(
         jsonObject._post,
         User.fromJsonObj(jsonObject._user),
-        jsonObject._timestamp
+        jsonObject._timestamp,
+        jsonObject._timestamp_unique,
       );
     } else {
       return null;
@@ -270,14 +282,17 @@ export class Status {
     return !status ? null : new Status(
       status.post,
       User.fromDto(status.user)!,
-      status.timestamp);
+      status.timestamp,
+      status.timestamp_unique,
+    );
   }
 
   public get dto(): StatusDTO {
     return {
       post: this.post,
       user: this.user.dto,
-      timestamp: this.timestamp
+      timestamp: this.timestamp,
+      timestamp_unique: this.timestamp_unique,
     };
   }
 }
