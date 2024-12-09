@@ -84,6 +84,7 @@ export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDA
       ExpressionAttributeValues: {
         ":alias": alias,
       },
+      ScanIndexForward: false,
       ExclusiveStartKey: !lastItem ? undefined : this.generateDefaultKey(lastItem.user.alias),
     });
 
