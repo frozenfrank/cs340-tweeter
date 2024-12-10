@@ -1,10 +1,8 @@
-import { TweeterResponse } from "tweeter-shared";
 import { FeedStoryDTO } from "../../model/dto/FeedStoryDTO";
 import { buildStatusService } from "../helper/factory";
-import { successfulEmptyResponse } from "../helper/helper";
+import { queueHandler } from "../helper/QueueHandler";
 
-export const handler = async (feedItem: FeedStoryDTO): Promise<TweeterResponse> => {
+export const handler = queueHandler(async (feedItem: FeedStoryDTO): Promise<void> => {
   const service = buildStatusService();
   await service.postStatusSpawn(feedItem);
-  return successfulEmptyResponse();
-};
+});
