@@ -18,13 +18,13 @@ This file contained my working progress counter to help me keep track of all the
 
 ## Processing Architecture
 
-- [ ] Install post status queue
-  - [ ] Consider batch read follower aliases?
-  - [ ] Write follower aliases in chunks to processing queue
-  - [ ] Create queue
-- [ ] Install post status processing queue
+- [x] Install post status queue
+  - [x] Consider batch read follower aliases?
+  - [x] Write follower aliases in chunks to processing queue
+  - [x] Create queue
+- [x] Install post status processing queue
   - [ ] Fiddle with asynchronous levels
-  - [ ] Create lambda for reading from queue
+  - [x] Create lambda for reading from queue
   - [ ] Install intentional backoff
 
 ## Verify Performance
