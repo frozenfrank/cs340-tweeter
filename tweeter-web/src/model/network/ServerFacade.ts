@@ -131,7 +131,7 @@ export class ServerFacade {
     request: UserRequestSingle,
     followPath: string,
   ): Promise<FollowBidirectionalCount> {
-    return this.executePostForValue<UserRequestSingle, FollowBidirectionalCount>(request, followPath)
+    return this.executePostForValue<UserRequestSingle, FollowBidirectionalCount>(request, this.FOLLOW_BASE + followPath)
       .then(followStats => {
         const countedFollowers = request.user.followerCount || 0;
         const countedFollowees = request.user.followeeCount || 0;
