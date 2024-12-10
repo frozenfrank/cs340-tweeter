@@ -44,9 +44,10 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
   /** Internal architecture role that downloads followers and distributes posting work to separate posting lambdas. */
   async fetchAndSpawnPosters(feedItem: FeedStoryDTO): Promise<void> {
     const start = new Date;
-    console.log(`Starting fetch and spawn method.: ` + JSON.stringify(feedItem));
+    console.log(`Starting fetch and spawn method (${typeof feedItem}): ` + feedItem);
 
     const alias = feedItem.alias;
+    console.log("Read alias", alias, "from feedItem", feedItem);
     let totalFollowers = 0;
 
     const onbatch = (followers: string[]): void => {
