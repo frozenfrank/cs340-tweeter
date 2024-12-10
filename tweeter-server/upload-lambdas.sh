@@ -21,12 +21,13 @@ do
     function_name=$(echo "$lambda_info" | cut -d '|' -f 1 | tr -d '[:space:]')
     handler=$(echo "$lambda_info" | cut -d '|' -f 2 | tr -d '[:space:]')
 
-    if aws lambda get-function --function-name "$function_name" &>/dev/null; then
+    if aws lambda get-function --function-name "$function_name" --region "$REGION" &>/dev/null; then
         # Lambda exists, update code
         aws lambda update-function-code \
             --function-name  "$function_name" \
             --s3-bucket $BUCKET \
             --s3-key code/lambdalist.zip \
+            --region "$REGION" \
             1>>/dev/null \
             &
         echo lambda $i, "$function_name", updating from s3
@@ -38,6 +39,7 @@ do
             --role $LAMBDA_ROLE \
             --handler "$handler" \
             --code S3Bucket=$BUCKET,S3Key=code/lambdalist.zip \
+            --region "$REGION" \
             1>>/dev/null \
             &
         echo lambda $i, "$function_name", created from s3

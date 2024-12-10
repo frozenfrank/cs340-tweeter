@@ -29,9 +29,19 @@ This file contained my working progress counter to help me keep track of all the
 
 ## Verify Performance
 
-- [ ] Perceived post status latency is < 1 second
+- [x] Perceived post status latency is < 1 second
 - [ ] New status finishes processing in < 120 seconds
-- [ ] Individual feed returns in < 1 second
+- [x] Individual feed returns in < 1 second
+
+
+| State | Resource | Current Region | Desired Region | Updated region |
+| ----- | ----- | ----- | ----- | ----- |
+| ✅ | Lambda | us-east-1 | us-west-2 | us-east-1 |
+| ✅ | Lambda Layer | us-east-1 | us-west-2 | both |
+| ✅ | Dynamo | us-west-2 | us-west-2 |
+| 🟡 | S3 | us-east-1 | us-west-2 |
+| ❌ | API Gateway | us-east-1 | us-west-2 |
+| ✅ | SQS Queues | us-west-2 | us-west-2 | us-east-1 |
 
 ## Testing
 

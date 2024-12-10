@@ -2,8 +2,8 @@ import { ObjectCannedACL, PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { ImageDAO } from "../interface/ImageDAO";
 
 export class S3ImageDao implements ImageDAO {
-  private BUCKET = "byu-cs340-tweeter";
-  private REGION = "us-east-1";
+  private BUCKET = "byu-cs340-tweeter-2";
+  private REGION = "us-west-2";
   private client = new S3Client({ region: this.REGION });
 
   uploadProfileImage(imageBase64: string, fileExtension: string, userAlias?: string): Promise<string> {
