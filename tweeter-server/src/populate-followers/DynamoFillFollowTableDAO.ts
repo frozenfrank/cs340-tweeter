@@ -1,20 +1,17 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   BatchWriteCommand,
   BatchWriteCommandInput,
-  BatchWriteCommandOutput,
-  DynamoDBDocumentClient,
+  BatchWriteCommandOutput
 } from "@aws-sdk/lib-dynamodb";
+import { DynamoDAO } from "../model/dao/dynamo/DynamoDAO";
 
-export class DynamoFillFollowTableDao {
+export class DynamoFillFollowTableDao extends DynamoDAO {
   //
   // Modify these values as needed to match your follow table.
   //
   private readonly tableName = "tweeter-follows";
   private readonly followerAliasAttribute = "follower_handle";
   private readonly followeeAliasAttribute = "followee_handle";
-
-  private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
   async createFollows(followeeAlias: string, followerAliasList: string[]) {
     if (followerAliasList.length == 0) {

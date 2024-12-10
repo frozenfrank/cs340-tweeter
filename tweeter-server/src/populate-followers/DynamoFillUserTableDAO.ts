@@ -1,14 +1,13 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   BatchWriteCommand,
   BatchWriteCommandInput,
-  BatchWriteCommandOutput,
-  DynamoDBDocumentClient
+  BatchWriteCommandOutput
 } from "@aws-sdk/lib-dynamodb";
 import * as bcrypt from "bcryptjs";
 import { User } from "tweeter-shared";
+import { DynamoDAO } from "../model/dao/dynamo/DynamoDAO";
 
-export class DynamoFillUserTableDao {
+export class DynamoFillUserTableDao extends DynamoDAO {
   //
   // Modify these values as needed to match your user table.
   //
@@ -20,8 +19,6 @@ export class DynamoFillUserTableDao {
   private readonly passwordHashAttribute = "passwordHash";
   private readonly followeeCountAttribute = "followeeCount";
   private readonly followerCountAttribute = "followerCount";
-
-  private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
   async createUsers(userList: User[], password: string) {
     if (userList.length == 0) {

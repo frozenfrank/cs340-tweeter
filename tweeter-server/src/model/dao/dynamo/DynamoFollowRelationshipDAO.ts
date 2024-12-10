@@ -1,12 +1,12 @@
 import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { DataPage } from "../../../model/dto/DataPage";
 import { FollowEntity } from "../../dto/FollowEntity";
-import { DynamoDAO } from "./DynamoDAO";
+import { DynamoTableDAO } from "./DynamoDAO";
 
 type FollowHandles = Pick<FollowEntity, "followee_handle" | "follower_handle">;
 
 
-export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
+export class DynamoFollowRelationshipDAO extends DynamoTableDAO<FollowEntity> {
   protected override readonly tableName = "tweeter-follows";
 
   private readonly followerHandleAttr = "follower_handle";

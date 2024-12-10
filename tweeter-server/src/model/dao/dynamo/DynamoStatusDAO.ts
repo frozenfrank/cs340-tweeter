@@ -6,9 +6,9 @@ import { FeedStoryDTO } from "../../dto/FeedStoryDTO";
 import { FollowEntity } from "../../dto/FollowEntity";
 import { FollowDAO } from "../interface/FollowDAO";
 import { PagedStatusData, StatusDAO } from "../interface/StatusDAO";
-import { DynamoDAO } from "./DynamoDAO";
+import { DynamoTableDAO } from "./DynamoDAO";
 
-export class DynamoStatusDAO extends DynamoDAO<FeedStoryDTO> implements StatusDAO {
+export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements StatusDAO {
   private storyTableName = "tweeter-story";
   private feedTableName = "tweeter-feed";
   protected tableName = this.storyTableName;

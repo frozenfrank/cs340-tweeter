@@ -1,8 +1,8 @@
 import { UserDTO } from "tweeter-shared";
 import { UserDAO } from "../interface/UserDAO";
-import { DynamoDAO } from "./DynamoDAO";
+import { DynamoTableDAO } from "./DynamoDAO";
 
-export class DynamoUserDAO extends DynamoDAO<UserDTO> implements UserDAO {
+export class DynamoUserDAO extends DynamoTableDAO<UserDTO> implements UserDAO {
   protected tableName = 'tweeter-users';
 
   private aliasAttr = "alias";
