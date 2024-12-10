@@ -40,6 +40,11 @@ export class StatusService {
     await this.statusDao.createStatus(newStatus);
   };
 
+  public postStatusSpawn(feedItem: FeedStoryDTO): Promise<void> {
+    // NOTE: No required authentication because it is not publicly accessible
+    return this.statusDao.fetchAndSpawnPosters(feedItem);
+  }
+
   public postStatusProcessing(
     feedItem: FeedStoryDTO,
     followers: string[],

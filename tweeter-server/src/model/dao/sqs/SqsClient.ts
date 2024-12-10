@@ -5,8 +5,8 @@ export class SqsClient implements QueueClient {
   sqsClient: SQSClient;
 
   constructor(
-    private sqsUrl: string,
     sqsRegion: string,
+    private sqsUrl: string,
   ) {
     this.sqsClient = new SQSClient({ region: sqsRegion });
   }
