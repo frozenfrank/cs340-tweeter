@@ -4,4 +4,6 @@ export interface UserDTO {
   readonly alias: string;
   readonly imageUrl: string;
   readonly passwordHash: string;
+  readonly followeeCount?: number;
+  readonly followerCount?: number;
 }
