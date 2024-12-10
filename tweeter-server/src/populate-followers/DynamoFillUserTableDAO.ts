@@ -1,10 +1,9 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
-  DynamoDBDocumentClient,
   BatchWriteCommand,
   BatchWriteCommandInput,
   BatchWriteCommandOutput,
-  UpdateCommand,
+  DynamoDBDocumentClient
 } from "@aws-sdk/lib-dynamodb";
 import * as bcrypt from "bcryptjs";
 import { User } from "tweeter-shared";
@@ -13,14 +12,14 @@ export class DynamoFillUserTableDao {
   //
   // Modify these values as needed to match your user table.
   //
-  private readonly tableName = "tweeter_user";
+  private readonly tableName = "tweeter-users";
   private readonly userAliasAttribute = "alias";
-  private readonly userFirstNameAttribute = "first_name";
-  private readonly userLastNameAttribute = "last_name";
-  private readonly userImageUrlAttribute = "image_url";
-  private readonly passwordHashAttribute = "password_hash";
-  private readonly followeeCountAttribute = "followee_count";
-  private readonly followerCountAttribute = "follower_count";
+  private readonly userFirstNameAttribute = "firstName";
+  private readonly userLastNameAttribute = "lastName";
+  private readonly userImageUrlAttribute = "imageUrl";
+  private readonly passwordHashAttribute = "passwordHash";
+  private readonly followeeCountAttribute = "followeeCount";
+  private readonly followerCountAttribute = "followerCount";
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
@@ -109,25 +108,4 @@ export class DynamoFillUserTableDao {
     }
   }
 
-  async increaseFollowersCount(alias: string, count: number): Promise<boolean> {
-    const params = {
-      TableName: this.tableName,
-      Key: { [this.userAliasAttribute]: alias },
-      ExpressionAttributeValues: { ":inc": count },
-      UpdateExpression:
-        "SET " +
-        this.followerCountAttribute +
-        " = " +
-        this.followerCountAttribute +
-        " + :inc",
-    };
-
-    try {
-      await this.client.send(new UpdateCommand(params));
-      return true;
-    } catch (err) {
-      console.error("Error while updating followers count:", err);
-      return false;
-    }
-  }
 }

@@ -1,16 +1,17 @@
+import { DynamoFollowStatsDAO } from "../model/dao/dynamo/DynamoFollowStatsDAO";
 import { DynamoFillFollowTableDao as FillFollowTableDao } from "./DynamoFillFollowTableDAO";
 import { DynamoFillUserTableDao as FillUserTableDao } from "./DynamoFillUserTableDAO";
 import { User } from "tweeter-shared";
 
 // Increase the write capacities for the follow table, follow index, and user table, AND REMEMBER TO DECREASE THEM after running this script
 
-const mainUsername = "@daisy";
-const baseFollowerAlias = "@donald";
+const mainUsername = "@frozenfrank";
+const baseFollowerAlias = "@ghost_base";
 const followerPassword = "password";
 const followerImageUrl =
-  "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
-const baseFollowerFirstName = "Donald";
-const baseFollowerLastName = "Duck";
+  "https://byu-cs340-tweeter.s3.us-east-1.amazonaws.com/image/@ghost_base-xoaq21kltxjpeg";
+const baseFollowerFirstName = "Ghost Base";
+const baseFollowerLastName = "Mandelbrot";
 
 const numbUsersToCreate = 10000;
 const numbFollowsToCreate = numbUsersToCreate;
@@ -22,6 +23,7 @@ const aliasList: string[] = Array.from(
 
 const fillUserTableDao = new FillUserTableDao();
 const fillFollowTableDao = new FillFollowTableDao();
+const followStatsDao = new DynamoFollowStatsDAO();
 
 main();
 
@@ -33,8 +35,9 @@ async function main() {
   await createFollows(0);
 
   console.log("Increasing the followee's followers count");
-  await fillUserTableDao.increaseFollowersCount(
+  await followStatsDao.incrementValue(
     mainUsername,
+    true,
     numbUsersToCreate
   );
 
