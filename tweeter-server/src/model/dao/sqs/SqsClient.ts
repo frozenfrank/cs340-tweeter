@@ -12,13 +12,14 @@ export class SqsClient implements QueueClient {
   }
 
   public sendJsonMessage(obj: object): Promise<void> {
+    console.log("Sending JSON message: " + obj);
     return this.sendMessage(JSON.stringify(obj));
   }
 
   public async sendMessage(message: string): Promise<void> {
 
     const params = {
-      DelaySeconds: 10,
+      // DelaySeconds: 1,
       MessageBody: message,
       QueueUrl: this.sqsUrl,
     };

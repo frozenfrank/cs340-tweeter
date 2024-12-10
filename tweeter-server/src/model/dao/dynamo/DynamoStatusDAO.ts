@@ -68,6 +68,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
 
   /** Responsible for posting the status to the feeds of a portion of followers. */
   postStatusToFollowers(feedItem: FeedStoryDTO, followers: string[]): Promise<void> {
+    console.log(`DynamoStatusDAO: Posting statuses to followers (${typeof feedItem}, ${typeof followers}): ${feedItem}; ${followers}`);
     return this.postStatusToFeeds(feedItem, followers);
   }
 

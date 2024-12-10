@@ -51,6 +51,7 @@ export class StatusService {
     followers: string[],
   ): Promise<void> {
     // NOTE: No required authentication because it is not publicly accessible
+    console.log(`StatusService postStatusProcessing (${typeof feedItem}, ${typeof followers}): ${feedItem}; ${followers}`);
     return this.statusDao.postStatusToFollowers(feedItem, followers);
   }
 
