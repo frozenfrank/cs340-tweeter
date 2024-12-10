@@ -79,6 +79,7 @@ export abstract class DynamoTableDAO<T extends Record<string, any>, U extends Re
 
   protected async readPagedQueryCommand(command: QueryCommand): Promise<DataPage<U>> {
     const response = await this.send<QueryCommandOutput>(command);
+    console.log(`DynamoTableDAO: ${response}`);
     const hasMorePages = response.LastEvaluatedKey !== undefined;
     const items = this.readItems(response.Items as T[]);
 
@@ -86,7 +87,9 @@ export abstract class DynamoTableDAO<T extends Record<string, any>, U extends Re
   }
 
   protected async send<OUT extends object>(command: DynamoDBDocumentClientCommand<any, OUT, any, any, any>): Promise<OUT> {
-    const response = await this.client.send(command);
+    console.log(`DynamoTableDAO: Sending command: ` + command);
+    const response = await this.client.send(command).catch(error => console.error(`CLIENT SEND FAILED!!!`, error));
+    console.log(`DynamoTableDAO: send response ${response.$metadata.statusCode}`);
     this.logResponseOnError(response);
     return response;
   }

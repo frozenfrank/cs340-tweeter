@@ -59,7 +59,8 @@ export class DynamoFollowDAO implements FollowDAO {
   }
 
   listFollowers(alias: string, pageSize: number, lastItem: FollowEntity | null): Promise<DataPage<FollowEntity>> {
-    return this.relationships.getPageOfFollowers(alias, pageSize, lastItem?.followee_name);
+    console.log(`Received request to list followers (${typeof alias}, ${typeof pageSize}, ${typeof lastItem}): ${alias}; ${pageSize}; ${lastItem}`);
+    return this.relationships.getPageOfFollowers(alias, pageSize, lastItem?.followee_handle);
   }
 
   private convertToPagedUserData(dataPage: DataPage<FollowEntity>, followers: boolean): Promise<PagedUserData> {
