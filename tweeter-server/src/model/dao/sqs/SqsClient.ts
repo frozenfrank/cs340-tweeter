@@ -18,7 +18,7 @@ export class SqsClient implements QueueClient {
   public async sendMessage(message: string): Promise<void> {
 
     const params = {
-      DelaySeconds: 10,
+      DelaySeconds: 0,
       MessageBody: message,
       QueueUrl: this.sqsUrl,
     };
