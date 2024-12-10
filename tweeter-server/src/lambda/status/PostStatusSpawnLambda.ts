@@ -4,5 +4,6 @@ import { queueHandler } from "../helper/QueueHandler";
 
 export const handler = queueHandler(async (feedItem: FeedStoryDTO): Promise<void> => {
   const service = buildStatusService();
-  await service.postStatusSpawn(feedItem);
+  console.log(`Handling spawn status method: ` + JSON.stringify(feedItem));
+  return service.postStatusSpawn(feedItem);
 });

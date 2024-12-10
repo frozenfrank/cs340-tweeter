@@ -44,11 +44,13 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
   /** Internal architecture role that downloads followers and distributes posting work to separate posting lambdas. */
   async fetchAndSpawnPosters(feedItem: FeedStoryDTO): Promise<void> {
     const start = new Date;
+    console.log(`Starting fetch and spawn method.: ` + JSON.stringify(feedItem));
 
     const alias = feedItem.alias;
     let totalFollowers = 0;
 
     const onbatch = (followers: string[]): void => {
+      console.log(`Processing batch of ${followers.length}  followers: : ` + JSON.stringify(followers));
       totalFollowers += followers.length;
       const message: PostStatusProcessingRequest = {
         feedItem: feedItem,
@@ -56,7 +58,8 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
       };
       void this.postProcessingQueue.sendJsonMessage(message);
     };
-    await this.getFollowersOf(alias, 100, onbatch);
+    const result = await this.getFollowersOf(alias, 100, followers => onbatch(followers));
+    console.log("fetch followers response: " +  JSON.stringify(result));
 
     const end = new Date();
     console.log(`Finished spawning posters for ${totalFollowers} followers of ${alias} in ${(+end - +start)/1000} seconds.`);
@@ -81,6 +84,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
    *  When {@linkcode onbatch} is provided, an empty list will be returned from the function. */
   private async getFollowersOf(alias: string, batchSize = 100, onbatch?: (followersBatch: string[]) => void): Promise<string[]> {
     const followerAliases: string[] = [];
+    console.log(`Getting followers of ${alias}`);
 
     onbatch ||= ((followers) => followerAliases.push(...followers));
 
@@ -88,6 +92,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     let dataPage: DataPage<FollowEntity>;
     do {
       dataPage = await this.followDao.listFollowers(alias, batchSize, lastItem || null);
+      console.log(`Received page of data from Elders: ` + JSON.stringify(dataPage));
       lastItem = dataPage.values[dataPage.values.length];
       onbatch(dataPage.values.map(follow => follow.follower_handle));
     } while (dataPage.hasMorePages);

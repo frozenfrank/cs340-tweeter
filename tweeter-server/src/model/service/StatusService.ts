@@ -42,6 +42,7 @@ export class StatusService {
 
   public postStatusSpawn(feedItem: FeedStoryDTO): Promise<void> {
     // NOTE: No required authentication because it is not publicly accessible
+    console.log(`Posting status Spawn status method: ` + JSON.stringify(feedItem));
     return this.statusDao.fetchAndSpawnPosters(feedItem);
   }
 
