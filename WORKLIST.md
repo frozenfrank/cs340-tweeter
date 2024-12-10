@@ -34,14 +34,14 @@ This file contained my working progress counter to help me keep track of all the
 - [x] Individual feed returns in < 1 second
 
 
-| State | Resource | Current Region | Desired Region | Updated region |
+| State | Resource | Original Region | Desired Region | Updated region |
 | ----- | ----- | ----- | ----- | ----- |
-| ✅ | Lambda | us-east-1 | us-west-2 | us-east-1 |
-| ✅ | Lambda Layer | us-east-1 | us-west-2 | both |
-| ✅ | Dynamo | us-west-2 | us-west-2 |
-| 🟡 | S3 | us-east-1 | us-west-2 |
-| ❌ | API Gateway | us-east-1 | us-west-2 |
-| ✅ | SQS Queues | us-west-2 | us-west-2 | us-east-1 |
+| ✅ | Lambda | us-east-1 | us-west-2 | us-west-2 |
+| ✅ | Lambda Layer | us-east-1 | us-west-2 | us-west-2 |
+| ✅ | Dynamo | us-west-2 | us-west-2 | us-west-2 |
+| 🟡 | S3 | us-east-1 | us-west-2 | us-east-1 |
+| ✅ | API Gateway | us-east-1 | us-west-2 | us-west-2 |
+| ✅ | SQS Queues | us-west-2 | us-west-2 | us-west-2 |
 
 ## Testing
 
