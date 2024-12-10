@@ -5,8 +5,10 @@ import { DataPage } from "../../../model/dto/DataPage";
 import { FeedStoryDTO } from "../../dto/FeedStoryDTO";
 import { FollowEntity } from "../../dto/FollowEntity";
 import { FollowDAO } from "../interface/FollowDAO";
+import { QueueClient } from "../interface/QueueClient";
 import { PagedStatusData, StatusDAO } from "../interface/StatusDAO";
 import { DynamoTableDAO } from "./DynamoDAO";
+import { PostStatusProcessingRequest } from "../../../lambda/status/PostStatusProcessingRequest";
 
 export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements StatusDAO {
   private storyTableName = "tweeter-story";
@@ -18,18 +20,49 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
 
   constructor(
     private followDao: FollowDAO,
+    private postQueue: QueueClient,
+    private postProcessingQueue: QueueClient,
   ) { super(); }
 
+  /** Public API Endpoint that begins Create Status processing. Returns to posting user within 1 second. */
+  createStatus(status: StatusDTO): Promise<void> {
+    const start = new Date;
+    const promises: Promise<unknown>[] = [];
 
-  async createStatus(status: StatusDTO): Promise<void> {
+    // Post to poster's story
     const feedItem = this.makeFeedStoryItem(status);
-    await this.putItem(feedItem, this.storyTableName);
+    promises.push(this.putItem(feedItem, this.storyTableName));
 
-    const followers = await this.getFollowersOf(status.user.alias);
-    // TODO: Break this by posting in segments to queue
-    this.postStatusToFeeds(feedItem, followers);
+    // Kick off additional distributions
+    promises.push(this.postQueue.sendJsonMessage(feedItem));
+
+    const end = new Date();
+    console.log(`Finished queuing status processing in ${(+end - +start)/1000} seconds.`);
+    return Promise.all(promises).then();
   }
 
+  /** Internal architecture role that downloads followers and distributes posting work to separate posting lambdas. */
+  async fetchAndSpawnPosters(feedItem: FeedStoryDTO): Promise<void> {
+    const start = new Date;
+
+    const alias = feedItem.alias;
+    let totalFollowers = 0;
+
+    const onbatch = (followers: string[]): void => {
+      totalFollowers += followers.length;
+      const message: PostStatusProcessingRequest = {
+        feedItem: feedItem,
+        toFollowerAliases: followers,
+      };
+      void this.postProcessingQueue.sendJsonMessage(message);
+    };
+    await this.getFollowersOf(alias, 100, onbatch);
+
+    const end = new Date();
+    console.log(`Finished spawning posters for ${totalFollowers} followers of ${alias} in ${(+end - +start)/1000} seconds.`);
+  }
+
+  /** Responsible for posting the status to the feeds of a portion of followers. */
   postStatusToFollowers(feedItem: FeedStoryDTO, followers: string[]): Promise<void> {
     return this.postStatusToFeeds(feedItem, followers);
   }
@@ -44,15 +77,19 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     };
   }
 
-  private async getFollowersOf(alias: string): Promise<string[]> {
+  /** Returns the followers, optionally feeding a callback with one page at a time.
+   *  When {@linkcode onbatch} is provided, an empty list will be returned from the function. */
+  private async getFollowersOf(alias: string, batchSize = 100, onbatch?: (followersBatch: string[]) => void): Promise<string[]> {
     const followerAliases: string[] = [];
+
+    onbatch ||= ((followers) => followerAliases.push(...followers));
 
     let lastItem: FollowEntity|undefined = undefined;
     let dataPage: DataPage<FollowEntity>;
     do {
-      dataPage = await this.followDao.listFollowers(alias, 100, lastItem || null);
+      dataPage = await this.followDao.listFollowers(alias, batchSize, lastItem || null);
       lastItem = dataPage.values[dataPage.values.length];
-      followerAliases.push(...dataPage.values.map(follow => follow.follower_handle));
+      onbatch(dataPage.values.map(follow => follow.follower_handle));
     } while (dataPage.hasMorePages);
 
     return followerAliases;
