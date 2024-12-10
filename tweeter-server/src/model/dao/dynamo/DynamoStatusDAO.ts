@@ -49,6 +49,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
 
     const alias = feedItem.alias;
     let totalFollowers = 0;
+    const promises: Promise<unknown>[] = [];
 
     const onbatch = (followers: string[]): void => {
       totalFollowers += followers.length;
@@ -56,9 +57,12 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
         feedItem: feedItem,
         toFollowerAliases: followers,
       };
-      void this.postProcessingQueue.sendJsonMessage(message);
+      promises.push(this.postProcessingQueue.sendJsonMessage(message));
     };
     await this.getFollowersOf(alias, 100, onbatch);
+
+    await Promise.all(promises);
+    console.log(`Finished awaiting ${promises.length} promises`);
 
     const end = new Date();
     console.log(`Finished spawning posters for ${totalFollowers} followers of ${alias} in ${(+end - +start)/1000} seconds.`);
