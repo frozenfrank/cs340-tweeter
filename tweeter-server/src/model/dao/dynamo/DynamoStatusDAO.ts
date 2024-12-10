@@ -53,7 +53,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     let totalFollowers = 0;
 
     const onbatch = (followers: string[]): void => {
-      console.log(`Processing batch of ${followers.length}  followers: : ` + JSON.stringify(followers));
+      console.log(`Processing batch of ${followers.length}  followers: ${typeof followers}: ` + followers);
       totalFollowers += followers.length;
       const message: PostStatusProcessingRequest = {
         feedItem: feedItem,
@@ -95,8 +95,9 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     let lastItem: FollowEntity|undefined = undefined;
     let dataPage: DataPage<FollowEntity>;
     do {
+      console.log(`DynamoStatusDAO: Requesting page of followers for ${alias} of size ${batchSize}. Last item: ${lastItem}`);
       dataPage = await this.followDao.listFollowers(alias, batchSize, lastItem || null);
-      console.log(`Received page of data from Elders: ` + JSON.stringify(dataPage));
+      console.log(`DynamoStatusDAO: Received page of data from Elders: ` + JSON.stringify(dataPage));
       lastItem = dataPage.values[dataPage.values.length];
       onbatch(dataPage.values.map(follow => follow.follower_handle));
     } while (dataPage.hasMorePages);
@@ -114,6 +115,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
         promises.length = 0;
       }
     }
+    await Promise.all(promises);
   }
 
   /** Requires a special StatusDTO which has the {@linkcode timestamp_unique} field populated. */
