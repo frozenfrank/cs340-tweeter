@@ -39,19 +39,19 @@ export class ServerFacade {
   // ### Follow Service ###
 
   public follow(request: UserRequestSingle): Promise<FollowBidirectionalCount> {
-    return this.executePostForValue(request, this.FOLLOW_BASE + "/add");
+    return this.executeFollowPostRequest(request, "/add");
   }
 
   public unfollow(request: UserRequestSingle): Promise<FollowBidirectionalCount> {
-    return this.executePostForValue(request, this.FOLLOW_BASE + "/remove");
+    return this.executeFollowPostRequest(request, "/remove");
   }
 
   public getFollowerCount(request: UserRequestSingle): Promise<number> {
-    return this.executePostForValue(request, this.FOLLOW_BASE + "/count/followers");
+    return this.executeFollowCountRequest(request, request.user.followerCount, "/count/followers");
   }
 
   public getFolloweeCount(request: UserRequestSingle): Promise<number> {
-    return this.executePostForValue(request, this.FOLLOW_BASE + "/count/followees");
+    return this.executeFollowCountRequest(request, request.user.followeeCount, "/count/followees");
   }
 
   public getIsFollowerStatus(request: UserRequestDouble): Promise<boolean> {
@@ -125,6 +125,27 @@ export class ServerFacade {
     // Upscale back to client model classes
     const items = response.items.map(upscale) as MODEL[];
     return [items, response.hasMore];
+  }
+
+  private executeFollowPostRequest(
+    request: UserRequestSingle,
+    followPath: string,
+  ): Promise<FollowBidirectionalCount> {
+    return this.executePostForValue<UserRequestSingle, FollowBidirectionalCount>(request, followPath)
+      .then(followStats => {
+        const countedFollowers = request.user.followerCount || 0;
+        const countedFollowees = request.user.followeeCount || 0;
+        return [followStats[0] + countedFollowers, followStats[1] + countedFollowees];
+      });
+  }
+
+  private executeFollowCountRequest(
+    request: UserRequestSingle,
+    addVal: number | undefined,
+    followPath: string,
+  ): Promise<number> {
+    return this.executePostForValue<UserRequestSingle, number>(request, this.FOLLOW_BASE + followPath)
+      .then(v => v + (addVal || 0));
   }
 
   private async executePostForValue<

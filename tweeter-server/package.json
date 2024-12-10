@@ -10,7 +10,8 @@
     "deps:b": "./bundle-deps.sh --no-build",
     "lambdas": "npm run lambdas:bundle && npm run lambdas:upload",
     "lambdas:bundle": "./bundle-lambdas.sh",
-    "lambdas:upload": "./upload-lambdas.sh "
+    "lambdas:upload": "./upload-lambdas.sh",
+    "populate-followers": "npx ts-node src/populate-followers/populate-followers.ts"
   },
   "keywords": [],
   "author": "",

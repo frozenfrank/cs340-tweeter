@@ -8,13 +8,13 @@ This file contained my working progress counter to help me keep track of all the
 
 ## Database Population
 
-- [ ] Register 10000 users
-  - [ ] Upload a few more small sized profile pictures
-  - [ ] Use a round robin of my already uploaded profile pictures
-  - [ ] Prepare upload script
-  - [ ] Increase WCU limit on Follows table
-  - [ ] Run script
-  - [ ] Decrease WCU limit on Follows table
+- [x] Register 10000 users
+  - [x] Upload a few more small sized profile pictures
+  - [x] Use a round robin of my already uploaded profile pictures
+  - [x] Prepare upload script
+  - [x] Increase WCU limit on Follows table
+  - [x] Run script
+  - [x] Decrease WCU limit on Follows table
 
 ## Processing Architecture
 

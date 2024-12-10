@@ -12,9 +12,21 @@ import {
 import { MetadataBearer } from "@aws-sdk/types";
 import { DataPage } from "../../dto/DataPage";
 
-export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<string, any> = T> {
+export abstract class DynamoDAO {
   protected readonly client = DynamoDBDocumentClient.from(new DynamoDBClient({region: 'us-west-2'}));
 
+  protected logResponseOnError(response: MetadataBearer): void {
+    const statusCode = response.$metadata.httpStatusCode || 0;
+    const statusCategory = Math.floor(statusCode / 100);
+    if (statusCategory === 2) {
+      console.log(`Received successful status code (${statusCode}):`, response);
+      return;
+    }
+    console.warn(`Received ${statusCode} status code:`, response);
+  }
+}
+
+export abstract class DynamoTableDAO<T extends Record<string, any>, U extends Record<string, any> = T> extends DynamoDAO {
   protected abstract tableName: string;
   protected keyAttr?: string;
 
@@ -98,13 +110,4 @@ export abstract class DynamoDAO<T extends Record<string, any>, U extends Record<
     return data as unknown as U; // Assume that the data row is a POJO matching the entity type
   }
 
-  protected logResponseOnError(response: MetadataBearer): void {
-    const statusCode = response.$metadata.httpStatusCode || 0;
-    const statusCategory = Math.floor(statusCode / 100);
-    if (statusCategory === 2) {
-      console.log(`Received successful status code (${statusCode}):`, response);
-      return;
-    }
-    console.warn(`Received ${statusCode} status code:`, response);
-  }
 }
