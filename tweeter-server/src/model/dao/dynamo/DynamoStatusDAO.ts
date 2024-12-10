@@ -18,6 +18,8 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
   private aliasAttr = "alias";
   private timestampAttr = "timestamp_unique";
 
+  private MAX_PENDING_PROMISES = 50;
+
   constructor(
     private followDao: FollowDAO,
     private postQueue: QueueClient,
@@ -96,11 +98,16 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
   }
 
   private async postStatusToFeeds(feedItem: FeedStoryDTO, followers: string[]): Promise<void> {
+    let promises: Promise<unknown>[] = [];
     for (const follower of followers) {
       // TODO: Convert to batch write
-      await this.putItem({...feedItem, alias: follower}, this.feedTableName);
-      // TODO: Implement spaced backoff and wait to stay within write limit
+      promises.push(this.putItem({...feedItem, alias: follower}, this.feedTableName));
+      if (promises.length >= this.MAX_PENDING_PROMISES) {
+        await Promise.all(promises);
+        promises.length = 0;
+      }
     }
+    await Promise.all(promises);
   }
 
   /** Requires a special StatusDTO which has the {@linkcode timestamp_unique} field populated. */
