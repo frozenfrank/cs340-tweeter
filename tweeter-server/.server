@@ -19,5 +19,5 @@ tweeterLoginUser              | lambda/user/LoginUserLambda.handler
 tweeterLogoutUser             | lambda/user/LogoutUserLambda.handler
 tweeterGetUser                | lambda/user/GetUserLambda.handler
 '
-LAMBDALAYER_VERSION=1
+LAMBDALAYER_VERSION=3
 LAMBDALAYER_ARN="arn:aws:lambda:us-west-2:043309350193:layer:tweeter-lambda-layer:$LAMBDALAYER_VERSION"
