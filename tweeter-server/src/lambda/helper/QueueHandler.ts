@@ -5,7 +5,7 @@ export const queueHandler = function<T>(onMessage: (obj: T) => Promise<void>) {
     for (let i = 0; i < event.Records.length; ++i) {
       const { body } = event.Records[i];
       console.log(`Received message (${typeof body}): ${body}`);
-      onMessage(body as T);
+      await onMessage(body as T);
     }
     return null;
   };
