@@ -94,7 +94,7 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     let dataPage: DataPage<FollowEntity>;
     do {
       dataPage = await this.followDao.listFollowers(alias, batchSize, lastItem || null);
-      lastItem = dataPage.values[dataPage.values.length];
+      lastItem = dataPage.values[dataPage.values.length-1];
       onbatch(dataPage.values.map(follow => follow.follower_handle));
     } while (dataPage.hasMorePages);
 
