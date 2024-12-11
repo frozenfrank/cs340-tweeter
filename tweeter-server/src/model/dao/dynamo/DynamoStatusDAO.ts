@@ -7,6 +7,7 @@ import { FollowEntity } from "../../dto/FollowEntity";
 import { FollowDAO } from "../interface/FollowDAO";
 import { PagedStatusData, StatusDAO } from "../interface/StatusDAO";
 import { DynamoTableDAO } from "./DynamoDAO";
+import { QueueClient } from "../interface/QueueClient";
 
 export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements StatusDAO {
   private storyTableName = "tweeter-story";
@@ -18,14 +19,26 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
 
   constructor(
     private followDao: FollowDAO,
+    private postQueue: QueueClient,
+    private postProcessingQueue: QueueClient,
   ) { super(); }
 
 
   async createStatus(status: StatusDTO): Promise<void> {
     const feedItem = this.makeFeedStoryItem(status);
+    console.log(`Saving feedItem in story table`);
     await this.putItem(feedItem, this.storyTableName);
 
+    console.log(`Sending post queue message: ` + JSON.stringify(feedItem));
+    await this.postQueue.sendJsonMessage(feedItem);
+
+    console.log(`Getting followers of ${status.user.alias}`);
     const followers = await this.getFollowersOf(status.user.alias);
+
+    console.log(`Sending processing queue message: ` + JSON.stringify(followers));
+    this.postProcessingQueue.sendJsonMessage(followers);
+
+    console.log(`Also posting statuses directly to feeds`);
     // TODO: Break this by posting in segments to queue
     this.postStatusToFeeds(feedItem, followers);
   }

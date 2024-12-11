@@ -42,7 +42,7 @@ export class DynamoDaoFactory implements DAOFactory {
     if (!this.status) {
       const postQueue           = new SqsClient(this.SQS_REGION, this.QUEUE_BASE + this.POST_QUEUE_NAME);
       const postProcessingQueue = new SqsClient(this.SQS_REGION, this.QUEUE_BASE + this.UPLOAD_QUEUE_NAME);
-      this.status = new DynamoStatusDAO(this.getFollowDao());
+      this.status = new DynamoStatusDAO(this.getFollowDao(), postQueue, postProcessingQueue);
     }
     return this.status;
   }
