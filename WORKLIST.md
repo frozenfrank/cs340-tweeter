@@ -23,26 +23,26 @@ This file contained my working progress counter to help me keep track of all the
   - [x] Write follower aliases in chunks to processing queue
   - [x] Create queue
 - [x] Install post status processing queue
-  - [ ] Fiddle with asynchronous levels
+  - [x] Fiddle with asynchronous levels
   - [x] Create lambda for reading from queue
-  - [ ] Install intentional backoff
+  - [x] Install intentional backoff (not needed)
 
 ## Verify Performance
 
 - [x] Perceived post status latency is < 1 second
-- [ ] New status finishes processing in < 120 seconds
+- [x] New status finishes processing in < 120 seconds
 - [x] Individual feed returns in < 1 second
 
 ### Review AWS region distribution
 
-| State | Resource | Original Region | Desired Region | Updated region |
-| ----- | ----- | ----- | ----- | ----- |
-| ✅ | Lambda | us-east-1 | us-west-2 | us-west-2 |
-| ✅ | Lambda Layer | us-east-1 | us-west-2 | us-west-2 |
-| ✅ | Dynamo | us-west-2 | us-west-2 | us-west-2 |
-| 🟡 | S3 | us-east-1 | us-west-2 | us-east-1 |
-| ✅ | API Gateway | us-east-1 | us-west-2 | us-west-2 |
-| ✅ | SQS Queues | us-west-2 | us-west-2 | us-west-2 |
+| State | Resource | Original Region | Updated region | Notes |
+| -- | -------------  | -------- | ---------- | -----
+| ✅ | Lambda         | us-east-1 | us-west-2 | Update `upload-lambdas.sh` and `update-layers.sh` to write to an arbitrary region. |
+| ✅ | Lambda Layer   | us-east-1 | us-west-2 | Create a new lambda layer in a new region. |
+| ✅ | Dynamo         | us-west-2 | us-west-2 | _Correct._ |
+| ✅ | S3             | us-east-1 | us-west-2 | Create new bucket and update URLs. |
+| ✅ | API Gateway    | us-east-1 | us-west-2 | Export API as OpenAI 3.0 with API Gateway extensions. Manually update lambdas to use `us-west-2` versions. |
+| ✅ | SQS Queues     | us-west-2 | us-west-2 | _Correct._ |
 
 ## Testing
 
