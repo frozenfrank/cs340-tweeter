@@ -50,3 +50,26 @@ This file contained my working progress counter to help me keep track of all the
 - [x] Consider disabling or deleting previous integration tests (for this class, not life)
 
 **Pass off with TAs before 5pm**
+
+## Tricky Resolutions
+
+1. `403 AuthToken Missing` message from API Gateway
+    - I had left off a base path which resulted in hitting the wrong endpoints.
+    - The default behavior is to throw the `403` error, which was really not helpful.
+    - c.f. `8bfde614176bfa03fbdf53635f5b520d76b54fef`
+2. `undefined` values in SQS processing
+    - Messy relationship between objects and JSON string.
+    - I hadn't deserialized the JSON strings properly.
+3. Disappearing call to `DynamoTableDAO.send()`
+    - It came down to a missing `await` keyword.
+    - I had installed a helper function at the root level for my SQS parsing,
+      but that function didn't await the promise it launched off.
+    - This lead to the lambda exiting as soon as any of the threads finished.
+      Since the `client.send()` was slow, the timeout typically fell on this line,
+      but that was all misleading.
+    - In actuality, it was the missing `await` at the root level.
+      I finally found the root problem as I carefully recompleted the assignment
+      from scratch and observed that all the code worked in the main function
+      but broke when I moved it into the SQS functions. This helped me isolate
+      the root cause.
+    - c.f. `5bc8645`
