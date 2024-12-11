@@ -18,13 +18,13 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.22.2",
     "tweeter-shared": "file:../tweeter-shared",
-    "typescript": "^4.9.5",
     "vite-plugin-commonjs": "^0.8.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "vite",
     "test": "jest",
+    "test:post-status": "npx jest test/integration/post-status.test.ts",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "reload": "npm run build && npm run serve"
@@ -50,6 +50,7 @@
   "jest": {
     "verbose": true,
     "testEnvironment": "jsdom",
+    "preset": "ts-jest",
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js"
     },
@@ -79,6 +80,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-mockito": "^2.6.1",
+    "typescript": "^5.7.2",
     "vite": "^4.5.2",
     "vite-plugin-svgr": "^3.3.0",
     "vite-tsconfig-paths": "^4.3.1"
