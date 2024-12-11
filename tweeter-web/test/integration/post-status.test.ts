@@ -36,7 +36,6 @@ describe('Post Status Integration', () => {
     const postEnd = new Date;
     const postSecs = (+postEnd - +postStart) / 1000;
     console.log(`Posting status took ${postSecs} seconds.`);
-    expect(postSecs).toBeLessThanOrEqual(2);
 
     verify(mockPresenterView.displayErrorMessage(anyString())).never();
     verify(mockPresenterView.setIsLoading(true)).once();
@@ -55,9 +54,12 @@ describe('Post Status Integration', () => {
     const loadEnd = new Date;
     const loadSecs = (+loadEnd - +loadStart) / 1000;
     console.log(`Loading feed took ${loadSecs} seconds.`);
-    expect(loadSecs).toBeLessThanOrEqual(2);
 
     expect(storyItems).toHaveLength(1);
     expect(storyItems[0].post).toBe(statusContent);
-  });
+
+    // Assert times afterwards to allow cold-starting all lambdas
+    expect(postSecs).toBeLessThanOrEqual(2);
+    expect(loadSecs).toBeLessThanOrEqual(2);
+  }, 15 * 1000);
 });
