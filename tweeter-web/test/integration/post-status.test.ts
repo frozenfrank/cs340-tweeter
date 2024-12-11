@@ -1,8 +1,9 @@
-import { anyNumber, verify } from "ts-mockito";
+import "isomorphic-fetch";
+import { anyNumber, anyString, verify } from "ts-mockito";
 import { AuthToken, User } from "tweeter-shared";
 import { ServerFacade } from "../../src/model/network/ServerFacade";
 import { PostStatusPresenter, PostStatusView } from "../../src/presenters/others/PostStatusPresenter";
-import "isomorphic-fetch"
+import { mockPresenter } from "../utils";
 
 describe('Post Status Integration', () => {
   const server = new ServerFacade();
@@ -24,29 +25,23 @@ describe('Post Status Integration', () => {
 
 
     // Create presenter
-    const view: PostStatusView = {
-      setPost: jest.fn(),
-      setIsLoading: jest.fn(),
-      displayErrorMessage: jest.fn(),
-      clearLastInfoMessage: jest.fn(),
-      displayInfoMessage: jest.fn(),
-    };
-    const presenter = new PostStatusPresenter(view);
+    const {mockPresenterView, presenterInstance, presenterSpy}
+      = mockPresenter((view: PostStatusView) => new PostStatusPresenter(view));
 
 
     // Post a status
     const statusContent = "Hello, world! " + "🚀".repeat(Math.random() * 15 + 1);
     const postStart = new Date;
-    await presenter.doPostStatus(auth, signedInUser, statusContent);
+    await presenterInstance.doPostStatus(auth, signedInUser, statusContent);
     const postEnd = new Date;
     const postSecs = (+postEnd - +postStart) / 1000;
     console.log(`Posting status took ${postSecs} seconds.`);
     expect(postSecs).toBeLessThanOrEqual(2);
 
-    verify(view.displayErrorMessage).never();
-    verify(view.clearLastInfoMessage).never();
-    verify(view.setIsLoading).twice();
-    verify(view.displayInfoMessage("Status posted!", anyNumber())).once(); // Verify success message displayed without error message
+    verify(mockPresenterView.displayErrorMessage(anyString())).never();
+    verify(mockPresenterView.setIsLoading(true)).once();
+    verify(mockPresenterView.setIsLoading(false)).once();
+    verify(mockPresenterView.displayInfoMessage("Status posted!", anyNumber())).once(); // Verify success message displayed without error message
 
 
     // Verify status found in story
