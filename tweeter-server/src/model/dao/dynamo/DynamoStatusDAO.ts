@@ -8,6 +8,7 @@ import { FollowDAO } from "../interface/FollowDAO";
 import { PagedStatusData, StatusDAO } from "../interface/StatusDAO";
 import { DynamoTableDAO } from "./DynamoDAO";
 import { QueueClient } from "../interface/QueueClient";
+import { PostStatusProcessingRequest } from "../../../lambda/status/PostStatusProcessingRequest";
 
 export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements StatusDAO {
   private storyTableName = "tweeter-story";
@@ -29,29 +30,34 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     console.log(`Saving feedItem in story table`);
     await this.putItem(feedItem, this.storyTableName);
 
-    const PROCESSING_FAKE_MSG = ["@frozenfrank", "@frozenfrank", "@ghost"]
-    console.log(`Sending processing queue message: ` + JSON.stringify(PROCESSING_FAKE_MSG));
-    await this.postProcessingQueue.sendJsonMessage(PROCESSING_FAKE_MSG);
-
     console.log(`Sending post queue message: ` + JSON.stringify(feedItem));
     await this.postQueue.sendJsonMessage(feedItem);
-
-    console.log(`Getting followers of ${status.user.alias}`);
-    const followers = await this.getFollowersOf(status.user.alias);
-
-    console.log(`Also posting statuses directly to feeds`);
-    // TODO: Break this by posting in segments to queue
-    await this.postStatusToFeeds(feedItem, followers);
 
     console.log("Finished processing createStatus");
   }
 
-  fetchAndSpawnPosters(feedItem: FeedStoryDTO): Promise<void> {
-    throw new Error("Method not implemented.");
+  async fetchAndSpawnPosters(feedItem: FeedStoryDTO): Promise<void> {
+    const posterAlias = feedItem.alias;
+    console.log(`Getting followers of ${posterAlias}`);
+    const followers = await this.getFollowersOf(posterAlias);
+
+    console.log("Received followers: " + JSON.stringify(followers));
+
+    const message: PostStatusProcessingRequest = {
+      feedItem: feedItem,
+      toFollowerAliases: followers,
+    };
+    console.log(`Sending processing queue message: ` + JSON.stringify(message));
+    await this.postProcessingQueue.sendJsonMessage(message);
+
+    console.log("Sent all processing messages");
   }
 
-  postStatusToFollowers(feedItem: FeedStoryDTO, followers: string[]): Promise<void> {
-    return this.postStatusToFeeds(feedItem, followers);
+  async postStatusToFollowers(feedItem: FeedStoryDTO, followers: string[]): Promise<void> {
+    console.log("Processing feedItem: " + JSON.stringify(feedItem));
+    console.log(`Posting statuses directly to feeds: ` + JSON.stringify(followers));
+    await this.postStatusToFeeds(feedItem, followers);
+    console.log(`Finished posting statuses to feeds: ` + JSON.stringify(followers));
   }
 
   private makeFeedStoryItem(status: StatusDTO): FeedStoryDTO {
@@ -64,13 +70,13 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     };
   }
 
-  private async getFollowersOf(alias: string): Promise<string[]> {
+  private async getFollowersOf(alias: string, batchSize=100): Promise<string[]> {
     const followerAliases: string[] = [];
 
     let lastItem: FollowEntity|undefined = undefined;
     let dataPage: DataPage<FollowEntity>;
     do {
-      dataPage = await this.followDao.listFollowers(alias, 100, lastItem || null);
+      dataPage = await this.followDao.listFollowers(alias, batchSize, lastItem || null);
       lastItem = dataPage.values[dataPage.values.length];
       followerAliases.push(...dataPage.values.map(follow => follow.follower_handle));
     } while (dataPage.hasMorePages);
