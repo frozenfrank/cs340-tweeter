@@ -33,6 +33,7 @@ This file contained my working progress counter to help me keep track of all the
 - [ ] New status finishes processing in < 120 seconds
 - [x] Individual feed returns in < 1 second
 
+### Review AWS region distribution
 
 | State | Resource | Original Region | Desired Region | Updated region |
 | ----- | ----- | ----- | ----- | ----- |
@@ -45,7 +46,7 @@ This file contained my working progress counter to help me keep track of all the
 
 ## Testing
 
-- [ ] Create automated post status integration test
-- [ ] Consider disabling or deleting previous integration tests (for this class, not life)
+- [x] Create automated post status integration test
+- [x] Consider disabling or deleting previous integration tests (for this class, not life)
 
 **Pass off with TAs before 5pm**
