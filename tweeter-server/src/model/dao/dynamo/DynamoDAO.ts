@@ -87,7 +87,7 @@ export abstract class DynamoTableDAO<T extends Record<string, any>, U extends Re
   }
 
   protected async send<OUT extends object>(command: DynamoDBDocumentClientCommand<any, OUT, any, any, any>): Promise<OUT> {
-    console.log(`DynamoTableDAO: Sending command: ` + command);
+    console.log(`DynamoTableDAO: Sending command: ` + JSON.stringify(command));
     const response = await this.client.send(command).catch(error => console.error(`CLIENT SEND FAILED!!!`, error));
     console.log(`DynamoTableDAO: send response ${response.$metadata.statusCode}`);
     this.logResponseOnError(response);

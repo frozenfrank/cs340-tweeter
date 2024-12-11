@@ -29,18 +29,21 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
     console.log(`Saving feedItem in story table`);
     await this.putItem(feedItem, this.storyTableName);
 
+    const PROCESSING_FAKE_MSG = ["@frozenfrank", "@frozenfrank", "@ghost"]
+    console.log(`Sending processing queue message: ` + JSON.stringify(PROCESSING_FAKE_MSG));
+    await this.postProcessingQueue.sendJsonMessage(PROCESSING_FAKE_MSG);
+
     console.log(`Sending post queue message: ` + JSON.stringify(feedItem));
     await this.postQueue.sendJsonMessage(feedItem);
 
     console.log(`Getting followers of ${status.user.alias}`);
     const followers = await this.getFollowersOf(status.user.alias);
 
-    console.log(`Sending processing queue message: ` + JSON.stringify(followers));
-    this.postProcessingQueue.sendJsonMessage(followers);
-
     console.log(`Also posting statuses directly to feeds`);
     // TODO: Break this by posting in segments to queue
-    this.postStatusToFeeds(feedItem, followers);
+    await this.postStatusToFeeds(feedItem, followers);
+
+    console.log("Finished processing createStatus");
   }
 
   fetchAndSpawnPosters(feedItem: FeedStoryDTO): Promise<void> {
