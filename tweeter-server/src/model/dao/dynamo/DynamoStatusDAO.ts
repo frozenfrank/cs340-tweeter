@@ -1,6 +1,6 @@
 
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { PagedData, StatusDTO } from "tweeter-shared";
+import { PagedData, StatusDTO, User } from "tweeter-shared";
 import { DataPage } from "../../../model/dto/DataPage";
 import { FeedStoryDTO } from "../../dto/FeedStoryDTO";
 import { FollowEntity } from "../../dto/FollowEntity";
@@ -76,10 +76,14 @@ export class DynamoStatusDAO extends DynamoTableDAO<FeedStoryDTO> implements Sta
   private makeFeedStoryItem(status: StatusDTO): FeedStoryDTO {
     const alias = status.user.alias;
     const timestamp = new Date(status.timestamp);
+
+    const {passwordHash, ...cleanedUser} = status.user;
+    const cleanedStatus = {...status, user: cleanedUser as User};
+
     return {
       alias: alias,
       timestamp_unique: timestamp.toISOString() + "--" + alias,
-      status,
+      status: cleanedStatus,
     };
   }
 
