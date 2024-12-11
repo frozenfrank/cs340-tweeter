@@ -1,12 +1,12 @@
 import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { DataPage } from "../../../model/dto/DataPage";
 import { FollowEntity } from "../../dto/FollowEntity";
-import { DynamoDAO } from "./DynamoDAO";
+import { DynamoTableDAO } from "./DynamoDAO";
 
 type FollowHandles = Pick<FollowEntity, "followee_handle" | "follower_handle">;
 
 
-export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
+export class DynamoFollowRelationshipDAO extends DynamoTableDAO<FollowEntity> {
   protected override readonly tableName = "tweeter-follows";
 
   private readonly followerHandleAttr = "follower_handle";
@@ -70,7 +70,7 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
 
   /** Gets a single page of followers of a particular user. */
   getPageOfFollowers(followeeHandle: string, pageSize: number, lastFollowerHandle: string | undefined): Promise<DataPage<FollowEntity>> {
-    const command = new QueryCommand({
+    const params = {
       TableName: this.tableName,
       Limit: pageSize,
       KeyConditionExpression: this.followeeHandleAttr + " = :fee",
@@ -82,8 +82,9 @@ export class DynamoFollowRelationshipDAO extends DynamoDAO<FollowEntity> {
         followee_handle: followeeHandle,
         follower_handle: lastFollowerHandle,
       }),
-    });
-
+    };
+    const command = new QueryCommand(params);
+    console.log(`DynamoFollowRelationshipDAO: getPageOfFollowers(). Very fine (${typeof  followeeHandle}; ${typeof pageSize}; ${typeof lastFollowerHandle}): ` + JSON.stringify(params));
     return this.readPagedQueryCommand(command);
   }
 

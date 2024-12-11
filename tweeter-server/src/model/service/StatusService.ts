@@ -1,5 +1,6 @@
 import { StatusDTO } from "tweeter-shared";
 import { PagedStatusData, StatusDAO } from "../dao/interface/StatusDAO";
+import { FeedStoryDTO } from "../dto/FeedStoryDTO";
 import { AuthService } from "./AuthService";
 
 
@@ -38,5 +39,18 @@ export class StatusService {
     await this.authService.assertToken(token);
     await this.statusDao.createStatus(newStatus);
   };
+
+  public postStatusSpawn(feedItem: FeedStoryDTO): Promise<void> {
+    // NOTE: No required authentication because it is not publicly accessible
+    return this.statusDao.fetchAndSpawnPosters(feedItem);
+  }
+
+  public postStatusProcessing(
+    feedItem: FeedStoryDTO,
+    followers: string[],
+  ): Promise<void> {
+    // NOTE: No required authentication because it is not publicly accessible
+    return this.statusDao.postStatusToFollowers(feedItem, followers);
+  }
 
 }

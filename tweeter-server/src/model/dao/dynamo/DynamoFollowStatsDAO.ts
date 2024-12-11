@@ -1,8 +1,8 @@
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { FollowxStats } from "../../dto/FollowxStats";
-import { DynamoDAO } from "./DynamoDAO";
+import { DynamoTableDAO } from "./DynamoDAO";
 
-export class DynamoFollowStatsDAO extends DynamoDAO<FollowxStats> {
+export class DynamoFollowStatsDAO extends DynamoTableDAO<FollowxStats> {
   private aliasAttr = "alias";
   private followersAttr = "followers";
   private followeesAttr = "followees";

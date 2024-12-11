@@ -1,6 +1,6 @@
 import { AuthToken } from "tweeter-shared";
 import { AuthDAO } from "../interface/AuthDAO";
-import { DynamoDAO } from "./DynamoDAO";
+import { DynamoTableDAO } from "./DynamoDAO";
 
 // TODO: Convert this into a common DTO object
 interface AuthTokenEntity {
@@ -9,7 +9,7 @@ interface AuthTokenEntity {
   alias: string;
 }
 
-export class DynamoAuthDAO extends DynamoDAO<AuthTokenEntity, AuthToken> implements AuthDAO {
+export class DynamoAuthDAO extends DynamoTableDAO<AuthTokenEntity, AuthToken> implements AuthDAO {
   protected tableName = 'tweeter-auth';
 
   private tokenAttr = 'token';

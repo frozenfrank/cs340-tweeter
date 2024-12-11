@@ -9,6 +9,7 @@ import { DynamoFollowDAO } from "./DynamoFollowDAO";
 import { S3ImageDao } from "./S3ImageDAO";
 import { DynamoStatusDAO } from "./DynamoStatusDAO";
 import { DynamoUserDAO } from "./DynamoUserDAO";
+import { SqsClient } from "../sqs/SqsClient";
 
 export class DynamoDaoFactory implements DAOFactory {
   // Lazy load these so they are only constructed when needed.
@@ -19,6 +20,11 @@ export class DynamoDaoFactory implements DAOFactory {
   private follow?: FollowDAO;
   private status?: StatusDAO;
 
+  private readonly AWS_ACCT_ID = "043309350193";
+  private readonly SQS_REGION = "us-west-2";
+  private readonly QUEUE_BASE = `https://sqs.${this.SQS_REGION}.amazonaws.com/${this.AWS_ACCT_ID}/`;
+  private readonly POST_QUEUE_NAME = "tweeter-post-queue";
+  private readonly UPLOAD_QUEUE_NAME = "tweeter-post-status-processing-queue";
 
   getAuthDao(): AuthDAO {
     this.auth ||= new DynamoAuthDAO();
@@ -33,7 +39,11 @@ export class DynamoDaoFactory implements DAOFactory {
     return this.image;
   }
   getStatusDao(): StatusDAO {
-    this.status ||= new DynamoStatusDAO(this.getFollowDao());
+    if (!this.status) {
+      const postQueue           = new SqsClient(this.SQS_REGION, this.QUEUE_BASE + this.POST_QUEUE_NAME);
+      const postProcessingQueue = new SqsClient(this.SQS_REGION, this.QUEUE_BASE + this.UPLOAD_QUEUE_NAME);
+      this.status = new DynamoStatusDAO(this.getFollowDao(), postQueue, postProcessingQueue);
+    }
     return this.status;
   }
   getUserDao(): UserDAO {

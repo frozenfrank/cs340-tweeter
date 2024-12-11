@@ -6,6 +6,8 @@ export interface UserJsonObj {
   _alias: string;
   _imageUrl: string;
   _passwordHash: string;
+  followeeCount?: number;
+  followerCount?: number;
 }
 
 export class User {
@@ -21,6 +23,8 @@ export class User {
     alias: string,
     imageUrl: string,
     passwordHash: string,
+    public followeeCount?: number,
+    public followerCount?: number,
   ) {
     this._firstName = firstName;
     this._lastName = lastName;
@@ -93,6 +97,8 @@ export class User {
       jsonObject._alias,
       jsonObject._imageUrl,
       jsonObject._passwordHash,
+      jsonObject.followeeCount,
+      jsonObject.followerCount,
     );
   }
 
@@ -101,7 +107,15 @@ export class User {
   }
 
   public static fromDto(dto: UserDTO | null): User | null {
-    return !dto ? null : new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl, dto.passwordHash);
+    return !dto ? null : new User(
+      dto.firstName,
+      dto.lastName,
+      dto.alias,
+      dto.imageUrl,
+      dto.passwordHash,
+      dto.followeeCount,
+      dto.followerCount,
+    );
   }
 
   public get dto(): UserDTO {
@@ -111,6 +125,8 @@ export class User {
       alias: this.alias,
       imageUrl: this.imageUrl,
       passwordHash: this._passwordHash,
+      followeeCount: this.followeeCount,
+      followerCount: this.followerCount,
     };
   }
 }
